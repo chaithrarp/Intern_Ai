@@ -12,3 +12,24 @@ venv/
 
 # OS
 .DS_Store
+
+# Environment
+.env
+
+# Audio recordings
+*.wav
+*.mp3
+*.webm
+audio/
+recordings/
+
+# Node
+node_modules/
+
+# Python
+venv/
+__pycache__/
+*.pyc
+
+# Git junk
+.DS_Store

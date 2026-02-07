@@ -1,0 +1,36 @@
+Project structure for Intern_Ai
+
+backend/
+	interview_data.py
+	main.py
+	test_whisper.py
+	whisper_service.py
+	__pycache__/
+	audio_uploads/
+
+frontend/
+	package.json
+	README.md
+	public/
+		index.html
+		manifest.json
+		robots.txt
+
+	src/
+		App.css
+		App.js
+		App.test.js
+		AudioRecorder.css
+		AudioRecorder.js
+		index.css
+		index.js
+		Interview.css
+		Interview.js
+		reportWebVitals.js
+		setupTests.js
+		components/
+			AIInterviewer.js
+			MiniAIOrb.js
+			WelcomeScreen.css
+			WelcomeScreen.js
+		styles/
