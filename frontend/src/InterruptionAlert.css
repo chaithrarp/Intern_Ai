@@ -1,0 +1,157 @@
+/* Interruption Alert Styling */
+
+.interruption-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.85);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 9999;
+  backdrop-filter: blur(8px);
+}
+
+.interruption-alert {
+  background: linear-gradient(135deg, #ff4444 0%, #cc0000 100%);
+  border: 3px solid #ff6666;
+  border-radius: 20px;
+  padding: 40px;
+  max-width: 600px;
+  width: 90%;
+  box-shadow: 0 20px 60px rgba(255, 68, 68, 0.5),
+              0 0 100px rgba(255, 68, 68, 0.3);
+  position: relative;
+  text-align: center;
+}
+
+.interruption-icon {
+  font-size: 80px;
+  margin-bottom: 20px;
+  filter: drop-shadow(0 0 20px rgba(255, 255, 0, 0.8));
+}
+
+.interruption-phrase {
+  font-size: 28px;
+  font-weight: 700;
+  color: white;
+  margin-bottom: 30px;
+  text-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+  letter-spacing: 0.5px;
+}
+
+.interruption-question {
+  background: rgba(255, 255, 255, 0.15);
+  border: 2px solid rgba(255, 255, 255, 0.3);
+  border-radius: 12px;
+  padding: 25px;
+  margin: 20px 0;
+  backdrop-filter: blur(10px);
+}
+
+.interruption-question .question-label {
+  font-size: 14px;
+  font-weight: 600;
+  color: #ffeb3b;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  margin-bottom: 10px;
+}
+
+.interruption-question .question-text {
+  font-size: 20px;
+  color: white;
+  font-weight: 500;
+  line-height: 1.5;
+  margin: 0;
+}
+
+.btn-acknowledge {
+  background: white;
+  color: #cc0000;
+  border: none;
+  padding: 16px 40px;
+  font-size: 18px;
+  font-weight: 700;
+  border-radius: 30px;
+  cursor: pointer;
+  margin-top: 20px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+  transition: all 0.3s ease;
+}
+
+.btn-acknowledge:hover {
+  background: #ffeb3b;
+  color: #000;
+  box-shadow: 0 6px 20px rgba(255, 235, 59, 0.5);
+}
+
+.btn-acknowledge:active {
+  transform: scale(0.95);
+}
+
+.pressure-badge {
+  position: absolute;
+  top: 15px;
+  right: 15px;
+  background: rgba(0, 0, 0, 0.4);
+  border: 2px solid rgba(255, 255, 255, 0.3);
+  border-radius: 20px;
+  padding: 8px 16px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  backdrop-filter: blur(10px);
+}
+
+.pressure-icon {
+  font-size: 20px;
+}
+
+.pressure-text {
+  color: white;
+  font-size: 12px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+/* Pulse Animation for Icon */
+@keyframes pulse {
+  0%, 100% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.1);
+  }
+}
+
+.interruption-icon {
+  animation: pulse 1.5s ease-in-out infinite;
+}
+
+/* Mobile Responsive */
+@media (max-width: 768px) {
+  .interruption-alert {
+    padding: 30px 20px;
+  }
+
+  .interruption-icon {
+    font-size: 60px;
+  }
+
+  .interruption-phrase {
+    font-size: 22px;
+  }
+
+  .interruption-question .question-text {
+    font-size: 18px;
+  }
+
+  .btn-acknowledge {
+    padding: 14px 30px;
+    font-size: 16px;
+  }
+}
