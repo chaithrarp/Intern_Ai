@@ -459,4 +459,99 @@
   .question-text {
     font-size: 1.2rem;
   }
+
+  /* PHASE 5: Interruption Badge Styling */
+.interruption-badge {
+  background: linear-gradient(135deg, #ff6b6b, #ff8787);
+  color: white;
+  padding: 8px 16px;
+  border-radius: 8px;
+  margin-bottom: 12px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 0.85rem;
+  box-shadow: 0 4px 12px rgba(255, 107, 107, 0.3);
+}
+
+.badge-icon {
+  font-size: 1.2rem;
+  animation: flash 1.5s ease-in-out infinite;
+}
+
+.badge-text {
+  flex: 1;
+  font-weight: 500;
+  line-height: 1.4;
+}
+
+@keyframes flash {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.6; }
+}
+/* Persona Badge in Interview */
+.persona-badge-active {
+  position: absolute;
+  top: 20px;
+  left: 20px;
+  background: rgba(255, 255, 255, 0.95);
+  padding: 10px 20px;
+  border-radius: 25px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+  font-size: 14px;
+  font-weight: 600;
+  color: #1f2937;
+}
+
+.persona-emoji-small {
+  font-size: 18px;
+}
+
+.persona-name-small {
+  font-size: 13px;
+}
+/* Loading Interview Screen */
+.loading-interview-screen {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  text-align: center;
+  padding: 20px;
+}
+
+.loading-orb {
+  font-size: 120px;
+  margin-bottom: 30px;
+  filter: drop-shadow(0 10px 30px rgba(0, 0, 0, 0.3));
+}
+
+.loading-interview-screen h2 {
+  font-size: 32px;
+  margin-bottom: 15px;
+  font-weight: 600;
+}
+
+.loading-subtitle {
+  font-size: 16px;
+  opacity: 0.9;
+  margin-bottom: 30px;
+  max-width: 400px;
+}
+
+.loading-dots {
+  display: flex;
+  gap: 15px;
+  font-size: 24px;
+}
+
+.loading-dots span {
+  color: rgba(255, 255, 255, 0.6);
+}
 }

@@ -1,0 +1,95 @@
+Project structure for Intern_Ai
+
+Root: Intern_Ai/
+
+Hidden/Version Control:
+- .git/
+- .gitignore
+- .zencoder/
+- .zenflow/
+
+Main Directories:
+- backend/
+  - Configuration & Core:
+    - config.py
+    - main.py
+  - Database & Data:
+    - database.py
+    - interview_data.py
+    - metrics_storage.py
+    - internai.db
+  - Interview Engine:
+    - interview_engine.py
+    - pressure_engine.py
+    - pressure_modes.py
+  - Services:
+    - llm_service.py
+    - whisper_service.py
+  - Analysis:
+    - metrics_analyzer.py
+  - Prompts & Configuration:
+    - prompts.py
+  - Testing & Requirements:
+    - test_whisper.py
+    - requirements.txt
+  - Environment & Storage:
+    - .env
+    - audio_uploads/
+    - venv/
+  - Cache:
+    - __pycache__/
+
+- frontend/
+  - Configuration:
+    - package.json
+    - package-lock.json
+    - .gitignore
+  - Documentation:
+    - README.md
+  - Public Assets:
+    - public/
+      - index.html
+      - manifest.json
+      - robots.txt
+  - Source Code:
+    - src/
+      - Main App Files:
+        - App.js
+        - App.css
+        - App.test.js
+        - index.js
+        - index.css
+      - Interview Components:
+        - Interview.js
+        - Interview.css
+      - Audio:
+        - AudioRecorder.js
+        - AudioRecorder.css
+      - Alerts:
+        - InterruptionAlert.js
+        - InterruptionAlert.css
+      - Utilities:
+        - reportWebVitals.js
+        - setupTests.js
+        - logo.svg
+      - Component Library:
+        - components/
+          - AIInterviewer.js
+          - FeedbackScreen.js
+          - FeedbackScreen.css
+          - MiniAIOrb.js
+          - SessionDetail.js
+          - SessionDetail.css
+          - SessionHistory.js
+          - SessionHistory.css
+          - WelcomeScreen.js
+          - WelcomeScreen.css
+      - Styling:
+        - styles/
+  - Dependencies:
+    - node_modules/
+
+Root Files:
+- project_structure.txt  (this file)
+- readme.md
+- setup.md

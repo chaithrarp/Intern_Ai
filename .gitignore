@@ -1,35 +1,38 @@
-# Node
+# =====================
+# Node / Frontend
+# =====================
 node_modules/
 npm-debug.log*
+build/
+dist/
 
-# Python
+# =====================
+# Python / Backend
+# =====================
 __pycache__/
 *.pyc
 venv/
 
-# Environment
+# =====================
+# Environment & Secrets
+# =====================
 .env
 
-# OS
-.DS_Store
+# =====================
+# Databases
+# =====================
+*.db
 
-# Environment
-.env
-
-# Audio recordings
+# =====================
+# Audio & Media
+# =====================
 *.wav
 *.mp3
 *.webm
 audio/
 recordings/
 
-# Node
-node_modules/
-
-# Python
-venv/
-__pycache__/
-*.pyc
-
-# Git junk
+# =====================
+# OS / Editor junk
+# =====================
 .DS_Store

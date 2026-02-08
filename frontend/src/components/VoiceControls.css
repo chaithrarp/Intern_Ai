@@ -1,0 +1,224 @@
+/* Voice Controls - Professional Blue/Cyan Theme */
+/* Matches the neon grid aesthetic from Interview.css */
+
+.voice-controls-minimal {
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+  z-index: 10;
+}
+
+.voice-icon-btn {
+  background: rgba(26, 31, 58, 0.8);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(0, 240, 255, 0.3);
+  cursor: pointer;
+  padding: 0.5rem;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.3s ease;
+  color: #9ca3af;
+  position: relative;
+  box-shadow: 0 0 15px rgba(0, 240, 255, 0.1);
+}
+
+.voice-icon-btn:hover {
+  background: rgba(26, 31, 58, 0.95);
+  border-color: rgba(0, 240, 255, 0.5);
+  color: #00f0ff;
+  box-shadow: 0 0 25px rgba(0, 240, 255, 0.3);
+}
+
+.voice-icon-btn:active {
+  transform: scale(0.95);
+}
+
+.voice-icon-btn svg {
+  transition: all 0.3s ease;
+}
+
+/* Speaking state - cyan glow to match theme */
+.voice-speaking {
+  background: rgba(26, 31, 58, 0.95);
+  border-color: rgba(0, 240, 255, 0.6);
+  color: #00f0ff;
+  box-shadow: 
+    0 0 30px rgba(0, 240, 255, 0.4),
+    0 0 15px rgba(0, 240, 255, 0.2);
+}
+
+.voice-speaking:hover {
+  border-color: rgba(0, 240, 255, 0.8);
+  box-shadow: 
+    0 0 40px rgba(0, 240, 255, 0.5),
+    0 0 20px rgba(0, 240, 255, 0.3);
+}
+
+/* Animated sound waves when speaking */
+.sound-wave-icon .wave-1 {
+  animation: wave-pulse 1.5s ease-in-out infinite;
+  transform-origin: center;
+}
+
+.sound-wave-icon .wave-2 {
+  animation: wave-pulse 1.5s ease-in-out infinite 0.3s;
+  transform-origin: center;
+}
+
+@keyframes wave-pulse {
+  0%, 100% {
+    opacity: 0.4;
+    stroke-width: 2;
+  }
+  50% {
+    opacity: 1;
+    stroke-width: 2.5;
+  }
+}
+
+/* Subtle glow effect when speaking - cyan to match neon grid */
+.voice-speaking::before {
+  content: '';
+  position: absolute;
+  inset: -4px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(0, 240, 255, 0.3) 0%, transparent 70%);
+  animation: glow-pulse 2s ease-in-out infinite;
+  z-index: -1;
+}
+
+@keyframes glow-pulse {
+  0%, 100% {
+    opacity: 0.5;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 1;
+    transform: scale(1.1);
+  }
+}
+
+/* Focus state for accessibility */
+.voice-icon-btn:focus {
+  outline: 2px solid #00f0ff;
+  outline-offset: 2px;
+}
+
+.voice-icon-btn:focus:not(:focus-visible) {
+  outline: none;
+}
+
+/* Tooltip on hover - matches dark theme */
+.voice-icon-btn::after {
+  content: attr(title);
+  position: absolute;
+  bottom: -2.5rem;
+  left: 50%;
+  transform: translateX(-50%) scale(0.95);
+  background: rgba(10, 14, 39, 0.98);
+  color: #00f0ff;
+  padding: 0.4rem 0.8rem;
+  border-radius: 6px;
+  font-size: 0.75rem;
+  white-space: nowrap;
+  opacity: 0;
+  pointer-events: none;
+  transition: all 0.2s ease;
+  backdrop-filter: blur(8px);
+  font-weight: 600;
+  letter-spacing: 0.3px;
+  border: 1px solid rgba(0, 240, 255, 0.3);
+  box-shadow: 0 0 20px rgba(0, 240, 255, 0.2);
+  text-shadow: 0 0 10px rgba(0, 240, 255, 0.5);
+}
+
+.voice-icon-btn:hover::after {
+  opacity: 1;
+  transform: translateX(-50%) scale(1);
+}
+
+/* Small arrow for tooltip - cyan theme */
+.voice-icon-btn::before {
+  content: '';
+  position: absolute;
+  bottom: -0.75rem;
+  left: 50%;
+  transform: translateX(-50%);
+  border: 6px solid transparent;
+  border-bottom-color: rgba(10, 14, 39, 0.98);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.2s ease;
+}
+
+.voice-icon-btn:hover::before {
+  opacity: 1;
+}
+
+/* Update question card speaking state - cyan glow */
+.question-card.speaking {
+  box-shadow: 
+    0 4px 20px rgba(0, 0, 0, 0.3),
+    0 0 30px rgba(0, 240, 255, 0.15);
+}
+
+/* Enhanced left border glow when speaking */
+.question-card.speaking::before {
+  box-shadow: 0 0 35px rgba(0, 240, 255, 1);
+}
+
+/* Subtle pulse on question card when speaking - cyan theme */
+@keyframes question-speaking-pulse {
+  0%, 100% {
+    box-shadow: 
+      0 4px 20px rgba(0, 0, 0, 0.3),
+      0 0 30px rgba(0, 240, 255, 0.15);
+  }
+  50% {
+    box-shadow: 
+      0 4px 20px rgba(0, 0, 0, 0.3),
+      0 0 40px rgba(0, 240, 255, 0.25);
+  }
+}
+
+.question-card.speaking {
+  animation: question-speaking-pulse 3s ease-in-out infinite;
+}
+
+/* Responsive design */
+@media (max-width: 768px) {
+  .voice-controls-minimal {
+    top: 0.75rem;
+    right: 0.75rem;
+  }
+
+  .voice-icon-btn {
+    padding: 0.4rem;
+  }
+
+  .voice-icon-btn svg {
+    width: 18px;
+    height: 18px;
+  }
+
+  /* Hide tooltip on mobile */
+  .voice-icon-btn::after,
+  .voice-icon-btn::before {
+    display: none;
+  }
+}
+
+/* Reduce motion for accessibility */
+@media (prefers-reduced-motion: reduce) {
+  .voice-icon-btn,
+  .voice-icon-btn svg,
+  .sound-wave-icon .wave-1,
+  .sound-wave-icon .wave-2,
+  .voice-speaking::before,
+  .question-card.speaking {
+    animation: none !important;
+    transition: none !important;
+  }
+}

@@ -280,6 +280,32 @@
   font-style: italic;
 }
 
+
+.pressure-warning {
+  background: linear-gradient(135deg, #ff9800 0%, #f44336 100%);
+  border: 2px solid #ffeb3b;
+  border-radius: 12px;
+  padding: 12px 20px;
+  margin: 15px 0;
+  color: white;
+  font-weight: 600;
+  font-size: 14px;
+  text-align: center;
+  box-shadow: 0 4px 15px rgba(255, 152, 0, 0.4);
+  animation: pressurePulse 1.5s ease-in-out infinite;
+}
+
+@keyframes pressurePulse {
+  0%, 100% {
+    transform: scale(1);
+    box-shadow: 0 4px 15px rgba(255, 152, 0, 0.4);
+  }
+  50% {
+    transform: scale(1.02);
+    box-shadow: 0 6px 20px rgba(255, 152, 0, 0.6);
+  }
+}
+
 /* Responsive */
 @media (max-width: 768px) {
   .audio-recorder {
@@ -300,4 +326,36 @@
   .btn-upload {
     width: 100%;
   }
+
+/* PHASE 5: Interrupted Recording Badge */
+.interrupted-badge {
+  background: linear-gradient(135deg, #ff6b6b, #ff8787);
+  color: white;
+  padding: 10px 16px;
+  border-radius: 8px;
+  margin: 12px 0;
+  text-align: center;
+  font-weight: 600;
+  font-size: 0.9rem;
+  box-shadow: 0 4px 12px rgba(255, 107, 107, 0.4);
+  animation: pulse-glow 2s ease-in-out infinite;
+}
+
+.interrupted-label {
+  color: #ff6b6b;
+  font-weight: 600;
+  margin-left: 8px;
+}
+
+@keyframes pulse-glow {
+  0%, 100% {
+    box-shadow: 0 4px 12px rgba(255, 107, 107, 0.4);
+  }
+  50% {
+    box-shadow: 0 4px 20px rgba(255, 107, 107, 0.7);
+  }
+}  
+
+
+
 }

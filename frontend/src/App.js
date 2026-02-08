@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import WelcomeScreen from './components/WelcomeScreen';
-import Interview from './Interview'; 
+import Interview from './Interview';
+import SoundToggle from './components/SoundToggle';
 import './App.css';
 
 function App() {
@@ -17,6 +18,9 @@ function App() {
       ) : (
         <Interview />
       )}
+      
+      {/* PHASE 8: Sound Toggle */}
+      <SoundToggle />
     </div>
   );
 }

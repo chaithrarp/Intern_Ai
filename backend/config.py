@@ -43,11 +43,29 @@ ENABLE_CONTEXT_MEMORY = True  # Remember previous answers
 # PHASE 5: PRESSURE SETTINGS
 # ============================================
 ENABLE_INTERRUPTIONS = True  # Enable pressure interruptions
-INTERRUPTION_PROBABILITY = 0.3  # 30% chance of interruption
+INTERRUPTION_PROBABILITY = 0.5  # 50% chance of interruption
 MIN_INTERRUPTION_TIME = 5  # Minimum seconds before interruption
 MAX_INTERRUPTION_TIME = 20  # Maximum seconds before interruption
 ENABLE_RAMBLING_DETECTION = True  # Adaptive interruption on rambling
 PRESSURE_MODE = "random"  # always random (aggressive/gentle/neutral mix)
+
+# Add this to backend/config.py
+
+# ============================================
+# PHASE 5: INTERRUPTION SETTINGS
+# ============================================
+
+# Maximum interruptions per interview session
+MAX_INTERRUPTIONS_PER_SESSION = 2  # Realistic: 0-2 interruptions max
+
+# Enable/disable interruptions globally
+ENABLE_INTERRUPTIONS = True
+
+# Interruption probability multiplier (1.0 = normal, 0.5 = half as likely)
+INTERRUPTION_PROBABILITY = 1.0
+
+# Pressure mode (not used yet, for future phases)
+PRESSURE_MODE = "adaptive"
 
 # ============================================
 # VALIDATION

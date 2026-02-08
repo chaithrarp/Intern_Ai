@@ -2,7 +2,11 @@
 Pressure Engine - Interruption Coordination
 Handles timing and triggering of interruptions during interviews
 """
-
+from pressure_modes import (
+    should_interrupt,
+    get_interruption_phrase,
+    get_interruption_followup_prompt
+)
 from datetime import datetime
 from pressure_modes import (
     should_interrupt,
@@ -31,25 +35,24 @@ def calculate_interruption_time():
 # CHECK IF INTERRUPTION SHOULD TRIGGER
 # ============================================
 
-def check_interruption_trigger(recording_duration, partial_transcript):
+def check_interruption_trigger(recording_duration, partial_transcript, question_number=1, persona="standard_professional"):
     """
-    Check if we should interrupt based on duration and content
+    Check if we should interrupt based on duration, content, question number, and persona
     
     Args:
         recording_duration: How long user has been speaking (seconds)
         partial_transcript: What they've said so far (if available)
+        question_number: Current question number (for progressive difficulty)
+        persona: Interviewer persona (friendly_coach, standard_professional, aggressive_challenger)
     
     Returns:
-        Dict with:
-            - should_interrupt: bool
-            - reason: str (rambling, time, clarification, random, or None)
-            - interruption_phrase: str (what AI says when interrupting)
+        Dict with interruption data
     """
     
-    should_int, reason = should_interrupt(recording_duration, partial_transcript)
+    should_int, reason = should_interrupt(recording_duration, partial_transcript, question_number, persona)
     
     if should_int:
-        phrase = get_interruption_phrase()  # Random mode
+        phrase = get_interruption_phrase(persona)  # Get persona-specific phrase
         return {
             "should_interrupt": True,
             "reason": reason,
@@ -68,28 +71,48 @@ def check_interruption_trigger(recording_duration, partial_transcript):
 # GENERATE INTERRUPTION QUESTION
 # ============================================
 
-def generate_interruption_question(partial_answer, interruption_reason, session_data):
+def generate_interruption_question(partial_answer, interruption_reason, session_data, current_question_text=None):
     """
     Generate follow-up question after interrupting user
-    
-    Args:
-        partial_answer: What user said before being interrupted
-        interruption_reason: Why we interrupted
-        session_data: Current interview session data
-    
-    Returns:
-        String: The interruption follow-up question
     """
     try:
-        # Build conversation history
         from prompts import build_conversation_history
         messages = build_conversation_history(session_data)
         
-        # Add interruption context
+        if current_question_text:
+            messages.append({
+                "role": "assistant",
+                "content": f"INTERVIEWER ASKED: {current_question_text}"
+            })
+            messages.append({
+                "role": "user", 
+                "content": f"CANDIDATE WAS SAYING: {partial_answer} (then got interrupted)"
+            })
+        
+        # PHASE 8: Get persona from session
+        persona = session_data.get("persona", "standard_professional")
+        
         interruption_prompt = get_interruption_followup_prompt(
             partial_answer,
-            interruption_reason
+            interruption_reason,
+            persona  # Pass persona to prompt generation
         )
+        
+        # Override prompt to emphasize CURRENT question
+        if current_question_text:
+            interruption_prompt = f"""The candidate is CURRENTLY answering this question:
+"{current_question_text}"
+
+Their partial answer before interruption:
+"{partial_answer}"
+
+Generate ONE sharp follow-up question that:
+1. Relates ONLY to the current question they're answering
+2. Asks for clarification or more specifics about what they just said
+3. Is brief and direct (1 sentence max)
+4. Does NOT reference previous questions or topics
+
+Remember: Output ONLY the question text, nothing else."""
         
         messages.append({
             "role": "user",
@@ -114,12 +137,11 @@ def generate_interruption_question(partial_answer, interruption_reason, session_
         }
         
         return fallbacks.get(interruption_reason, "Can you clarify that point?")
-
 # ============================================
 # PROCESS INTERRUPTION
 # ============================================
 
-def process_interruption(session_data, partial_answer, interruption_data):
+def process_interruption(session_data, partial_answer, interruption_data, current_question_text=None):
     """
     Handle interruption event and generate response
     
@@ -127,19 +149,18 @@ def process_interruption(session_data, partial_answer, interruption_data):
         session_data: Current interview session
         partial_answer: User's incomplete answer
         interruption_data: Data from check_interruption_trigger
-    
-    Returns:
-        Dict with interruption details and next question
+        current_question_text: The actual question being answered NOW
     """
     
     interruption_phrase = interruption_data["interruption_phrase"]
     reason = interruption_data["reason"]
     
-    # Generate follow-up question
+    # Generate follow-up question WITH current question context
     followup_question = generate_interruption_question(
         partial_answer,
         reason,
-        session_data
+        session_data,
+        current_question_text  # ← ADD THIS
     )
     
     # Log interruption event
@@ -215,15 +236,15 @@ if __name__ == "__main__":
         time_to_interrupt = calculate_interruption_time()
         print(f"  Attempt {i+1}: Interrupt at {time_to_interrupt:.1f} seconds")
     
-    # Test interruption trigger
-    print("\n2. Testing interruption trigger:")
+    # Test interruption trigger with question numbers
+    print("\n2. Testing interruption trigger (progressive):")
     test_transcript = "Um, so like, I was working on this project, you know..."
     
-    for duration in [3, 8, 12, 15, 20]:
-        result = check_interruption_trigger(duration, test_transcript)
+    for q_num in [1, 2, 3, 4, 5]:
+        result = check_interruption_trigger(15, test_transcript, q_num)
         if result["should_interrupt"]:
-            print(f"  At {duration}s: INTERRUPT ({result['reason']}) - '{result['interruption_phrase']}'")
+            print(f"  Q{q_num} at 15s: INTERRUPT ({result['reason']}) - '{result['interruption_phrase']}'")
         else:
-            print(f"  At {duration}s: Continue")
+            print(f"  Q{q_num} at 15s: Continue")
     
     print("\n✅ Pressure engine test complete!")
