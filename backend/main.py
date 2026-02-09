@@ -1,4 +1,4 @@
-from fastapi import FastAPI, UploadFile, File
+from fastapi import FastAPI, UploadFile, File, Depends
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
 from interview_data import get_question_by_id, get_total_questions
@@ -6,10 +6,17 @@ from whisper_service import transcribe_audio
 import os
 from datetime import datetime
 import asyncio
-from pydantic import BaseModel
-from datetime import datetime
 import uuid
 
+
+# ============================================
+# AUTHENTICATION IMPORTS
+# ============================================
+from auth_endpoints import auth_router
+from auth_database import (
+    init_auth_database,
+    create_user_session
+)
 
 from database import (
     init_database,
@@ -43,6 +50,8 @@ from pressure_engine import (
     process_interruption,
     store_interrupted_answer
 )
+
+from auth import get_current_active_user, User
 import config
 
 app = FastAPI()
@@ -51,7 +60,10 @@ app = FastAPI()
 async def startup_event():
     """Initialize database when backend starts"""
     init_database()
+    init_auth_database() 
+    
     print("✅ Database initialized")
+    print("✅ Authentication database initialized")
 
 
 # CORS configuration
@@ -62,6 +74,9 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
+# Include authentication endpoints
+app.include_router(auth_router)
+
 
 # ============================================
 # DATA MODELS
@@ -629,7 +644,9 @@ def get_personas():
     }
 
 @app.post("/interview/start-with-persona")
-def start_interview_with_persona(persona: str = "standard_professional"):
+async def start_interview_with_persona(
+    persona: str = "standard_professional"
+):
     """
     Start a new interview with a specific persona
     
@@ -659,11 +676,11 @@ def start_interview_with_persona(persona: str = "standard_professional"):
             "interruption_count": 0,
             "max_interruptions": 2,
             "interruption_scheduled": None,
-            "persona": persona  # PHASE 8: Store persona
+            "persona": persona,
+            "user_id": None  # Will be set when audio is uploaded with session context
         }
         
-        db_create_session(session_id, ai_powered=True, pressure_enabled=config.ENABLE_INTERRUPTIONS)
-        
+        create_user_session(session_id, None, ai_powered=True, pressure_enabled=config.ENABLE_INTERRUPTIONS)
         persona_config = PERSONAS[persona]
         
         print(f"✅ Started AI interview with persona: {persona_config['emoji']} {persona_config['name']}")

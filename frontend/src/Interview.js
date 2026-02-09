@@ -14,7 +14,7 @@ import voiceService from './utils/voiceService';
 import { useEffect } from "react";
 
 
-function Interview() {
+function Interview({ onBack }) {
   const [sessionId, setSessionId] = useState(null);
   const [currentQuestion, setCurrentQuestion] = useState(null);
   const [questionNumber, setQuestionNumber] = useState(0);
@@ -28,7 +28,7 @@ function Interview() {
   const [interruptionData, setInterruptionData] = useState(null);
   const [showInterruptionAlert, setShowInterruptionAlert] = useState(false);
   const [originalQuestion, setOriginalQuestion] = useState(null);
-  const [showPersonaSelector, setShowPersonaSelector] = useState(false);
+  const [showPersonaSelector, setShowPersonaSelector] = useState(true); // Initialize to true to show persona selector on load
   const [selectedPersona, setSelectedPersona] = useState(null);
   // PHASE 8: Voice State
   const [isQuestionSpeaking, setIsQuestionSpeaking] = useState(false);
@@ -191,7 +191,7 @@ function Interview() {
     }
   };
 
-  // Reset Interview
+  // Reset Interview - goes back to persona selector
   const handleResetInterview = () => {
     voiceService.stop(); // Stop any speaking
     setSessionId(null);
@@ -203,8 +203,14 @@ function Interview() {
     setInterruptionData(null);
     setShowInterruptionAlert(false);
     setOriginalQuestion(null);
-    setShowPersonaSelector(false);
+    setShowPersonaSelector(true); // Show persona selector again for new interview
     setSelectedPersona(null);
+  };
+
+  // Handle back from persona selector - returns to App welcome
+  const handleBackFromPersona = () => {
+    voiceService.stop();
+    onBack(); // Call the onBack prop to go back to App
   };
 
   // Track recording state
@@ -255,7 +261,7 @@ function Interview() {
     return (
       <PersonaSelector 
         onPersonaSelected={handleStartInterviewWithPersona}
-        onBack={() => setShowPersonaSelector(false)}
+        onBack={handleBackFromPersona}
       />
     );
   }
@@ -313,47 +319,6 @@ function Interview() {
               transition={{ duration: 1.5, repeat: Infinity, delay: 0.6 }}
             >●</motion.span>
           </div>
-        </motion.div>
-      </div>
-    );
-  }
-
-  // View 1: Start Screen
-  if (!sessionId) {
-    return (
-      <div className="interview-container">
-        <motion.div 
-          className="start-screen"
-          initial={{ opacity: 0, scale: 0.95 }}
-          animate={{ opacity: 1, scale: 1 }}
-          transition={{ duration: 0.6 }}
-        >
-          <motion.h1
-            initial={{ y: -20, opacity: 0 }}
-            animate={{ y: 0, opacity: 1 }}
-            transition={{ delay: 0.2, duration: 0.5 }}
-          >
-            Ready to Begin?
-          </motion.h1>
-          <motion.p 
-            className="subtitle"
-            initial={{ y: -10, opacity: 0 }}
-            animate={{ y: 0, opacity: 1 }}
-            transition={{ delay: 0.4, duration: 0.5 }}
-          >
-            Choose your interviewer and start practicing
-          </motion.p>
-          <motion.button 
-            className="btn-primary" 
-            onClick={() => setShowPersonaSelector(true)}
-            initial={{ y: 20, opacity: 0 }}
-            animate={{ y: 0, opacity: 1 }}
-            transition={{ delay: 0.6, duration: 0.5 }}
-            whileHover={{ scale: 1.05 }}
-            whileTap={{ scale: 0.95 }}
-          >
-            Choose Interviewer 🎭
-          </motion.button>
         </motion.div>
       </div>
     );
