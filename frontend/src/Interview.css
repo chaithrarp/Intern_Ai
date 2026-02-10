@@ -555,3 +555,31 @@
   color: rgba(255, 255, 255, 0.6);
 }
 }
+/* Resume indicator badge */
+.resume-indicator {
+  text-align: center;
+  margin: 20px 0;
+}
+
+.resume-badge {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  padding: 10px 20px;
+  border-radius: 25px;
+  font-size: 0.95rem;
+  font-weight: 600;
+  display: inline-block;
+  box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
+  animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+  0%, 100% {
+    transform: scale(1);
+    box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
+  }
+  50% {
+    transform: scale(1.02);
+    box-shadow: 0 6px 20px rgba(102, 126, 234, 0.6);
+  }
+}

@@ -14,7 +14,7 @@ import voiceService from './utils/voiceService';
 import { useEffect } from "react";
 
 
-function Interview() {
+function Interview({ resumeData }) {
   const [sessionId, setSessionId] = useState(null);
   const [currentQuestion, setCurrentQuestion] = useState(null);
   const [questionNumber, setQuestionNumber] = useState(0);
@@ -60,8 +60,16 @@ function Interview() {
     setShowPersonaSelector(false);
 
     try {
-      const response = await fetch(`http://localhost:8000/interview/start-with-persona?persona=${personaId}`, {
+      // ← CHANGE #2: Modified to send resume_context in request body
+      const response = await fetch(`http://localhost:8000/interview/start-with-persona`, {
         method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          persona: personaId,
+          resume_context: resumeData?.resume_context || null  // ← Pass resume context
+        })
       });
       const data = await response.json();
       
