@@ -7,7 +7,20 @@ import os
 from datetime import datetime
 import asyncio
 import uuid
-
+from resume_parser import ResumeParser
+from resume_question_generator import ResumeQuestionGenerator
+from fastapi import FastAPI, UploadFile, File, Form
+from fastapi.responses import JSONResponse
+from werkzeug.utils import secure_filename
+from pydantic import BaseModel
+from datetime import datetime
+import uuid
+from resume_parser import ResumeParser
+from resume_question_generator import ResumeQuestionGenerator
+from fastapi import FastAPI, UploadFile, File, Form
+from fastapi.responses import JSONResponse
+from werkzeug.utils import secure_filename
+from pydantic import BaseModel
 
 # ============================================
 # AUTHENTICATION IMPORTS
@@ -55,6 +68,8 @@ from auth import get_current_active_user, User
 import config
 
 app = FastAPI()
+resume_parser = ResumeParser()
+resume_question_gen = ResumeQuestionGenerator()
 
 @app.on_event("startup")
 async def startup_event():
@@ -168,6 +183,118 @@ def start_interview():
             "question_number": 1,
             "total_questions": 5
         }
+# ============================================
+# RESUME UPLOAD ENDPOINT
+# ============================================
+
+@app.post("/upload-resume")
+async def upload_resume(
+    resume: UploadFile = File(...),
+    session_id: str = Form(None)
+):
+    """
+    Upload and parse resume to enable personalized interview questions
+    
+    Args:
+        resume: Resume file (PDF, DOC, DOCX, or TXT)
+        session_id: Optional existing session ID
+    
+    Returns:
+        Resume context and suggested questions for AI interviewer
+    """
+    try:
+        # Validate file type
+        allowed_types = [
+            'application/pdf',
+            'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+            'application/msword',
+            'text/plain'
+        ]
+        
+        if resume.content_type not in allowed_types:
+            return JSONResponse(
+                status_code=400,
+                content={
+                    "success": False, 
+                    "error": "Invalid file type. Please upload PDF, DOC, DOCX, or TXT"
+                }
+            )
+        
+        # Validate file size (5MB limit)
+        contents = await resume.read()
+        if len(contents) > 5 * 1024 * 1024:
+            return JSONResponse(
+                status_code=400,
+                content={
+                    "success": False,
+                    "error": "File size too large. Maximum 5MB allowed"
+                }
+            )
+        
+        # Generate session ID if not provided
+        if not session_id:
+            session_id = f"resume_{datetime.now().strftime('%Y%m%d_%H%M%S')}_{uuid.uuid4().hex[:4]}"
+        
+        # Create temporary file to save upload
+        os.makedirs("resume_uploads", exist_ok=True)
+        file_extension = resume.filename.split('.')[-1]
+        filename = f"{session_id}.{file_extension}"
+        file_path = os.path.join("resume_uploads", filename)
+        
+        # Save file
+        with open(file_path, 'wb') as f:
+            f.write(contents)
+        
+        print(f"📄 Resume uploaded: {filename} ({len(contents)} bytes)")
+        
+        # Parse resume
+        parsed_data = resume_parser.parse_resume(file_path)
+        
+        if not parsed_data["success"]:
+            return JSONResponse(
+                status_code=400,
+                content={
+                    "success": False,
+                    "error": parsed_data.get("error", "Failed to parse resume")
+                }
+            )
+        
+        # Generate personalized questions
+        questions = resume_question_gen.generate_questions(
+            parsed_data["raw_text"], 
+            num_questions=8
+        )
+        
+        # Create resume context for LLM
+        resume_context = resume_question_gen.create_resume_context(
+            parsed_data["raw_text"]
+        )
+        
+        print(f"✅ Resume parsed successfully")
+        print(f"   - Text length: {len(parsed_data['raw_text'])} chars")
+        print(f"   - Generated {len(questions)} personalized questions")
+        
+        return {
+            "success": True,
+            "session_id": session_id,
+            "resume_context": resume_context,
+            "suggested_questions": questions,
+            "resume_summary": parsed_data["summary"],
+            "filename": resume.filename,
+            "message": "Resume uploaded and analyzed successfully"
+        }
+        
+    except Exception as e:
+        print(f"❌ Error uploading resume: {str(e)}")
+        import traceback
+        traceback.print_exc()
+        return JSONResponse(
+            status_code=500,
+            content={
+                "success": False,
+                "error": f"Server error: {str(e)}"
+            }
+        )
 
 
 @app.post("/interview/answer")
@@ -643,17 +770,22 @@ def get_personas():
         "personas": personas
     }
 
-@app.post("/interview/start-with-persona")
-async def start_interview_with_persona(
+class InterviewStartRequest(BaseModel):
     persona: str = "standard_professional"
-):
+    resume_context: str = None
+
+@app.post("/interview/start-with-persona")
+def start_interview_with_persona(request: InterviewStartRequest):  # ← ADD request parameter
     """
-    Start a new interview with a specific persona
+    Start a new interview with a specific persona and optional resume
     
     Args:
-        persona: One of 'friendly_coach', 'standard_professional', 'aggressive_challenger'
+        request: Contains persona and optional resume_context
     """
     from pressure_modes import PERSONAS, DEFAULT_PERSONA
+    
+    persona = request.persona
+    resume_context = request.resume_context
     
     # Validate persona
     if persona not in PERSONAS:
@@ -662,9 +794,15 @@ async def start_interview_with_persona(
     session_id = f"session_{datetime.now().strftime('%Y%m%d_%H%M%S')}_{uuid.uuid4().hex[:4]}"
     
     try:
-        interview_data = start_ai_interview(session_id)
+        # Pass resume context to interview engine if provided
+        if resume_context:
+            # Store resume context in session for AI to use
+            interview_data = start_ai_interview(session_id, resume_context=resume_context)
+            print(f"📄 Starting interview with resume-based questions")
+        else:
+            interview_data = start_ai_interview(session_id)
         
-        # Initialize session with persona
+        # Initialize session with persona and resume flag
         sessions[session_id] = {
             "current_question": 1,
             "current_question_text": interview_data["question"]["question"],
@@ -677,15 +815,15 @@ async def start_interview_with_persona(
             "max_interruptions": 2,
             "interruption_scheduled": None,
             "persona": persona,
-            "user_id": None  # Will be set when audio is uploaded with session context
+            "resume_context": resume_context  
         }
         
-        create_user_session(session_id, None, ai_powered=True, pressure_enabled=config.ENABLE_INTERRUPTIONS)
+        db_create_session(session_id, ai_powered=True, pressure_enabled=config.ENABLE_INTERRUPTIONS)  # ← FIXED: Use db_create_session
         persona_config = PERSONAS[persona]
         
         print(f"✅ Started AI interview with persona: {persona_config['emoji']} {persona_config['name']}")
         print(f"   Session: {session_id}")
-        print(f"   Interruption probability: {persona_config['interruption_probability']*100}%")
+        print(f"   Resume-based: {resume_context is not None}")
         
         return {
             **interview_data,
@@ -694,7 +832,8 @@ async def start_interview_with_persona(
                 "name": persona_config["name"],
                 "emoji": persona_config["emoji"],
                 "description": persona_config["description"]
-            }
+            },
+            "has_resume": resume_context is not None  # ← FIXED: Use resume_context variable
         }
     
     except Exception as e:
@@ -715,9 +854,10 @@ async def start_interview_with_persona(
                 "name": "Standard Professional",
                 "emoji": "🟡",
                 "description": "Realistic interview simulation"
-            }
+            },
+            "has_resume": False
         }
-
+    
 @app.get("/test/pressure")
 def test_pressure():
     """
@@ -754,5 +894,23 @@ def test_pressure():
         return {
             "success": False,
             "message": f"Pressure test failed: {str(e)}"
+        }
+@app.get("/test/resume")
+def test_resume_parsing():
+    """
+    Test resume parsing (for debugging)
+    """
+    try:
+        return {
+            "success": True,
+            "message": "Resume parser initialized",
+            "supported_formats": ["PDF", "DOC", "DOCX", "TXT"],
+            "max_file_size": "5MB",
+            "upload_directory": "resume_uploads"
+        }
+    except Exception as e:
+        return {
+            "success": False,
+            "message": f"Resume parser test failed: {str(e)}"
         }
     

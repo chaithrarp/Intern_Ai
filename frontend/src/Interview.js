@@ -13,8 +13,8 @@ import soundEffects from './utils/soundEffects';
 import voiceService from './utils/voiceService';
 import { useEffect } from "react";
 
-
-function Interview({ onBack }) {
+// ← ADD PROPS HERE
+function Interview({ resumeData, onBack }) {
   const [sessionId, setSessionId] = useState(null);
   const [currentQuestion, setCurrentQuestion] = useState(null);
   const [questionNumber, setQuestionNumber] = useState(0);
@@ -28,7 +28,7 @@ function Interview({ onBack }) {
   const [interruptionData, setInterruptionData] = useState(null);
   const [showInterruptionAlert, setShowInterruptionAlert] = useState(false);
   const [originalQuestion, setOriginalQuestion] = useState(null);
-  const [showPersonaSelector, setShowPersonaSelector] = useState(true); // Initialize to true to show persona selector on load
+  const [showPersonaSelector, setShowPersonaSelector] = useState(true);
   const [selectedPersona, setSelectedPersona] = useState(null);
   // PHASE 8: Voice State
   const [isQuestionSpeaking, setIsQuestionSpeaking] = useState(false);
@@ -60,8 +60,15 @@ function Interview({ onBack }) {
     setShowPersonaSelector(false);
 
     try {
-      const response = await fetch(`http://localhost:8000/interview/start-with-persona?persona=${personaId}`, {
+      const response = await fetch(`http://localhost:8000/interview/start-with-persona`, {
         method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          persona: personaId,
+          resume_context: resumeData?.resume_context || null
+        })
       });
       const data = await response.json();
       
@@ -73,7 +80,6 @@ function Interview({ onBack }) {
       setAiState('speaking');
       setLoading(false);
       
-      // After 3 seconds, switch to waiting
       setTimeout(() => setAiState('idle'), 3000);
     } catch (error) {
       console.error('Error starting interview:', error);
@@ -88,7 +94,6 @@ function Interview({ onBack }) {
   const handleInterruption = (interruption) => {
     console.log('🔥 INTERRUPTION RECEIVED IN INTERVIEW:', interruption);
     
-    // PHASE 8: Play interruption sound & stop voice
     soundEffects.playInterruption();
     voiceService.stop();
     
@@ -129,7 +134,6 @@ function Interview({ onBack }) {
   const handleAudioSubmitted = async (audioData) => {
     console.log('Submitting transcript:', audioData.transcript);
     
-    // PHASE 8: Play success sound
     soundEffects.playSuccess();
     
     if (!currentQuestion) {
@@ -164,23 +168,18 @@ function Interview({ onBack }) {
 
       setLoading(false);
 
-      // Clear interruption data after submitting
       setInterruptionData(null);
       setOriginalQuestion(null);
 
-      // Check if interview is complete
       if (data.completed) {
         setIsComplete(true);
         setAiState('idle');
-        
-        // PHASE 8: Play completion sound
         soundEffects.playComplete();
       } else {
         setAiState('speaking');
         setCurrentQuestion(data.question);
         setQuestionNumber(data.question_number);
         
-        // After 1 second, switch to waiting
         setTimeout(() => setAiState('idle'), 1000);
       }
     } catch (error) {
@@ -193,7 +192,7 @@ function Interview({ onBack }) {
 
   // Reset Interview - goes back to persona selector
   const handleResetInterview = () => {
-    voiceService.stop(); // Stop any speaking
+    voiceService.stop();
     setSessionId(null);
     setCurrentQuestion(null);
     setQuestionNumber(0);
@@ -203,21 +202,23 @@ function Interview({ onBack }) {
     setInterruptionData(null);
     setShowInterruptionAlert(false);
     setOriginalQuestion(null);
-    setShowPersonaSelector(true); // Show persona selector again for new interview
+    setShowPersonaSelector(true);
     setSelectedPersona(null);
   };
 
   // Handle back from persona selector - returns to App welcome
   const handleBackFromPersona = () => {
     voiceService.stop();
-    onBack(); // Call the onBack prop to go back to App
+    if (onBack) {
+      onBack(); // ← Add safety check
+    }
   };
 
   // Track recording state
   const handleRecordingStateChange = (isRecording) => {
     if (isRecording) {
       setAiState('listening');
-      voiceService.stop(); // Stop question voice when user starts talking
+      voiceService.stop();
     } else if (!loading) {
       setAiState('idle');
     }
