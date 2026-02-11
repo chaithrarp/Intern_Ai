@@ -5,18 +5,25 @@ import './UserMenu.css';
 function UserMenu({ user, onLogout }) {
   const [isOpen, setIsOpen] = useState(false);
 
-  const handleLogout = async () => {
+  const handleLogout = async (e) => {
+    e.stopPropagation(); // ← CRITICAL FIX: Prevent event bubbling
+    
     if (window.confirm('Are you sure you want to logout?')) {
-      setIsOpen(false); // Close menu immediately
-      await onLogout(); // Wait for logout to complete
+      setIsOpen(false);
+      await onLogout();
     }
+  };
+
+  const toggleMenu = (e) => {
+    e.stopPropagation(); // ← Prevent bubbling when opening menu
+    setIsOpen(!isOpen);
   };
 
   return (
     <div className="user-menu-container">
       <motion.button
         className="user-menu-button"
-        onClick={() => setIsOpen(!isOpen)}
+        onClick={toggleMenu} // ← Use new handler
         whileHover={{ scale: 1.05 }}
         whileTap={{ scale: 0.95 }}
       >
@@ -41,6 +48,7 @@ function UserMenu({ user, onLogout }) {
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, y: -10, scale: 0.95 }}
             transition={{ duration: 0.2 }}
+            onClick={(e) => e.stopPropagation()} // ← Prevent clicks inside from closing
           >
             <div className="user-info">
               <div className="user-avatar-large">
@@ -56,7 +64,7 @@ function UserMenu({ user, onLogout }) {
 
             <motion.button
               className="logout-button"
-              onClick={handleLogout}
+              onClick={handleLogout} // ← This now has stopPropagation
               whileHover={{ backgroundColor: 'rgba(239, 68, 68, 0.2)' }}
               whileTap={{ scale: 0.95 }}
             >
