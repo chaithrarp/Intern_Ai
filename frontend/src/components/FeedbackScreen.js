@@ -11,7 +11,17 @@ function FeedbackScreen({ sessionId, onNewInterview, onViewHistory }) {
   useEffect(() => {
     fetchSessionSummary();
   }, [sessionId]);
+  
 
+// NEW: Add this useEffect for celebration
+useEffect(() => {
+  if (summary && summary.avg_hesitation_score < 15) {
+    // Excellent performance! Play celebration
+    setTimeout(() => {
+      soundEffects.playCelebration();
+    }, 1000);
+  }
+}, [summary]);
   const fetchSessionSummary = async () => {
     try {
       const response = await fetch(`http://localhost:8000/metrics/summary/${sessionId}`);

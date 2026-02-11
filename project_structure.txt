@@ -13,6 +13,10 @@ Main Directories:
   - Configuration & Core:
     - config.py
     - main.py
+  - Authentication:
+    - auth.py
+    - auth_database.py
+    - auth_endpoints.py
   - Database & Data:
     - database.py
     - interview_data.py
@@ -22,6 +26,9 @@ Main Directories:
     - interview_engine.py
     - pressure_engine.py
     - pressure_modes.py
+  - Resume Processing:
+    - resume_parser.py
+    - resume_question_generator.py
   - Services:
     - llm_service.py
     - whisper_service.py
@@ -35,6 +42,7 @@ Main Directories:
   - Environment & Storage:
     - .env
     - audio_uploads/
+    - resume_uploads/
     - venv/
   - Cache:
     - __pycache__/
@@ -75,17 +83,35 @@ Main Directories:
       - Component Library:
         - components/
           - AIInterviewer.js
+          - Auth.css
           - FeedbackScreen.js
           - FeedbackScreen.css
+          - Login.js
           - MiniAIOrb.js
+          - PersonaSelector.js
+          - PersonaSelector.css
+          - RecoveryCurveChart.js
+          - RecoveryCurveChart.css
+          - Register.js
+          - ResumeUpload.js
+          - ResumeUpload.css
           - SessionDetail.js
           - SessionDetail.css
           - SessionHistory.js
           - SessionHistory.css
+          - SoundToggle.js
+          - SoundToggle.css
+          - UserMenu.js
+          - UserMenu.css
+          - VoiceControls.js
+          - VoiceControls.css
           - WelcomeScreen.js
           - WelcomeScreen.css
-      - Styling:
-        - styles/
+      - Utilities & Services:
+        - utils/
+          - apiUtils.js
+          - soundEffects.js
+          - voiceService.js
   - Dependencies:
     - node_modules/
 
