@@ -1,121 +1,221 @@
-Project structure for Intern_Ai
+Project Structure for Intern_Ai
 
 Root: Intern_Ai/
 
-Hidden/Version Control:
-- .git/
-- .gitignore
-- .zencoder/
-- .zenflow/
+======================================
+BACKEND (Python/FastAPI)
+======================================
+backend/
+  
+  Core Application Files:
+    - main.py                         (FastAPI application entry point)
+    - config.py                       (Root configuration module)
+    - requirements.txt                (Python dependencies)
+    - .env                            (Environment variables configuration)
+  
+  System & Database Files:
+    - internai.db                     (SQLite database for persistence)
+    - venv/                           (Python virtual environment)
+  
+  Backup & Legacy:
+    - backup_old_system/              (Archive of previous system versions)
+      - interview_engine.py           (Legacy interview engine)
+      - main.py                       (Legacy main entry point)
+      - pressure_engine.py            (Legacy pressure engine)
+  
+  Configuration Module:
+    - config/
+      - __init__.py
+      - evaluation_config.py          (Evaluation settings and configurations)
+      - __pycache__/
+  
+  Authentication & Authorization:
+    - auth.py                         (Authentication logic)
+    - auth_database.py                (Auth database operations)
+    - auth_endpoints.py               (Auth API routes and endpoints)
+  
+  Database & Data Management:
+    - database.py                     (Core database operations)
+    - interview_data.py               (Interview data models and management)
+    - metrics_storage.py              (Metrics data storage)
+  
+  Data Models:
+    - models/
+      - __init__.py
+      - evaluation_models.py          (Evaluation data models)
+      - interruption_models.py        (Interruption tracking and models)
+      - interview_models.py           (Interview session models)
+      - state_models.py               (State management models)
+      - __pycache__/
+  
+  Analysis & Processing Engines:
+    - engines/
+      - __init__.py
+      - answer_analyzer.py            (Answer analysis engine)
+      - claim_analyzer.py             (Claim analysis engine)
+      - claim_extractor.py            (Claim extraction logic)
+      - final_report.py               (Final interview report generation)
+      - immediate_feedback.py         (Real-time candidate feedback)
+      - interruption_analyzer.py      (Interruption detection and analysis)
+      - interruption_decision.py      (Interruption decision logic)
+      - interview_orchestrator.py     (Interview orchestration and state management)
+      - live_warning_generator.py     (Real-time warning generation)
+      - __pycache__/
+      - round_evaluators/             (Round-specific evaluation engines)
+        - __init__.py
+        - hr_evaluator.py             (HR round evaluator)
+        - sysdesign_evaluator.py      (System design round evaluator)
+        - technical_evaluator.py      (Technical round evaluator)
+    - metrics_analyzer.py             (Metrics analysis and processing)
+  
 
-Main Directories:
-- backend/
-  - Configuration & Core:
-    - config.py
-    - main.py
-  - Authentication:
-    - auth.py
-    - auth_database.py
-    - auth_endpoints.py
-  - Database & Data:
-    - database.py
-    - interview_data.py
-    - metrics_storage.py
-    - internai.db
-  - Interview Engine:
-    - interview_engine.py
-    - pressure_engine.py
-    - pressure_modes.py
-  - Resume Processing:
-    - resume_parser.py
-    - resume_question_generator.py
-  - Services:
-    - llm_service.py
-    - whisper_service.py
-  - Analysis:
-    - metrics_analyzer.py
-  - Prompts & Configuration:
-    - prompts.py
-  - Testing & Requirements:
-    - test_whisper.py
-    - requirements.txt
-  - Environment & Storage:
-    - .env
-    - audio_uploads/
-    - resume_uploads/
-    - venv/
-  - Cache:
-    - __pycache__/
+  
+  Resume Processing:
+    - resume_parser.py                (Resume parsing and extraction)
+    - resume_question_generator.py    (Question generation from resume data)
+  
+  AI & NLP Services:
+    - llm_service.py                  (LLM (Language Model) integration)
+    - whisper_service.py              (Whisper speech-to-text service)
+  
+  Prompts & Templates:
+    - prompts.py                      (Central prompt management)
+    - prompt_templates/
+      - __init__.py
+      - claim_prompts.py              (Claim analysis prompt templates)
+      - evaluation_prompts.py         (Evaluation analysis prompt templates)
+      - interruption_prompts.py       (Interruption detection prompt templates)
+      - __pycache__/
+  
+  Testing & Validation:
+    - test_intelligent_interruptions.py  (Intelligent interruption testing)
+    - test_whisper.py                    (Whisper service testing)
+    - validate_integration.py            (Integration validation and tests)
+  
+  Data Storage Directories:
+    - audio_uploads/                  (Uploaded audio files storage)
+    - resume_uploads/                 (Uploaded resume files storage)
+  
+  System Directories:
+    - __pycache__/                    (Python bytecode cache)
+    - engines/__pycache__/            (Engines module cache)
+    - models/__pycache__/             (Models module cache)
+    - prompt_templates/__pycache__/   (Prompt templates cache)
 
-- frontend/
-  - Configuration:
-    - package.json
-    - package-lock.json
-    - .gitignore
-  - Documentation:
-    - README.md
-  - Public Assets:
+======================================
+FRONTEND (React/JavaScript)
+======================================
+frontend/
+  
+  Configuration & Package Management:
+    - package.json                    (Node.js dependencies & npm scripts)
+    - package-lock.json               (Locked versions of dependencies)
+    - .gitignore                      (Git ignore configuration for frontend)
+    - README.md                       (Frontend documentation)
+  
+  Public Assets:
     - public/
-      - index.html
-      - manifest.json
-      - robots.txt
-  - Source Code:
+      - index.html                    (HTML entry point)
+      - manifest.json                 (PWA manifest file)
+      - robots.txt                    (SEO robots configuration)
+  
+  Source Code:
     - src/
-      - Main App Files:
-        - App.js
-        - App.css
-        - App.test.js
-        - index.js
-        - index.css
-      - Interview Components:
-        - Interview.js
-        - Interview.css
-      - Audio:
-        - AudioRecorder.js
-        - AudioRecorder.css
-      - Alerts:
-        - InterruptionAlert.js
-        - InterruptionAlert.css
-      - Utilities:
-        - reportWebVitals.js
-        - setupTests.js
-        - logo.svg
-      - Component Library:
-        - components/
-          - AIInterviewer.js
-          - Auth.css
-          - FeedbackScreen.js
-          - FeedbackScreen.css
-          - Login.js
-          - MiniAIOrb.js
-          - PersonaSelector.js
-          - PersonaSelector.css
-          - RecoveryCurveChart.js
-          - RecoveryCurveChart.css
-          - Register.js
-          - ResumeUpload.js
-          - ResumeUpload.css
-          - SessionDetail.js
-          - SessionDetail.css
-          - SessionHistory.js
-          - SessionHistory.css
-          - SoundToggle.js
-          - SoundToggle.css
-          - UserMenu.js
-          - UserMenu.css
-          - VoiceControls.js
-          - VoiceControls.css
-          - WelcomeScreen.js
-          - WelcomeScreen.css
-      - Utilities & Services:
-        - utils/
-          - apiUtils.js
-          - soundEffects.js
-          - voiceService.js
-  - Dependencies:
-    - node_modules/
+      
+      Core Application:
+        - App.js                      (Main React app component)
+        - App.css                     (App component styling)
+        - App.test.js                 (App component tests)
+        - index.js                    (React entry point)
+        - index.css                   (Global styles)
+        - logo.svg                    (Application logo asset)
+        - reportWebVitals.js          (Performance monitoring)
+        - setupTests.js               (Jest test setup)
+      
+      Main Feature Components:
+        - Interview.js / Interview.css
+          (Interview session interface)
+        - AudioRecorder.js / AudioRecorder.css
+          (Audio recording functionality)
+        - InterruptionAlert.js / InterruptionAlert.css
+          (Interruption alert notifications)
+      
+      Components Library (src/components/):
+        - AIInterviewer.js              (AI interviewer logic and rendering)
+        - Auth.css                      (Authentication UI styling)
+        - FeedbackScreen.js / FeedbackScreen.css
+          (Interview feedback display)
+        - LiveWarning.js / LiveWarning.css
+          (Real-time warning display)
+        - Login.js                      (Login authentication component)
+        - Register.js                   (User registration component)
+        - MiniAIOrb.js                  (Animated AI orb visualization)
+        - PersonaSelector.js / PersonaSelector.css
+          (Interviewer persona selection)
+        - RecoveryCurveChart.js / RecoveryCurveChart.css
+          (Performance recovery visualization)
+        - ResumeUpload.js / ResumeUpload.css
+          (Resume file upload interface)
+        - SessionDetail.js / SessionDetail.css
+          (Individual session details view)
+        - SessionHistory.js / SessionHistory.css
+          (Interview history and past sessions)
+        - SoundToggle.js / SoundToggle.css
+          (Sound effects toggle control)
+        - UserMenu.js / UserMenu.css
+          (User account menu)
+        - VoiceControls.js / VoiceControls.css
+          (Voice command control interface)
+        - WelcomeScreen.js / WelcomeScreen.css
+          (Welcome/landing screen)
+      
+      Utilities & Services (src/utils/):
+        - apiUtils.js                 (API communication and request handling)
+        - audioAnalyzer.js            (Audio analysis utilities)
+        - soundEffects.js             (Sound effects management and playback)
+        - voiceService.js             (Voice/speech recognition utilities)
 
-Root Files:
-- project_structure.txt  (this file)
-- readme.md
-- setup.md
+======================================
+ROOT PROJECT FILES & DIRECTORIES
+======================================
+- project_structure.txt               (Project structure documentation - this file)
+- readme.md                           (Main project documentation and overview)
+- setup.md                            (Setup, installation, and configuration instructions)
+- .gitignore                          (Git ignore configuration for version control)
+- .git/                               (Git repository metadata and history)
+- .zencoder/
+  - workflows/                        (Zencoder AI coding workflows configuration)
+- .zenflow/
+  - workflows/                        (Zenflow project workflows configuration)
+
+======================================
+PROJECT OVERVIEW
+======================================
+
+Intern_Ai is an AI-powered interview platform with:
+
+BACKEND FEATURES:
+  - FastAPI-based REST API
+  - User authentication and authorization
+  - AI interview engine with multiple evaluation modes
+  - Real-time speech-to-text (Whisper integration)
+  - LLM-powered interview questions and analysis
+  - Interruption detection and warning system
+  - Performance metrics and analysis
+  - Resume parsing and intelligent question generation
+  - Multi-round interview support (Technical, System Design, HR)
+  - Pressure mode for stress testing
+
+FRONTEND FEATURES:
+  - React-based interactive web application
+  - Real-time audio recording and streaming
+  - Live interruption alerts and warnings
+  - Session history and detailed feedback
+  - Performance visualization and analytics
+  - Voice control integration
+  - Multiple interviewer personas
+  - Responsive design with custom styling
+
+KEY TECHNOLOGIES:
+  Backend: Python, FastAPI, SQLite, LLM APIs, OpenAI Whisper
+  Frontend: React, JavaScript, Web Audio API, CSS3

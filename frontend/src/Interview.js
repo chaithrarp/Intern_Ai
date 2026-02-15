@@ -1,468 +1,689 @@
-import React, { useState } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import './Interview.css';
 import AudioRecorder from './AudioRecorder';
 import MiniAIOrb from './components/MiniAIOrb';
 import InterruptionAlert from './InterruptionAlert';
+import LiveWarning from './components/LiveWarning';
 import FeedbackScreen from './components/FeedbackScreen';
-import SessionHistory from './components/SessionHistory';
-import SessionDetail from './components/SessionDetail';
-import PersonaSelector from './components/PersonaSelector';
-import VoiceControls from './components/VoiceControls';
 import soundEffects from './utils/soundEffects';
 import voiceService from './utils/voiceService';
-import { useEffect } from "react";
 
-// ← ADD PROPS HERE
+/**
+ * Interview Component - FIXED VERSION
+ * 
+ * FIX: Questions now read aloud immediately when received
+ */
 function Interview({ resumeData, onBack }) {
+  // Session State
   const [sessionId, setSessionId] = useState(null);
   const [currentQuestion, setCurrentQuestion] = useState(null);
   const [questionNumber, setQuestionNumber] = useState(0);
-  const [totalQuestions, setTotalQuestions] = useState(0);
+  const [totalQuestions, setTotalQuestions] = useState(6);
   const [isComplete, setIsComplete] = useState(false);
   const [loading, setLoading] = useState(false);
-  const [aiState, setAiState] = useState('idle'); // idle, listening, thinking, speaking
-  const [showHistory, setShowHistory] = useState(false);
-  const [selectedSessionId, setSelectedSessionId] = useState(null);
-  // PHASE 5: Interruption State
+
+  // Round Selection
+  const [roundType, setRoundType] = useState(null);
+  const [showRoundSelector, setShowRoundSelector] = useState(true);
+  const [currentPhase, setCurrentPhase] = useState(null);
+
+  // AI State
+  const [aiState, setAiState] = useState('idle');
+
+  // Interruption State
   const [interruptionData, setInterruptionData] = useState(null);
   const [showInterruptionAlert, setShowInterruptionAlert] = useState(false);
   const [originalQuestion, setOriginalQuestion] = useState(null);
-  const [showPersonaSelector, setShowPersonaSelector] = useState(true);
-  const [selectedPersona, setSelectedPersona] = useState(null);
-  // PHASE 8: Voice State
-  const [isQuestionSpeaking, setIsQuestionSpeaking] = useState(false);
 
-  // Initialize sound effects on first interaction
+  // Warning State
+  const [liveWarning, setLiveWarning] = useState(null);
+
+  // Feedback State
+  const [lastFeedback, setLastFeedback] = useState(null);
+  const [showFeedback, setShowFeedback] = useState(false);
+
+  // Voice State
+  const [isQuestionSpeaking, setIsQuestionSpeaking] = useState(false);
+  const [isRecording, setIsRecording] = useState(false);
+  const [voiceEnabled, setVoiceEnabled] = useState(true);
+  
+  // Track last read question to prevent duplicates
+  const lastReadQuestionId = useRef(null);
+  const isProcessingAnswer = useRef(false);
+
+  // ============================================
+  // INITIALIZATION
+  // ============================================
   useEffect(() => {
     const initSound = () => {
       soundEffects.initAudioContext();
       document.removeEventListener('click', initSound);
     };
-    
     document.addEventListener('click', initSound);
-    
+
     return () => {
       document.removeEventListener('click', initSound);
-    };
-  }, []);
-
-  // Cleanup voice when component unmounts
-  useEffect(() => {
-    return () => {
       voiceService.stop();
     };
   }, []);
 
-  const handleStartInterviewWithPersona = async (personaId) => {
-    setLoading(true);
-    setAiState('thinking');
-    setShowPersonaSelector(false);
+  // ============================================
+  // READ QUESTION ALOUD - FIXED VERSION
+  // ============================================
+  useEffect(() => {
+    // SIMPLIFIED LOGIC - Read question when:
+    // 1. Question exists
+    // 2. Not recording
+    // 3. Voice enabled
+    // 4. Haven't read this exact question before
+    // 5. Not currently processing an answer
+    
+    const questionId = currentQuestion?.question_number;
+    
+    if (!currentQuestion || !currentQuestion.text) {
+      return; // No question to read
+    }
+    
+    if (isRecording) {
+      return; // Don't interrupt recording
+    }
+    
+    if (!voiceEnabled) {
+      return; // Voice disabled
+    }
+    
+    if (questionId === lastReadQuestionId.current) {
+      return; // Already read this question
+    }
+    
+    if (isProcessingAnswer.current) {
+      return; // Wait for answer processing to complete
+    }
 
-    try {
-      const response = await fetch(`http://localhost:8000/interview/start-with-persona`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          persona: personaId,
-          resume_context: resumeData?.resume_context || null
-        })
+    // All conditions passed - READ THE QUESTION!
+    console.log('🔊 Reading question:', questionId);
+    lastReadQuestionId.current = questionId;
+    setIsQuestionSpeaking(true);
+    
+    voiceService.speak(currentQuestion.text)
+      .then(() => {
+        console.log('✅ Finished reading question');
+        setIsQuestionSpeaking(false);
+      })
+      .catch((error) => {
+        console.error('❌ Voice error:', error);
+        setIsQuestionSpeaking(false);
       });
-      const data = await response.json();
+
+    return () => {
+      // Cleanup if question changes mid-read
+      if (questionId !== currentQuestion?.question_number) {
+        voiceService.stop();
+      }
+    };
+  }, [currentQuestion, isRecording, voiceEnabled]);
+
+  // ============================================
+  // VOICE CONTROL BUTTON HANDLER
+  // ============================================
+  const handleVoiceToggle = () => {
+    if (isQuestionSpeaking) {
+      voiceService.stop();
+      setIsQuestionSpeaking(false);
+    } else if (currentQuestion && currentQuestion.text) {
+      setIsQuestionSpeaking(true);
       
-      setSessionId(data.session_id);
-      setCurrentQuestion(data.question);
-      setQuestionNumber(data.question_number);
-      setTotalQuestions(data.total_questions);
-      setSelectedPersona(data.persona);
-      setAiState('speaking');
-      setLoading(false);
-      
-      setTimeout(() => setAiState('idle'), 3000);
-    } catch (error) {
-      console.error('Error starting interview:', error);
-      alert('Failed to start interview. Is the backend running?');
-      setLoading(false);
-      setAiState('idle');
-      setShowPersonaSelector(true);
+      voiceService.speak(currentQuestion.text)
+        .then(() => {
+          setIsQuestionSpeaking(false);
+        })
+        .catch((error) => {
+          console.error('Voice error:', error);
+          setIsQuestionSpeaking(false);
+        });
     }
   };
 
-  // PHASE 5: Handle Interruption
+  // ============================================
+  // START INTERVIEW
+  // ============================================
+  const handleStartInterview = async (selectedRoundType) => {
+    setLoading(true);
+    setAiState('thinking');
+    setShowRoundSelector(false);
+    setRoundType(selectedRoundType);
+
+    try {
+      const response = await fetch('http://localhost:8000/interview/start', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          round_type: selectedRoundType,
+          resume_context: resumeData?.resume_context || null
+        })
+      });
+
+      const data = await response.json();
+
+      if (!data.success) {
+        throw new Error('Failed to start interview');
+      }
+
+      console.log('✅ Interview started:', data);
+
+      setSessionId(data.session_id);
+      setRoundType(selectedRoundType);
+      setQuestionNumber(data.question_number);
+      setTotalQuestions(6);
+      setCurrentPhase(data.current_phase);
+      
+      // Reset flags
+      lastReadQuestionId.current = null;
+      isProcessingAnswer.current = false;
+      
+      // FIX: Read introduction FIRST, then show question
+      if (data.introduction) {
+        console.log('🔊 Reading introduction...');
+        setAiState('speaking');
+        
+        try {
+          await voiceService.speak(data.introduction);
+          console.log('✅ Finished reading introduction');
+          
+          // NOW set the question after introduction
+          setCurrentQuestion(data.question);
+          
+        } catch (error) {
+          console.error('Voice error:', error);
+          // Still show question even if voice fails
+          setCurrentQuestion(data.question);
+        }
+      } else {
+        // No introduction, just show question
+        setCurrentQuestion(data.question);
+      }
+      
+      setAiState('idle');
+      soundEffects.playSuccess();
+      setLoading(false);
+
+    } catch (error) {
+      console.error('Error starting interview:', error);
+      alert('Failed to start interview. Make sure backend is running.');
+      setLoading(false);
+      setAiState('idle');
+      setShowRoundSelector(true);
+    }
+  };
+
+  // ============================================
+  // HANDLE INTERRUPTION
+  // ============================================
   const handleInterruption = (interruption) => {
-    console.log('🔥 INTERRUPTION RECEIVED IN INTERVIEW:', interruption);
-    
+    console.log('🔥 INTERRUPTION:', interruption);
+
     soundEffects.playInterruption();
     voiceService.stop();
-    
-    if (!currentQuestion) {
-      console.error('❌ Cannot interrupt: currentQuestion is null');
-      return;
+
+    if (currentQuestion) {
+      setOriginalQuestion({
+        text: currentQuestion.text,
+        id: currentQuestion.question_number
+      });
     }
-    
-    setOriginalQuestion({
-      text: currentQuestion.question,
-      id: currentQuestion.id
-    });
-    
+
     setInterruptionData(interruption);
     setShowInterruptionAlert(true);
     setAiState('speaking');
   };
 
-  // PHASE 5: User Acknowledges Interruption
   const handleInterruptionAcknowledged = () => {
-    console.log('✅ User acknowledged interruption');
-    
+    console.log('✅ Interruption acknowledged');
+
     setShowInterruptionAlert(false);
-    
-    if (currentQuestion && interruptionData) {
+
+    // Update question to follow-up
+    if (interruptionData) {
       setCurrentQuestion({
-        id: currentQuestion.id,
-        question: interruptionData.followup_question,
-        category: 'interruption_followup',
+        text: interruptionData.followup_question,
+        question_number: currentQuestion?.question_number || questionNumber,
         is_followup: true
       });
+      
+      // Reset to allow follow-up to be read
+      lastReadQuestionId.current = null;
+      isProcessingAnswer.current = false;
     }
-    
+
     setAiState('idle');
   };
 
-  // Handle Audio Submission
+  // ============================================
+  // HANDLE LIVE WARNING
+  // ============================================
+  const handleLiveWarning = (warning) => {
+    console.log('⚠️ LIVE WARNING:', warning);
+    setLiveWarning(warning);
+
+    setTimeout(() => {
+      setLiveWarning(null);
+    }, 5000);
+  };
+
+  // ============================================
+  // HANDLE AUDIO SUBMISSION - FIXED
+  // ============================================
   const handleAudioSubmitted = async (audioData) => {
-    console.log('Submitting transcript:', audioData.transcript);
-    
+    console.log('📝 Submitting answer...');
+
     soundEffects.playSuccess();
-    
-    if (!currentQuestion) {
-      console.error('❌ Cannot submit: currentQuestion is null');
-      alert('Error: No active question. Please refresh and try again.');
-      return;
-    }
-      
     setAiState('thinking');
-    const answerText = audioData.transcript;
-    
     setLoading(true);
     
+    // Mark that we're processing an answer
+    isProcessingAnswer.current = true;
+
     try {
-      const response = await fetch(
-        `http://localhost:8000/interview/answer?session_id=${sessionId}`,
-        {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({
-            question_id: currentQuestion.id,
-            answer_text: answerText,
-            was_interrupted: interruptionData !== null,
-            recording_duration: audioData.recording_duration
-          }),
-        }
-      );
-      
+      const response = await fetch('http://localhost:8000/interview/answer', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          session_id: sessionId,
+          question_id: currentQuestion?.question_number || questionNumber,
+          answer_text: audioData.transcript,
+          recording_duration: audioData.recording_duration,
+          was_interrupted: interruptionData !== null,
+          is_followup_answer: currentQuestion?.is_followup || false  // ← NEW: Track follow-ups
+        })
+      });
+
       const data = await response.json();
 
-      setLoading(false);
+      if (!data.success) {
+        throw new Error('Failed to submit answer');
+      }
 
+      console.log('✅ Answer submitted, response:', data);
+
+      // Clear interruption state
       setInterruptionData(null);
       setOriginalQuestion(null);
+      setLiveWarning(null);
 
+      // Show immediate feedback
+      if (data.immediate_feedback) {
+        setLastFeedback(data.immediate_feedback);
+        setShowFeedback(true);
+        
+        setTimeout(() => {
+          setShowFeedback(false);
+        }, 5000);
+      }
+
+      // Check if completed
       if (data.completed) {
         setIsComplete(true);
         setAiState('idle');
         soundEffects.playComplete();
-      } else {
-        setAiState('speaking');
-        setCurrentQuestion(data.question);
-        setQuestionNumber(data.question_number);
-        
-        setTimeout(() => setAiState('idle'), 1000);
+        setLoading(false);
+        isProcessingAnswer.current = false;
+        return;
       }
+
+      // ========================================
+      // HANDLE FOLLOW-UP QUESTIONS - FIXED
+      // ========================================
+      if (data.requires_followup && data.followup_question) {
+        console.log('🔍 Follow-up required:', data.followup_question);
+        
+        setCurrentQuestion({
+          text: data.followup_question,
+          question_number: currentQuestion?.question_number,
+          is_followup: true
+        });
+        
+        // Reset to allow follow-up to be read
+        lastReadQuestionId.current = null;
+        isProcessingAnswer.current = false;
+        
+        setAiState('speaking');
+        setTimeout(() => setAiState('idle'), 2000);
+        setLoading(false);
+        return;
+      }
+
+      // ========================================
+      // CONTINUE TO NEXT QUESTION - FIXED
+      // ========================================
+      setCurrentQuestion(data.question);
+      setQuestionNumber(data.question_number);
+      setCurrentPhase(data.current_phase);
+      
+      // Reset flags for new question
+      lastReadQuestionId.current = null;
+      isProcessingAnswer.current = false;
+      
+      setAiState('speaking');
+      setTimeout(() => setAiState('idle'), 2000);
+      setLoading(false);
+
     } catch (error) {
       console.error('Error submitting answer:', error);
       alert('Failed to submit answer');
       setLoading(false);
       setAiState('idle');
+      isProcessingAnswer.current = false;
     }
   };
 
-  // Reset Interview - goes back to persona selector
+  // ============================================
+  // RECORDING STATE CHANGE
+  // ============================================
+  const handleRecordingStateChange = (recordingState) => {
+    setIsRecording(recordingState);
+    
+    if (recordingState) {
+      setAiState('listening');
+      voiceService.stop();
+      setIsQuestionSpeaking(false);
+      setLiveWarning(null);
+    } else if (!loading) {
+      setAiState('idle');
+    }
+  };
+
+  // ============================================
+  // RESET INTERVIEW
+  // ============================================
   const handleResetInterview = () => {
     voiceService.stop();
     setSessionId(null);
     setCurrentQuestion(null);
     setQuestionNumber(0);
-    setTotalQuestions(0);
     setIsComplete(false);
     setAiState('idle');
     setInterruptionData(null);
-    setShowInterruptionAlert(false);
     setOriginalQuestion(null);
-    setShowPersonaSelector(true);
-    setSelectedPersona(null);
+    setLiveWarning(null);
+    setShowFeedback(false);
+    setLastFeedback(null);
+    setShowRoundSelector(true);
+    setRoundType(null);
+    lastReadQuestionId.current = null;
+    isProcessingAnswer.current = false;
   };
 
-  // Handle back from persona selector - returns to App welcome
-  const handleBackFromPersona = () => {
-    voiceService.stop();
-    if (onBack) {
-      onBack(); // ← Add safety check
-    }
-  };
-
-  // Track recording state
-  const handleRecordingStateChange = (isRecording) => {
-    if (isRecording) {
-      setAiState('listening');
-      voiceService.stop();
-    } else if (!loading) {
-      setAiState('idle');
-    }
-  };
-
-  // PHASE 8: Handle voice speaking state
-  const handleVoiceSpeakingChange = (isSpeaking) => {
-    setIsQuestionSpeaking(isSpeaking);
-    if (isSpeaking) {
-      setAiState('speaking');
-    } else if (!loading) {
-      setAiState('idle');
-    }
-  };
-
-  // ===========================================
-  // RENDER VIEWS
-  // ===========================================
-  
-  // View 0: Session History
-  if (showHistory) {
-    if (selectedSessionId) {
-      return (
-        <SessionDetail 
-          sessionId={selectedSessionId}
-          onBack={() => setSelectedSessionId(null)}
-        />
-      );
-    }
-    
-    return (
-      <SessionHistory 
-        onBack={() => setShowHistory(false)}
-        onViewSession={(sessionId) => setSelectedSessionId(sessionId)}
-      />
-    );
-  }
-
-  // View 0: Persona Selection
-  if (showPersonaSelector) {
-    return (
-      <PersonaSelector 
-        onPersonaSelected={handleStartInterviewWithPersona}
-        onBack={handleBackFromPersona}
-      />
-    );
-  }
-
-  // Loading Screen
-  if (loading && sessionId === null) {
+  // ============================================
+  // RENDER: ROUND SELECTOR
+  // ============================================
+  if (showRoundSelector) {
     return (
       <div className="interview-container">
-        <motion.div 
+        <motion.div
+          className="round-selector"
+          initial={{ opacity: 0, scale: 0.9 }}
+          animate={{ opacity: 1, scale: 1 }}
+        >
+          <h2>Select Interview Round</h2>
+          <p className="round-subtitle">
+            Choose the type of interview you want to practice
+          </p>
+
+          <div className="round-options">
+            {/* HR Round */}
+            <motion.button
+              className="round-option hr-round"
+              onClick={() => handleStartInterview('hr')}
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
+            >
+              <div className="round-icon">👔</div>
+              <h3>HR / Behavioral</h3>
+              <p>STAR method, storytelling, soft skills</p>
+              <div className="round-focus">
+                <span>• Problem-solving stories</span>
+                <span>• Team dynamics</span>
+                <span>• Career goals</span>
+              </div>
+            </motion.button>
+
+            {/* Technical Round */}
+            <motion.button
+              className="round-option technical-round"
+              onClick={() => handleStartInterview('technical')}
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
+            >
+              <div className="round-icon">💻</div>
+              <h3>Technical</h3>
+              <p>Algorithms, data structures, coding concepts</p>
+              <div className="round-focus">
+                <span>• Technical depth</span>
+                <span>• Problem decomposition</span>
+                <span>• Trade-offs & complexity</span>
+              </div>
+            </motion.button>
+
+            {/* System Design Round */}
+            <motion.button
+              className="round-option sysdesign-round"
+              onClick={() => handleStartInterview('system_design')}
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
+            >
+              <div className="round-icon">🏗️</div>
+              <h3>System Design</h3>
+              <p>Architecture, scalability, distributed systems</p>
+              <div className="round-focus">
+                <span>• High-level architecture</span>
+                <span>• Scalability strategies</span>
+                <span>• Bottleneck identification</span>
+              </div>
+            </motion.button>
+          </div>
+
+          {resumeData && (
+            <div className="resume-badge">
+              ✅ Resume uploaded - questions will be personalized
+            </div>
+          )}
+
+          <button className="btn-back" onClick={onBack}>
+            ← Back to Home
+          </button>
+        </motion.div>
+      </div>
+    );
+  }
+
+  // ============================================
+  // RENDER: LOADING
+  // ============================================
+  if (loading && !currentQuestion) {
+    return (
+      <div className="interview-container">
+        <motion.div
           className="loading-interview-screen"
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
-          transition={{ duration: 0.4 }}
         >
-          <motion.div 
+          <motion.div
             className="loading-orb"
-            animate={{ 
+            animate={{
               scale: [1, 1.2, 1],
               rotate: [0, 180, 360]
             }}
-            transition={{ 
+            transition={{
               duration: 2,
               repeat: Infinity,
               ease: "easeInOut"
             }}
           >
-            {selectedPersona ? selectedPersona.emoji : '🤖'}
+            🤖
           </motion.div>
-          <motion.h2
-            initial={{ y: 20, opacity: 0 }}
-            animate={{ y: 0, opacity: 1 }}
-            transition={{ delay: 0.3 }}
-          >
-            Your interviewer is preparing...
-          </motion.h2>
-          <motion.p 
-            className="loading-subtitle"
-            initial={{ y: 10, opacity: 0 }}
-            animate={{ y: 0, opacity: 1 }}
-            transition={{ delay: 0.5 }}
-          >
-            {selectedPersona && `${selectedPersona.name} is generating your first question`}
-          </motion.p>
-          <div className="loading-dots">
-            <motion.span
-              animate={{ opacity: [0, 1, 0] }}
-              transition={{ duration: 1.5, repeat: Infinity, delay: 0 }}
-            >●</motion.span>
-            <motion.span
-              animate={{ opacity: [0, 1, 0] }}
-              transition={{ duration: 1.5, repeat: Infinity, delay: 0.3 }}
-            >●</motion.span>
-            <motion.span
-              animate={{ opacity: [0, 1, 0] }}
-              transition={{ duration: 1.5, repeat: Infinity, delay: 0.6 }}
-            >●</motion.span>
-          </div>
+          <h2>AI Interviewer is preparing...</h2>
+          <p className="loading-subtitle">
+            Generating your first {roundType} question
+          </p>
         </motion.div>
       </div>
     );
   }
 
-  // View 2: Interview Complete - Show Feedback
+  // ============================================
+  // RENDER: INTERVIEW COMPLETE
+  // ============================================
   if (isComplete) {
     return (
-      <FeedbackScreen 
+      <FeedbackScreen
         sessionId={sessionId}
         onNewInterview={handleResetInterview}
-        onViewHistory={() => setShowHistory(true)}
       />
     );
   }
 
-  // View 3: Active Interview
+  // ============================================
+  // RENDER: ACTIVE INTERVIEW
+  // ============================================
   return (
     <div className="interview-container">
       
-      {/* PHASE 5: Interruption Alert Overlay */}
+      {/* Interruption Alert Overlay */}
       {showInterruptionAlert && interruptionData && (
-        <InterruptionAlert 
+        <InterruptionAlert
           interruption={interruptionData}
           onAcknowledge={handleInterruptionAcknowledged}
         />
       )}
 
-      {/* AI Orb in top-right corner */}
+      {/* Live Warning (floating) */}
+      {liveWarning && <LiveWarning warning={liveWarning} />}
+
+      {/* Immediate Feedback (after answer) */}
+      {showFeedback && lastFeedback && (
+        <motion.div
+          className="immediate-feedback-popup"
+          initial={{ opacity: 0, y: -20 }}
+          animate={{ opacity: 1, y: 0 }}
+          exit={{ opacity: 0, y: -20 }}
+        >
+          <div className="feedback-score">
+            {lastFeedback.emoji} {lastFeedback.overall_score}/100
+          </div>
+          <div className="feedback-level">{lastFeedback.performance_level}</div>
+          {lastFeedback.key_strength && (
+            <div className="feedback-strength">
+              ✅ {lastFeedback.key_strength}
+            </div>
+          )}
+          {lastFeedback.key_weakness && (
+            <div className="feedback-weakness">
+              ⚠️ {lastFeedback.key_weakness}
+            </div>
+          )}
+        </motion.div>
+      )}
+
+      {/* AI Orb */}
       <div className="ai-orb-container">
-        <MiniAIOrb state={aiState} />
-        <div className={`ai-status ai-status-${aiState}`}>
-          {aiState === 'listening' && 'Listening...'}
-          {aiState === 'thinking' && 'Thinking...'}
-          {aiState === 'speaking' && 'Speaking...'}
-          {aiState === 'idle' && 'Waiting...'}
+        <MiniAIOrb state={isQuestionSpeaking ? 'speaking' : aiState} />
+        <div className={`ai-status ai-status-${isQuestionSpeaking ? 'speaking' : aiState}`}>
+          {isQuestionSpeaking && '🔊 Reading Question...'}
+          {!isQuestionSpeaking && aiState === 'listening' && 'Listening...'}
+          {!isQuestionSpeaking && aiState === 'thinking' && 'Analyzing...'}
+          {!isQuestionSpeaking && aiState === 'speaking' && 'Speaking...'}
+          {!isQuestionSpeaking && aiState === 'idle' && 'Ready'}
         </div>
       </div>
 
       {/* Interview Content */}
-      <motion.div 
+      <motion.div
         className="interview-content"
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
-        transition={{ duration: 0.5 }}
       >
         
         {/* Header */}
-        <motion.div 
-          className="interview-header"
-          initial={{ y: -20, opacity: 0 }}
-          animate={{ y: 0, opacity: 1 }}
-          transition={{ delay: 0.2, duration: 0.5 }}
-        >
-          <h2>Interview in Progress</h2>
+        <div className="interview-header">
+          <h2>{roundType.toUpperCase()} Interview</h2>
           <p className="progress">
-            Question {questionNumber} of {totalQuestions}
+            Question {questionNumber} • Phase: {currentPhase || 'Active'}
           </p>
-        </motion.div>
-        
-        {/* Persona Badge */}
-        {selectedPersona && (
-          <motion.div 
-            className="persona-badge-active"
-            initial={{ opacity: 0, y: -10 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.3 }}
-          >
-            <span className="persona-emoji-small">{selectedPersona.emoji}</span>
-            <span className="persona-name-small">{selectedPersona.name}</span>
-          </motion.div>
-        )}
+        </div>
 
         {/* Question Card */}
         <AnimatePresence mode="wait">
           {currentQuestion && (
-            <motion.div 
-              key={currentQuestion.id}
-              className={`question-card ${isQuestionSpeaking ? 'speaking' : ''}`}
-              initial={{ x: -50, opacity: 0, scale: 0.95 }}
-              animate={{ x: 0, opacity: 1, scale: 1 }}
-              exit={{ x: 50, opacity: 0, scale: 0.95 }}
-              transition={{ 
-                type: 'spring', 
-                stiffness: 100, 
-                damping: 20,
-                duration: 0.5 
-              }}
+            <motion.div
+              key={currentQuestion.question_number}
+              className="question-card"
+              initial={{ x: -50, opacity: 0 }}
+              animate={{ x: 0, opacity: 1 }}
+              exit={{ x: 50, opacity: 0 }}
+              transition={{ type: 'spring', stiffness: 100 }}
             >
-              {/* PHASE 5: Show interruption badge if this is a follow-up */}
-              {originalQuestion && (
-                <motion.div
-                  className="interruption-badge"
-                  initial={{ opacity: 0, y: -10 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 0.3 }}
+              {/* Voice Control Button */}
+              <motion.button
+                className={`voice-control-btn ${isQuestionSpeaking ? 'speaking' : ''}`}
+                onClick={handleVoiceToggle}
+                whileHover={{ scale: 1.1 }}
+                whileTap={{ scale: 0.9 }}
+                title={isQuestionSpeaking ? "Stop reading" : "Read question aloud"}
+              >
+                <svg 
+                  width="24" 
+                  height="24" 
+                  viewBox="0 0 24 24" 
+                  fill="none" 
+                  stroke="currentColor" 
+                  strokeWidth="2" 
+                  strokeLinecap="round" 
+                  strokeLinejoin="round"
                 >
-                  <span className="badge-icon">⚡</span>
-                  <span className="badge-text">
-                    Interrupted from: "{originalQuestion.text.substring(0, 50)}..."
-                  </span>
-                </motion.div>
+                  {isQuestionSpeaking ? (
+                    <>
+                      <rect x="6" y="4" width="4" height="16" />
+                      <rect x="14" y="4" width="4" height="16" />
+                    </>
+                  ) : (
+                    <>
+                      <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5" />
+                      <path d="M15.54 8.46a5 5 0 0 1 0 7.07" />
+                      <path d="M19.07 4.93a10 10 0 0 1 0 14.14" />
+                    </>
+                  )}
+                </svg>
+              </motion.button>
+
+              {/* Interruption Badge */}
+              {originalQuestion && (
+                <div className="interruption-badge">
+                  ⚡ Follow-up from: "{originalQuestion.text.substring(0, 40)}..."
+                </div>
               )}
 
               <p className="question-label">Interviewer:</p>
-              <motion.p 
-                className="question-text"
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                transition={{ delay: 0.3, duration: 0.5 }}
-              >
-                {currentQuestion.question}
-              </motion.p>
-
-              {/* PHASE 8: Voice Controls */}
-              <VoiceControls 
-                text={currentQuestion.question}
-                autoPlay={true}
-                onSpeakingChange={handleVoiceSpeakingChange}
-              />
+              <p className="question-text">{currentQuestion.text}</p>
             </motion.div>
           )}
         </AnimatePresence>
 
         {/* Answer Section */}
-        <motion.div 
-          className="answer-section"
-          initial={{ y: 20, opacity: 0 }}
-          animate={{ y: 0, opacity: 1 }}
-          transition={{ delay: 0.4, duration: 0.5 }}
-        >
+        <div className="answer-section">
           <label>Your Answer (Voice):</label>
-          {currentQuestion && (
-            <AudioRecorder 
+          {currentQuestion && sessionId && (
+            <AudioRecorder
               sessionId={sessionId}
-              questionId={currentQuestion.id}
-              currentQuestionText={currentQuestion.question}
+              questionId={currentQuestion.question_number || questionNumber}
+              currentQuestionText={currentQuestion.text}
               onAudioReady={handleAudioSubmitted}
               onRecordingStateChange={handleRecordingStateChange}
               onInterruption={handleInterruption}
+              onLiveWarning={handleLiveWarning}
             />
           )}
-        </motion.div>
+        </div>
 
       </motion.div>
     </div>

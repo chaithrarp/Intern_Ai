@@ -12,11 +12,18 @@ dist/
 __pycache__/
 *.pyc
 venv/
+backend/venv/
 
 # =====================
 # Environment & Secrets
 # =====================
 .env
+
+# =====================
+# User Uploads
+# =====================
+backend/resume_uploads/
+backend/audio_uploads/
 
 # =====================
 # Databases
@@ -33,6 +40,13 @@ audio/
 recordings/
 
 # =====================
-# OS / Editor junk
+# Project structure docs (IGNORE THESE)
+# =====================
+DETAILED_PROJECT_STRUCTURE.md
+PROJECT_STRUCTURE_COMPACT.md
+
+# =====================
+# OS junk
 # =====================
 .DS_Store
+Thumbs.db

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect,useCallback } from 'react';
 import { motion } from 'framer-motion';
 import './FeedbackScreen.css';
 import RecoveryCurveChart from './RecoveryCurveChart';
@@ -7,11 +7,11 @@ import soundEffects from '../utils/soundEffects';
 function FeedbackScreen({ sessionId, onNewInterview, onViewHistory }) {
   const [summary, setSummary] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null); 
 
   useEffect(() => {
-    fetchSessionSummary();
-  }, [sessionId]);
-  
+  fetchSessionSummary();
+}, [sessionId]);
 
 // NEW: Add this useEffect for celebration
 useEffect(() => {
@@ -22,22 +22,36 @@ useEffect(() => {
     }, 1000);
   }
 }, [summary]);
-  const fetchSessionSummary = async () => {
-    try {
-      const response = await fetch(`http://localhost:8000/metrics/summary/${sessionId}`);
-      const data = await response.json();
-      
-      if (data.success) {
-        setSummary(data.summary);
-      } else {
-        console.error('Failed to fetch summary:', data.error);
-      }
-    } catch (error) {
-      console.error('Error fetching summary:', error);
-    } finally {
-      setLoading(false);
+  const fetchSessionSummary = useCallback(async () => {
+  try {
+    const response = await fetch(`http://localhost:8000/metrics/summary/${sessionId}`);
+    const data = await response.json();
+    
+    if (data.success) {
+      setSummary({
+        overall_score: data.overall_score || 0,
+        dimension_scores: data.dimension_scores || {},
+        total_questions: data.total_questions || 0,
+        total_interruptions: data.total_interruptions || 0,
+        interruption_breakdown: data.interruption_breakdown || {},
+        phases_completed: data.phases_completed || [],
+        score_progression: data.score_progression || [],
+        duration_seconds: data.duration_seconds || 0
+      });
+    } else {
+      setError('Failed to load feedback data');
     }
-  };
+  } catch (error) {
+    console.error('Error fetching summary:', error);
+    setError('Unable to connect to server');
+  } finally {
+    setLoading(false);
+  }
+}, [sessionId]);
+
+useEffect(() => {
+  fetchSessionSummary();
+}, [fetchSessionSummary]); // ← FIXED: Now includes the function
 
   const getPerformanceLevel = (hesitationScore) => {
     if (hesitationScore < 10) return { level: 'EXCELLENT', emoji: '⭐', color: '#10b981' };
@@ -79,48 +93,58 @@ useEffect(() => {
   };
 
   const generateStrengths = (summary) => {
-    const strengths = [];
-    
-    if (summary.avg_hesitation_score < 10) {
-      strengths.push('Minimal hesitation - very confident delivery');
-    }
-    if (summary.avg_words_per_minute >= 120) {
-      strengths.push('Excellent speaking pace - clear and articulate');
-    }
-    if (summary.total_filler_words <= 5) {
-      strengths.push('Minimal filler words - professional communication');
-    }
-    if (summary.total_interruptions > 0 && summary.avg_recovery_time && summary.avg_recovery_time < 3) {
-      strengths.push('Quick recovery after interruptions');
-    }
-    if (summary.total_long_pauses === 0) {
-      strengths.push('No awkward pauses - maintained flow');
-    }
+  const strengths = [];
+  const scores = summary.dimension_scores;
+  
+  // Check each dimension
+  if (scores.technical_depth >= 80) {
+    strengths.push('Strong technical depth and understanding');
+  }
+  if (scores.structured_thinking >= 70) {
+    strengths.push('Excellent structured thinking (STAR method)');
+  }
+  if (scores.communication_clarity >= 70) {
+    strengths.push('Clear and articulate communication');
+  }
+  if (scores.confidence_consistency >= 80) {
+    strengths.push('Confident and consistent delivery');
+  }
+  if (summary.total_interruptions === 0) {
+    strengths.push('No interruptions - smooth performance throughout');
+  } else if (summary.total_interruptions <= 2) {
+    strengths.push('Handled pressure well with minimal interruptions');
+  }
 
-    return strengths.length > 0 ? strengths : ['Completed the interview successfully'];
-  };
+  return strengths.length > 0 ? strengths : ['Completed the interview successfully'];
+};
 
-  const generateImprovements = (summary) => {
-    const improvements = [];
-    
-    if (summary.avg_hesitation_score >= 25) {
-      improvements.push('Work on reducing hesitation - practice common questions');
-    }
-    if (summary.avg_words_per_minute < 90) {
-      improvements.push('Speak a bit faster - aim for 100-130 words per minute');
-    }
-    if (summary.total_filler_words > 10) {
-      improvements.push('Reduce filler words ("um", "like", "you know")');
-    }
-    if (summary.avg_recovery_time && summary.avg_recovery_time > 4) {
-      improvements.push('Practice recovering faster after interruptions (aim for <3s)');
-    }
-    if (summary.total_long_pauses > 2) {
-      improvements.push('Avoid long pauses - keep momentum in your answers');
-    }
+const generateImprovements = (summary) => {
+  const improvements = [];
+  const scores = summary.dimension_scores;
+  
+  // Check each dimension for weaknesses
+  if (scores.technical_depth < 60) {
+    improvements.push('Focus on deepening technical knowledge and concepts');
+  }
+  if (scores.structured_thinking < 60) {
+    improvements.push('Practice STAR method (Situation, Task, Action, Result)');
+  }
+  if (scores.communication_clarity < 60) {
+    improvements.push('Work on clarity - avoid jargon and be more specific');
+  }
+  if (scores.concept_accuracy < 60) {
+    improvements.push('Verify technical concepts before stating them as facts');
+  }
+  if (scores.confidence_consistency < 60) {
+    improvements.push('Build confidence - reduce uncertainty markers');
+  }
+  if (summary.total_interruptions > 3) {
+    improvements.push(`Reduce interruptions (you had ${summary.total_interruptions}) - be more concise`);
+  }
 
-    return improvements.length > 0 ? improvements : ['Keep practicing to maintain this level!'];
-  };
+  return improvements.length > 0 ? improvements : ['Keep practicing to improve further!'];
+};
+
 
   if (loading) {
     return (

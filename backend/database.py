@@ -270,6 +270,91 @@ def get_database_stats() -> Dict:
     conn.close()
     return stats
 
+
+
+# Add these functions to database.py
+
+def save_evaluation(
+    session_id: str,
+    answer_id: int,
+    evaluation_data: dict
+):
+    """Save answer evaluation to database"""
+    conn = sqlite3.connect(DB_PATH)
+    cursor = conn.cursor()
+    
+    cursor.execute("""
+        CREATE TABLE IF NOT EXISTS evaluations (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            session_id TEXT NOT NULL,
+            answer_id INTEGER NOT NULL,
+            round_type TEXT NOT NULL,
+            overall_score INTEGER NOT NULL,
+            scores TEXT NOT NULL,
+            strengths TEXT,
+            weaknesses TEXT,
+            red_flags TEXT,
+            difficulty_adjustment TEXT,
+            created_at TIMESTAMP NOT NULL,
+            FOREIGN KEY (session_id) REFERENCES sessions(session_id),
+            FOREIGN KEY (answer_id) REFERENCES answers(id)
+        )
+    """)
+    
+    import json
+    
+    cursor.execute("""
+        INSERT INTO evaluations (
+            session_id, answer_id, round_type, overall_score,
+            scores, strengths, weaknesses, red_flags,
+            difficulty_adjustment, created_at
+        )
+        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+    """, (
+        session_id,
+        answer_id,
+        evaluation_data.get("round_type"),
+        evaluation_data.get("overall_score"),
+        json.dumps(evaluation_data.get("scores")),
+        json.dumps(evaluation_data.get("strengths")),
+        json.dumps(evaluation_data.get("weaknesses")),
+        json.dumps(evaluation_data.get("red_flags")),
+        evaluation_data.get("difficulty_adjustment"),
+        datetime.now()
+    ))
+    
+    conn.commit()
+    conn.close()
+
+def get_session_evaluations(session_id: str) -> List[Dict]:
+    """Get all evaluations for a session"""
+    conn = sqlite3.connect(DB_PATH)
+    conn.row_factory = sqlite3.Row
+    cursor = conn.cursor()
+    
+    cursor.execute("""
+        SELECT * FROM evaluations 
+        WHERE session_id = ?
+        ORDER BY created_at
+    """, (session_id,))
+    
+    rows = cursor.fetchall()
+    conn.close()
+    
+    import json
+    
+    evaluations = []
+    for row in rows:
+        eval_dict = dict(row)
+        eval_dict["scores"] = json.loads(eval_dict["scores"])
+        eval_dict["strengths"] = json.loads(eval_dict["strengths"])
+        eval_dict["weaknesses"] = json.loads(eval_dict["weaknesses"])
+        eval_dict["red_flags"] = json.loads(eval_dict["red_flags"])
+        evaluations.append(eval_dict)
+    
+    return evaluations
+
+
 # ============================================
 # TESTING
 # ============================================

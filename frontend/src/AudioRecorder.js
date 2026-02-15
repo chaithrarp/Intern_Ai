@@ -2,6 +2,8 @@ import React, { useState, useRef, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import './AudioRecorder.css';
 import soundEffects from './utils/soundEffects';
+import AudioAnalyzer from './utils/audioAnalyzer';
+import LiveWarning from './components/LiveWarning';
 
 function AudioRecorder({ onAudioReady, questionId, sessionId, onRecordingStateChange, onInterruption ,currentQuestionText}) {
   const [isRecording, setIsRecording] = useState(false);
@@ -10,6 +12,8 @@ function AudioRecorder({ onAudioReady, questionId, sessionId, onRecordingStateCh
   const [transcribing, setTranscribing] = useState(false);
   const [transcript, setTranscript] = useState('');
   const [wasInterrupted, setWasInterrupted] = useState(false);
+  const [liveWarning, setLiveWarning] = useState(null);
+  const [audioAnalyzer, setAudioAnalyzer] = useState(null);
   
   // PHASE 5: Real-time detection states
   const [realtimeTranscript, setRealtimeTranscript] = useState('');
@@ -192,17 +196,20 @@ function AudioRecorder({ onAudioReady, questionId, sessionId, onRecordingStateCh
 
   // PHASE 5: Check for interruptions during recording
   useEffect(() => {
-    if (isRecording) {
-      // Check every 2 seconds if interruption should trigger
-      interruptionCheckInterval.current = setInterval(async () => {
-        const duration = (Date.now() - recordingStartTime.current) / 1000;
-        
-        // Use real-time transcript for interruption check
-        const transcriptForCheck = realtimeTranscript || '';
-        
-        // Check with backend if interruption should happen
-        try {
-          const response = await fetch(
+  if (isRecording && audioAnalyzer) {
+    // Check every 3 seconds if interruption should trigger
+    interruptionCheckInterval.current = setInterval(async () => {
+      const duration = (Date.now() - recordingStartTime.current) / 1000;
+      
+      // Get audio analysis report from analyzer
+      const audioReport = audioAnalyzer.getAnalysisReport();
+      
+      // Use real-time transcript for interruption check
+      const transcriptForCheck = realtimeTranscript || '';
+      
+      // Check with backend if interruption should happen
+      try {
+        const response = await fetch(
           `http://localhost:8000/interview/check-interruption?session_id=${sessionId}&question_id=${questionId}&recording_duration=${duration}&partial_transcript=${encodeURIComponent(transcriptForCheck)}`,
           {
             method: 'POST',
@@ -210,46 +217,59 @@ function AudioRecorder({ onAudioReady, questionId, sessionId, onRecordingStateCh
               'Content-Type': 'application/json',
             },
             body: JSON.stringify({
-              current_question_text: currentQuestionText || ''  // ← ADD THIS
+              current_question_text: currentQuestionText || '',
+              audio_analysis: audioReport  // ← STEP 3.2: Send audio analysis
             })
           }
         );
+        
+        const data = await response.json();
+        
+        // Handle LIVE WARNINGS (non-interrupting)
+        if (data.should_warn && data.warning) {
+          console.log('⚠️ Live warning:', data.warning.message);
+          setLiveWarning(data.warning);
           
-          const data = await response.json();
-          
-          if (data.should_interrupt) {
-            console.log('🔥 INTERRUPTION TRIGGERED!', data);
-            
-            // Mark that interruption happened (but keep recording!)
-            setWasInterrupted(true);
-            
-            // Trigger interruption alert in parent (recording continues!)
-            if (onInterruption) {
-              onInterruption(data);
-            }
-            
-            // Stop checking for more interruptions (only one per answer)
-            if (interruptionCheckInterval.current) {
-              clearInterval(interruptionCheckInterval.current);
-            }
-          }
-        } catch (error) {
-          console.error('Error checking interruption:', error);
+          // Clear warning after duration
+          setTimeout(() => {
+            setLiveWarning(null);
+          }, (data.warning.show_duration || 3) * 1000);
         }
-      }, 2000); // Check every 2 seconds
-    } else {
-      // Clear interval when not recording
-      if (interruptionCheckInterval.current) {
-        clearInterval(interruptionCheckInterval.current);
+        
+        // Handle INTERRUPTIONS
+        if (data.should_interrupt) {
+          console.log('🔥 INTERRUPTION TRIGGERED!', data);
+          
+          // Mark that interruption happened (but keep recording!)
+          setWasInterrupted(true);
+          
+          // Trigger interruption alert in parent (recording continues!)
+          if (onInterruption) {
+            onInterruption(data);
+          }
+          
+          // Stop checking for more interruptions (only one per answer)
+          if (interruptionCheckInterval.current) {
+            clearInterval(interruptionCheckInterval.current);
+          }
+        }
+      } catch (error) {
+        console.error('Error checking interruption:', error);
       }
+    }, 3000); // Check every 3 seconds (increased from 2s)
+  } else {
+    // Clear interval when not recording
+    if (interruptionCheckInterval.current) {
+      clearInterval(interruptionCheckInterval.current);
     }
+  }
 
-    return () => {
-      if (interruptionCheckInterval.current) {
-        clearInterval(interruptionCheckInterval.current);
-      }
-    };
-  }, [isRecording, sessionId, questionId, onInterruption, realtimeTranscript]);
+  return () => {
+    if (interruptionCheckInterval.current) {
+      clearInterval(interruptionCheckInterval.current);
+    }
+  };
+}, [isRecording, sessionId, questionId, onInterruption, realtimeTranscript, audioAnalyzer]);
 
   // Start Recording
   const startRecording = async () => {
@@ -273,6 +293,16 @@ function AudioRecorder({ onAudioReady, questionId, sessionId, onRecordingStateCh
       
       const mediaRecorder = new MediaRecorder(stream);
       mediaRecorderRef.current = mediaRecorder;
+      const analyzer = new AudioAnalyzer();
+      const initialized = await analyzer.initialize(stream);
+      if (initialized) {
+      analyzer.start();
+      setAudioAnalyzer(analyzer);
+      console.log('✅ Audio analyzer initialized and started');
+    } else {
+      console.warn('⚠️ Audio analyzer failed to initialize - using fallback detection');
+    }
+
       chunksRef.current = [];
       recordingStartTime.current = Date.now();
       setWasInterrupted(false);
@@ -334,6 +364,12 @@ function AudioRecorder({ onAudioReady, questionId, sessionId, onRecordingStateCh
   // Stop Recording
   const stopRecording = () => {
     if (mediaRecorderRef.current && isRecording) {
+      // STEP 3.2: Stop audio analyzer
+      if (audioAnalyzer) {
+        audioAnalyzer.stop();
+        audioAnalyzer.cleanup();
+        setAudioAnalyzer(null);
+      }
       mediaRecorderRef.current.stop();
       setIsRecording(false);
       clearInterval(timerRef.current);
@@ -406,6 +442,11 @@ function AudioRecorder({ onAudioReady, questionId, sessionId, onRecordingStateCh
     setRealtimeTranscript('');
     setFillerWarning(null);
     setSilenceWarning(false);
+    setLiveWarning(null);
+    if (audioAnalyzer) {
+    audioAnalyzer.cleanup();
+    setAudioAnalyzer(null);
+}
   };
 
   const formatTime = (seconds) => {
@@ -465,6 +506,8 @@ function AudioRecorder({ onAudioReady, questionId, sessionId, onRecordingStateCh
                   </motion.div>
                 )}
               </AnimatePresence>
+              {/* STEP 3.2: Live Warning Component */}
+              <LiveWarning warning={liveWarning} />
               
               {/* Show if interrupted (but keep recording!) */}
               {wasInterrupted && (

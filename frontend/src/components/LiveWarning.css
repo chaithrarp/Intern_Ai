@@ -1,0 +1,92 @@
+/* LiveWarning.css - Floating warning component styles */
+
+.live-warning-container {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  z-index: 9999;
+  pointer-events: none;
+}
+
+.live-warning {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 20px;
+  border-radius: 12px;
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(10px);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+  border-left: 4px solid #ffc107;
+  position: relative;
+  overflow: hidden;
+  min-width: 250px;
+  max-width: 350px;
+}
+
+.live-warning-critical {
+  border-left-color: #ff4444;
+  background: rgba(255, 68, 68, 0.05);
+}
+
+.live-warning-high {
+  border-left-color: #ff9800;
+  background: rgba(255, 152, 0, 0.05);
+}
+
+.live-warning-medium {
+  border-left-color: #ffc107;
+  background: rgba(255, 193, 7, 0.05);
+}
+
+.live-warning-low {
+  border-left-color: #4caf50;
+  background: rgba(76, 175, 80, 0.05);
+}
+
+.warning-icon {
+  font-size: 24px;
+  flex-shrink: 0;
+}
+
+.warning-message {
+  color: #333;
+  font-size: 14px;
+  font-weight: 500;
+  line-height: 1.4;
+  flex: 1;
+}
+
+.warning-severity-bar {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 3px;
+  transform-origin: left;
+}
+
+/* Dark mode support */
+@media (prefers-color-scheme: dark) {
+  .live-warning {
+    background: rgba(30, 30, 30, 0.95);
+  }
+  
+  .warning-message {
+    color: #e0e0e0;
+  }
+}
+
+/* Mobile responsive */
+@media (max-width: 768px) {
+  .live-warning-container {
+    top: 10px;
+    right: 10px;
+    left: 10px;
+  }
+  
+  .live-warning {
+    min-width: unset;
+    max-width: unset;
+  }
+}
