@@ -20,6 +20,8 @@ from datetime import datetime
 import random
 import json
 import os
+import asyncio
+import concurrent.futures
 
 from models.state_models import (
     SessionState,
@@ -268,15 +270,33 @@ class InterviewOrchestrator:
         print(f"{'='*60}")
         
         # Step 1: Evaluate answer
-        evaluation = self.analyzer.evaluate_answer(
-            answer_text=answer_text,
-            question_text=question_text,
-            question_id=question_id,
-            round_type=round_type,
-            session_id=state.session_id,
-            conversation_history=state.conversation_history,
-            skip_claim_extraction=skip_claim_extraction
-        )
+        # Step 1: Evaluate answer AND pre-generate next question IN PARALLEL
+        print(f"   ⚡ Running evaluation and question generation in parallel...")
+
+        def _evaluate():
+            return self.analyzer.evaluate_answer(
+                answer_text=answer_text,
+                question_text=question_text,
+                question_id=question_id,
+                round_type=round_type,
+                session_id=state.session_id,
+                conversation_history=state.conversation_history,
+                skip_claim_extraction=skip_claim_extraction
+            )
+
+        def _pregen_question():
+            return self._generate_question(
+                state=state,
+                round_type=round_type,
+                resume_context=state.resume_context,
+                previous_evaluation=None  # No evaluation yet, that's fine
+            )
+
+        with concurrent.futures.ThreadPoolExecutor(max_workers=2) as executor:
+            eval_future = executor.submit(_evaluate)
+            question_future = executor.submit(_pregen_question)
+            evaluation = eval_future.result()
+            pregenerated_question = question_future.result()
         
         # Step 2: FIX - Increment question count ONLY for non-followup answers
         if not is_followup_answer:
@@ -388,19 +408,17 @@ class InterviewOrchestrator:
                 }
         
         # Step 8: Increment actual question number for NEXT question
+        # Step 8: Increment actual question number for NEXT question
         next_question_num = actual_q_num + 1
         state.config['actual_question_number'] = next_question_num
-        
-        print(f"\n🎲 Generating next question (Q{next_question_num})")
-        
-        # Step 9: Generate next question
-        next_question = self._generate_question(
-            state=state,
-            round_type=round_type,
-            resume_context=state.resume_context,
-            previous_evaluation=evaluation
-        )
-        
+
+        print(f"\n🎲 Generating next question (Q{next_question_num}) in parallel with feedback...")
+
+        # Step 9: Generate next question (already have evaluation, just need question)
+        # Step 9: Use pre-generated question (already ready!)
+        print(f"   ✅ Using pre-generated question (saved ~10s)")
+        next_question = pregenerated_question
+        next_question["question_number"] = next_question_num
         # Update state with new question
         state.current_question_text = next_question["text"]
         state.current_question_id = f"q_{next_question_num}"
@@ -847,6 +865,18 @@ Just the question text, nothing else."""
             return max(1, current_level - 1)
         else:
             return current_level
+    
+    def _run_parallel(self, func1, args1, func2, args2):
+        """
+        Run two LLM calls in parallel using ThreadPoolExecutor
+        Returns (result1, result2)
+        """
+        with concurrent.futures.ThreadPoolExecutor(max_workers=2) as executor:
+            future1 = executor.submit(func1, **args1)
+            future2 = executor.submit(func2, **args2)
+            result1 = future1.result()
+            result2 = future2.result()
+        return result1, result2
     
     
     def _generate_immediate_feedback(self, evaluation: AnswerEvaluation) -> Dict:

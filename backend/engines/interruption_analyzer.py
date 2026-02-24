@@ -30,17 +30,17 @@ INTERRUPTION_SEVERITY = {
     "CONTRADICTION": {"weight": 95, "threshold": 1, "interruption_phrase": "Wait - that contradicts what you said earlier."},
     "COMPLETELY_OFF_TOPIC": {"weight": 90, "threshold": 1, "interruption_phrase": "Let me stop you - we're completely off track."},
     
-    # HIGH SEVERITY - Warn once, interrupt on second occurrence
-    "DODGING_QUESTION": {"weight": 85, "threshold": 2, "interruption_phrase": "I need to interrupt - you're not answering the question."},
-    "EXCESSIVE_RAMBLING": {"weight": 80, "threshold": 2, "interruption_phrase": "I'm going to stop you there - please get to the point."},
-    "EXCESSIVE_PAUSING": {"weight": 75, "threshold": 2, "interruption_phrase": "Let me help you focus - you seem to be struggling."},
+    # HIGH SEVERITY - Interrupt on second occurrence (was 2, now 1 for some)
+    "DODGING_QUESTION": {"weight": 85, "threshold": 1, "interruption_phrase": "I need to interrupt - you're not answering the question."},
+    "EXCESSIVE_RAMBLING": {"weight": 80, "threshold": 1, "interruption_phrase": "I'm going to stop you there - please get to the point."},
+    "EXCESSIVE_PAUSING": {"weight": 75, "threshold": 1, "interruption_phrase": "Let me help you focus - you seem to be struggling."},
     
-    # MEDIUM SEVERITY - Warn twice, interrupt on third
-    "VAGUE_ANSWER": {"weight": 70, "threshold": 3, "interruption_phrase": "Hold on - I need specific details, not generalizations."},
-    "LACK_OF_SPECIFICS": {"weight": 65, "threshold": 3, "interruption_phrase": "Let me interrupt - give me concrete examples."},
-    "HIGH_UNCERTAINTY": {"weight": 60, "threshold": 3, "interruption_phrase": "Stop for a moment - are you confident in this answer?"},
+    # MEDIUM SEVERITY - Warn once, interrupt on second (was threshold 3)
+    "VAGUE_ANSWER": {"weight": 70, "threshold": 2, "interruption_phrase": "Hold on - I need specific details, not generalizations."},
+    "LACK_OF_SPECIFICS": {"weight": 65, "threshold": 2, "interruption_phrase": "Let me interrupt - give me concrete examples."},
+    "HIGH_UNCERTAINTY": {"weight": 60, "threshold": 2, "interruption_phrase": "Stop for a moment - are you confident in this answer?"},
     
-    # LOW SEVERITY - Warning only, never interrupt
+    # LOW SEVERITY - Warning only
     "MINOR_RAMBLING": {"weight": 30, "threshold": 999, "interruption_phrase": ""},
     "SPEAKING_TOO_LONG": {"weight": 25, "threshold": 999, "interruption_phrase": ""},
     "INCONSISTENT_DELIVERY": {"weight": 20, "threshold": 999, "interruption_phrase": ""},
@@ -120,6 +120,12 @@ class EnhancedInterruptionAnalyzer:
         print(f"   Session: {session_id}")
         print(f"   Duration: {recording_duration:.1f}s")
         print(f"   Transcript length: {len(partial_transcript)} chars")
+        # Reset warnings for this session if this is a fresh answer
+        # (detect fresh answer by checking if duration < 5 seconds)
+        if recording_duration < 5:
+            if session_id in self.session_warnings:
+                self.session_warnings[session_id] = {}
+                print(f"   🔄 Reset warnings for new answer")
         
         all_triggers = []
         
@@ -152,7 +158,7 @@ class EnhancedInterruptionAnalyzer:
                 print(f"   🧠 Context triggers: {[t['reason'] for t in context_triggers]}")
         
         # === LAYER 4: LLM-POWERED DEEP ANALYSIS ===
-        if partial_transcript and len(partial_transcript) > 100:
+        if partial_transcript and len(partial_transcript) > 60:
             llm_triggers = self._analyze_llm_layer(
                 partial_transcript,
                 question_text,
@@ -178,6 +184,7 @@ class EnhancedInterruptionAnalyzer:
             self.session_warnings[session_id] = {}
         
         # Get occurrence count
+        # Get occurrence count
         occurrence_count = self.session_warnings[session_id].get(reason, 0) + 1
         self.session_warnings[session_id][reason] = occurrence_count
         
@@ -200,6 +207,10 @@ class EnhancedInterruptionAnalyzer:
             "interruption_phrase": severity_config.get('interruption_phrase', ''),
             "priority": self._calculate_priority(top_trigger['weight'])
         }
+        
+        # Reset ALL warnings after interrupt fires to prevent infinite loop
+        if should_interrupt:
+            self.session_warnings[session_id] = {}
         
         if should_interrupt:
             print(f"\n🔥 INTERRUPTION TRIGGERED!")
@@ -248,8 +259,8 @@ class EnhancedInterruptionAnalyzer:
             
             elif issue_type == 'HIGH_HESITATION':
                 triggers.append({
-                    "reason": "HIGH_UNCERTAINTY",
-                    "weight": INTERRUPTION_SEVERITY['HIGH_UNCERTAINTY']['weight'],
+                    "reason": "EXCESSIVE_PAUSING",
+                    "weight": INTERRUPTION_SEVERITY['EXCESSIVE_PAUSING']['weight'],
                     "evidence": evidence,
                     "source": "audio"
                 })
@@ -294,7 +305,7 @@ class EnhancedInterruptionAnalyzer:
         filler_ratio = filler_count / word_count if word_count > 0 else 0
         
         # Excessive filler words = rambling
-        if filler_ratio > 0.15:  # >15% filler words
+        if filler_ratio > 0.08:  # >15% filler words
             triggers.append({
                 "reason": "EXCESSIVE_RAMBLING",
                 "weight": INTERRUPTION_SEVERITY['EXCESSIVE_RAMBLING']['weight'],
@@ -302,7 +313,7 @@ class EnhancedInterruptionAnalyzer:
                 "source": "content"
             })
         
-        elif filler_ratio > 0.08:  # 8-15% = minor rambling
+        elif filler_ratio > 0.05:  # 8-15% = minor rambling
             triggers.append({
                 "reason": "MINOR_RAMBLING",
                 "weight": INTERRUPTION_SEVERITY['MINOR_RAMBLING']['weight'],
@@ -318,7 +329,7 @@ class EnhancedInterruptionAnalyzer:
         
         uncertainty_ratio = uncertainty_count / word_count if word_count > 0 else 0
         
-        if uncertainty_ratio > 0.10:  # >10% uncertainty markers
+        if uncertainty_ratio > 0.06:  # >10% uncertainty markers
             triggers.append({
                 "reason": "HIGH_UNCERTAINTY",
                 "weight": INTERRUPTION_SEVERITY['HIGH_UNCERTAINTY']['weight'],
@@ -334,7 +345,7 @@ class EnhancedInterruptionAnalyzer:
         has_specifics = bool(re.search(r'\b(specifically|for example|such as)\b', text_lower))
         
         # Long answer without specifics = vague
-        if word_count > 50 and not (has_numbers or has_metrics or has_specifics):
+        if word_count > 30 and not (has_numbers or has_metrics or has_specifics):
             triggers.append({
                 "reason": "VAGUE_ANSWER",
                 "weight": INTERRUPTION_SEVERITY['VAGUE_ANSWER']['weight'],
@@ -492,7 +503,7 @@ Analyze the answer for the following issues. Respond in JSON format:
   "explanation": "brief explanation of main issue if any"
 }}
 
-Be strict but fair. Only flag serious issues."""
+Be proactive in flagging issues. This is a tough interview simulation - flag anything that seems off."""
                 },
                 {
                     "role": "user",
@@ -511,7 +522,15 @@ Be strict but fair. Only flag serious issues."""
             if clean_response.startswith('```'):
                 clean_response = re.sub(r'```json\s*|\s*```', '', clean_response)
             
-            analysis = json.loads(clean_response)
+            try:
+                analysis = json.loads(clean_response)
+            except json.JSONDecodeError:
+                json_match = re.search(r'\{.*\}', clean_response, re.DOTALL)
+                if json_match:
+                    analysis = json.loads(json_match.group())
+                else:
+                    print(f"   ⚠️ Could not parse LLM JSON response")
+                    return triggers
             
             # Convert LLM findings to triggers
             explanation = analysis.get('explanation', '')

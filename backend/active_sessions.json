@@ -400,7 +400,7 @@
       0
     ],
     "total_interruptions": 0,
-    "started_at": "2026-02-15T23:12:59.440383",
+    "started_at": "2026-02-24T20:11:51.205764",
     "actual_question_number": 0,
     "followup_count": 0
   },
@@ -539,7 +539,7 @@
       82
     ],
     "total_interruptions": 0,
-    "started_at": "2026-02-15T23:12:59.444356",
+    "started_at": "2026-02-24T20:11:51.206173",
     "actual_question_number": 0,
     "followup_count": 0
   },
@@ -672,7 +672,7 @@
       78
     ],
     "total_interruptions": 0,
-    "started_at": "2026-02-15T23:12:59.446878",
+    "started_at": "2026-02-24T20:11:51.206446",
     "actual_question_number": 0,
     "followup_count": 0
   },
@@ -1181,7 +1181,7 @@
       60
     ],
     "total_interruptions": 0,
-    "started_at": "2026-02-15T23:12:59.452602",
+    "started_at": "2026-02-24T20:11:51.206623",
     "actual_question_number": 0,
     "followup_count": 0
   },
@@ -1455,7 +1455,7 @@
       0
     ],
     "total_interruptions": 0,
-    "started_at": "2026-02-15T23:12:59.454088",
+    "started_at": "2026-02-24T20:11:51.206769",
     "actual_question_number": 0,
     "followup_count": 0
   },
@@ -1905,7 +1905,7 @@
       74
     ],
     "total_interruptions": 0,
-    "started_at": "2026-02-15T23:12:59.460918",
+    "started_at": "2026-02-24T20:11:51.206897",
     "actual_question_number": 0,
     "followup_count": 0
   },
@@ -2217,7 +2217,7 @@
       52
     ],
     "total_interruptions": 0,
-    "started_at": "2026-02-15T23:12:59.467716",
+    "started_at": "2026-02-24T20:11:51.207007",
     "actual_question_number": 0,
     "followup_count": 0
   },
@@ -2356,7 +2356,7 @@
       3
     ],
     "total_interruptions": 0,
-    "started_at": "2026-02-15T23:12:59.472523",
+    "started_at": "2026-02-24T20:11:51.207264",
     "actual_question_number": 0,
     "followup_count": 0
   },
@@ -2616,7 +2616,7 @@
       0
     ],
     "total_interruptions": 0,
-    "started_at": "2026-02-15T23:12:59.473252",
+    "started_at": "2026-02-24T20:11:51.207417",
     "actual_question_number": 0,
     "followup_count": 0
   },
@@ -3071,7 +3071,7 @@
       86
     ],
     "total_interruptions": 0,
-    "started_at": "2026-02-15T23:12:59.473687",
+    "started_at": "2026-02-24T20:11:51.207565",
     "actual_question_number": 0,
     "followup_count": 0
   },
@@ -3211,7 +3211,7 @@
       3
     ],
     "total_interruptions": 0,
-    "started_at": "2026-02-15T23:12:59.474022",
+    "started_at": "2026-02-24T20:11:51.207784",
     "actual_question_number": 0,
     "followup_count": 0
   },
@@ -3293,7 +3293,7 @@
       3
     ],
     "total_interruptions": 0,
-    "started_at": "2026-02-15T23:12:59.474375",
+    "started_at": "2026-02-24T20:11:51.208050",
     "actual_question_number": 0,
     "followup_count": 0
   },
@@ -3426,7 +3426,7 @@
       0
     ],
     "total_interruptions": 0,
-    "started_at": "2026-02-15T23:12:59.475498",
+    "started_at": "2026-02-24T20:11:51.208384",
     "actual_question_number": 0,
     "followup_count": 0
   },
@@ -3808,7 +3808,7 @@
       74
     ],
     "total_interruptions": 0,
-    "started_at": "2026-02-15T23:12:59.478587",
+    "started_at": "2026-02-24T20:11:51.208721",
     "actual_question_number": 0,
     "followup_count": 0
   },
@@ -4235,7 +4235,7 @@
       74
     ],
     "total_interruptions": 0,
-    "started_at": "2026-02-15T23:12:59.480965",
+    "started_at": "2026-02-24T20:11:51.209100",
     "actual_question_number": 0,
     "followup_count": 0
   },
@@ -4752,7 +4752,7 @@
       78
     ],
     "total_interruptions": 0,
-    "started_at": "2026-02-15T23:12:59.483352",
+    "started_at": "2026-02-24T20:11:51.209288",
     "actual_question_number": 0,
     "followup_count": 0
   },
@@ -5104,8 +5104,2685 @@
       80
     ],
     "total_interruptions": 0,
-    "started_at": "2026-02-15T23:13:34.960867",
+    "started_at": "2026-02-24T20:11:51.209414",
     "actual_question_number": 5,
     "followup_count": 1
+  },
+  "session_20260217_223653_2857": {
+    "session_id": "session_20260217_223653_2857",
+    "resume_context": "CANDIDATE'S RESUME SUMMARY:\n    =====================================\n\n     \nSHREYA\n  \nS\n \nAI\n \n&\n \nData\n \nScience\n \nEnthusiast\n \n|\n \nExploring\n \nTechnology,\n \nInnovation\n \nBengaluru-70\n \n8494912356\n \nsshreyakp@gmail.com\n \nhttps://github.com/shreyaaa\na06\n \nPROJECTS\n \n \nMovie\n \nRecommendation\n \nSystem\n \nDeveloped\n \na\n \nmachine\n \nlearning-based\n \nrecommendation\n \nsystem\n \nthat\n \nsuggests\n \nmovies\n \naccording\n \nto\n \nuser\n \npreferences.Integrated\n \nTMDB\n \nAPI\n \nto\n \nfetch\n \nreal-time\n \nmovie\n \nmetadata,\n \nposters,\n \ngenres,\n \nand\n \nratings.\n \nImplemented\n \nsimilarity\n \nmeasures\n \n(cosine\n \nsimilarity)\n \non\n \nuser\n \ndata\n \nand\n \nmovie\n \nfeatures\n \nfor\n \npersonalized\n \nrecommendations.\n \n \nAI\n \nResume\n \nAnalyzer\n \nBuilt\n \na\n \ntool\n \nthat\n \nanalyzes\n \nresumes\n \nand\n \nprovides\n \nan\n \noverall\n \nscore\n \nwith\n \nstrengths\n \nand\n \nareas\n \nof\n \nimprovement.Implemented\n \nkeyword\n \nextraction,\n \nsection\n \nidenti\ufb01cation,\n \nand\n \nscoring\n \nlogic\n \nusing\n \nPython.Helps\n \nstudents\n \nand\n \njob\n \nseekers\n \nimprove\n \ntheir\n \nresumes\n \nfor\n \nbetter\n \nopportunities.\n \n \nMatch\n \nJewel\n \nGaming\n \nApp\n \nCreated\n \na\n \nmatch-three\n \njewel/candy\n \ngame\n \ninspired\n \nby\n \nCandy\n \nCrush\n \nusing\n \nAndroid\n \nStudio\n \nand\n \nFlutter.Added\n \nfeatures\n \nlike\n \nscoring,\n \nand\n \ncolorful\n \njewel\n \nicons\n \nfor\n \nan\n \nengaging\n \nexperience.Focused\n \non\n \nimproving\n \nUI\n \ndesign\n \nand\n \ngame\n \nmechanics\n \nfor\n \nsmooth\n \nuser\n \ninteraction.\n \n \nCamera\n \nAI\n \nApp\n \nDesigned\n \nan\n \nAI-powered\n \nmobile\n \ncamera\n \napplication\n \nthat\n \ngives\n \nreal-time\n \nsuggestions\n \nto\n \ncapture\n \nbetter\n \npictur... \n\n    KEY SKILLS IDENTIFIED: python, java, javascript, react, node\n\n    =====================================\n\n    INTERVIEW INSTRUCTIONS:\n    - You are conducting a PERSONALIZED interview based on the candidate's actual resume above\n    - Ask questions that reference SPECIFIC details from their resume (companies, projects, technologies)\n    - Make the interview feel realistic by mentioning things you \"noticed\" on their resume\n    - Start with their background, then dive deeper into specific experiences\n    - Ask follow-up questions based on what they mention from their resume\n\n    EXAMPLE GOOD QUESTIONS:\n    - \"I see you worked with python, java, javascript, react, node. Can you tell me about a specific project where you used these?\"\n    - \"I noticed you worked at [mention a company from resume if visible]. What was your role there?\"\n    - \"Walk me through your background and highlight the experiences most relevant to this role.\"\n\n    DO NOT ask generic questions - make it personal to THEIR resume!",
+    "resume_uploaded": true,
+    "current_phase": "resume_deep_dive",
+    "current_round_type": "hr",
+    "current_question_text": null,
+    "current_question_id": null,
+    "difficulty_level": 5,
+    "questions_in_current_phase": 0,
+    "conversation_history": [],
+    "overall_score_progression": [],
+    "total_interruptions": 0,
+    "started_at": "2026-02-24T20:11:51.209663",
+    "actual_question_number": 0,
+    "followup_count": 0
+  },
+  "session_20260217_224418_6ce7": {
+    "session_id": "session_20260217_224418_6ce7",
+    "resume_context": "CANDIDATE'S RESUME SUMMARY:\n    =====================================\n\n     \nSHREYA\n  \nS\n \nAI\n \n&\n \nData\n \nScience\n \nEnthusiast\n \n|\n \nExploring\n \nTechnology,\n \nInnovation\n \nBengaluru-70\n \n8494912356\n \nsshreyakp@gmail.com\n \nhttps://github.com/shreyaaa\na06\n \nPROJECTS\n \n \nMovie\n \nRecommendation\n \nSystem\n \nDeveloped\n \na\n \nmachine\n \nlearning-based\n \nrecommendation\n \nsystem\n \nthat\n \nsuggests\n \nmovies\n \naccording\n \nto\n \nuser\n \npreferences.Integrated\n \nTMDB\n \nAPI\n \nto\n \nfetch\n \nreal-time\n \nmovie\n \nmetadata,\n \nposters,\n \ngenres,\n \nand\n \nratings.\n \nImplemented\n \nsimilarity\n \nmeasures\n \n(cosine\n \nsimilarity)\n \non\n \nuser\n \ndata\n \nand\n \nmovie\n \nfeatures\n \nfor\n \npersonalized\n \nrecommendations.\n \n \nAI\n \nResume\n \nAnalyzer\n \nBuilt\n \na\n \ntool\n \nthat\n \nanalyzes\n \nresumes\n \nand\n \nprovides\n \nan\n \noverall\n \nscore\n \nwith\n \nstrengths\n \nand\n \nareas\n \nof\n \nimprovement.Implemented\n \nkeyword\n \nextraction,\n \nsection\n \nidenti\ufb01cation,\n \nand\n \nscoring\n \nlogic\n \nusing\n \nPython.Helps\n \nstudents\n \nand\n \njob\n \nseekers\n \nimprove\n \ntheir\n \nresumes\n \nfor\n \nbetter\n \nopportunities.\n \n \nMatch\n \nJewel\n \nGaming\n \nApp\n \nCreated\n \na\n \nmatch-three\n \njewel/candy\n \ngame\n \ninspired\n \nby\n \nCandy\n \nCrush\n \nusing\n \nAndroid\n \nStudio\n \nand\n \nFlutter.Added\n \nfeatures\n \nlike\n \nscoring,\n \nand\n \ncolorful\n \njewel\n \nicons\n \nfor\n \nan\n \nengaging\n \nexperience.Focused\n \non\n \nimproving\n \nUI\n \ndesign\n \nand\n \ngame\n \nmechanics\n \nfor\n \nsmooth\n \nuser\n \ninteraction.\n \n \nCamera\n \nAI\n \nApp\n \nDesigned\n \nan\n \nAI-powered\n \nmobile\n \ncamera\n \napplication\n \nthat\n \ngives\n \nreal-time\n \nsuggestions\n \nto\n \ncapture\n \nbetter\n \npictur... \n\n    KEY SKILLS IDENTIFIED: python, java, javascript, react, node\n\n    =====================================\n\n    INTERVIEW INSTRUCTIONS:\n    - You are conducting a PERSONALIZED interview based on the candidate's actual resume above\n    - Ask questions that reference SPECIFIC details from their resume (companies, projects, technologies)\n    - Make the interview feel realistic by mentioning things you \"noticed\" on their resume\n    - Start with their background, then dive deeper into specific experiences\n    - Ask follow-up questions based on what they mention from their resume\n\n    EXAMPLE GOOD QUESTIONS:\n    - \"I see you worked with python, java, javascript, react, node. Can you tell me about a specific project where you used these?\"\n    - \"I noticed you worked at [mention a company from resume if visible]. What was your role there?\"\n    - \"Walk me through your background and highlight the experiences most relevant to this role.\"\n\n    DO NOT ask generic questions - make it personal to THEIR resume!",
+    "resume_uploaded": true,
+    "current_phase": "resume_deep_dive",
+    "current_round_type": "hr",
+    "current_question_text": "Can you walk me through your experience developing the machine learning-based recommendation system mentioned on your resume? What was the specific task or challenge you were trying to address, and how did you go about designing and implementing the solution?",
+    "current_question_id": "q_1",
+    "difficulty_level": 5,
+    "questions_in_current_phase": 1,
+    "conversation_history": [
+      {
+        "question_id": 1,
+        "question": "Can you walk me through your experience developing the machine learning-based recommendation system mentioned on your resume? What was the specific task or challenge you were trying to address, and how did you go about designing and implementing the solution?",
+        "answer": "Complexity Problem Problem Problem Problem Problem Problem",
+        "evaluation": {
+          "question_id": 1,
+          "round_type": "hr",
+          "scores": {
+            "technical_depth": 20,
+            "concept_accuracy": 80,
+            "structured_thinking": 40,
+            "communication_clarity": 60,
+            "confidence_consistency": 70
+          },
+          "score_details": [
+            {
+              "dimension": "technical_depth",
+              "score": 20,
+              "evidence": "The candidate mentions complexity, but doesn't provide any technical details about the machine learning-based recommendation system.",
+              "improvement": "Provide more specific examples of how they approached the problem and implemented the solution."
+            },
+            {
+              "dimension": "concept_accuracy",
+              "score": 80,
+              "evidence": "The candidate does mention a specific project, but it's unclear what exactly they did or what the outcome was.",
+              "improvement": "Provide more concrete details about the task, challenge, and solution."
+            },
+            {
+              "dimension": "structured_thinking",
+              "score": 40,
+              "evidence": "The candidate doesn't follow the STAR method. They simply list \"complexity\" as a problem without providing context or specific actions.",
+              "improvement": "Use the STAR method to structure their answer, focusing on Situation, Task, Action, and Result."
+            },
+            {
+              "dimension": "communication_clarity",
+              "score": 60,
+              "evidence": "The candidate's response is vague and doesn't provide a clear picture of what they did or achieved.",
+              "improvement": "Use simpler language and provide more concrete examples to help the interviewer understand their experience."
+            }
+          ],
+          "overall_score": 50,
+          "strengths": [
+            "No strengths identified"
+          ],
+          "weaknesses": [
+            "No weaknesses identified"
+          ],
+          "red_flags": [],
+          "requires_followup": false,
+          "followup_reason": null,
+          "suggested_followup": null,
+          "difficulty_adjustment": "maintain"
+        },
+        "phase": "resume_deep_dive",
+        "timestamp": "2026-02-17T22:51:06.813738",
+        "triggered_followup": true,
+        "is_followup_answer": false
+      }
+    ],
+    "overall_score_progression": [
+      50
+    ],
+    "total_interruptions": 0,
+    "started_at": "2026-02-24T20:11:51.209832",
+    "actual_question_number": 1,
+    "followup_count": 1
+  },
+  "session_20260222_104315_d36d": {
+    "session_id": "session_20260222_104315_d36d",
+    "resume_context": "CANDIDATE'S RESUME SUMMARY:\n    =====================================\n\n     \nSHREYA\n  \nS\n \nAI\n \n&\n \nData\n \nScience\n \nEnthusiast\n \n|\n \nExploring\n \nTechnology,\n \nInnovation\n \nBengaluru-70\n \n8494912356\n \nsshreyakp@gmail.com\n \nhttps://github.com/shreyaaa\na06\n \nPROJECTS\n \n \nMovie\n \nRecommendation\n \nSystem\n \nDeveloped\n \na\n \nmachine\n \nlearning-based\n \nrecommendation\n \nsystem\n \nthat\n \nsuggests\n \nmovies\n \naccording\n \nto\n \nuser\n \npreferences.Integrated\n \nTMDB\n \nAPI\n \nto\n \nfetch\n \nreal-time\n \nmovie\n \nmetadata,\n \nposters,\n \ngenres,\n \nand\n \nratings.\n \nImplemented\n \nsimilarity\n \nmeasures\n \n(cosine\n \nsimilarity)\n \non\n \nuser\n \ndata\n \nand\n \nmovie\n \nfeatures\n \nfor\n \npersonalized\n \nrecommendations.\n \n \nAI\n \nResume\n \nAnalyzer\n \nBuilt\n \na\n \ntool\n \nthat\n \nanalyzes\n \nresumes\n \nand\n \nprovides\n \nan\n \noverall\n \nscore\n \nwith\n \nstrengths\n \nand\n \nareas\n \nof\n \nimprovement.Implemented\n \nkeyword\n \nextraction,\n \nsection\n \nidenti\ufb01cation,\n \nand\n \nscoring\n \nlogic\n \nusing\n \nPython.Helps\n \nstudents\n \nand\n \njob\n \nseekers\n \nimprove\n \ntheir\n \nresumes\n \nfor\n \nbetter\n \nopportunities.\n \n \nMatch\n \nJewel\n \nGaming\n \nApp\n \nCreated\n \na\n \nmatch-three\n \njewel/candy\n \ngame\n \ninspired\n \nby\n \nCandy\n \nCrush\n \nusing\n \nAndroid\n \nStudio\n \nand\n \nFlutter.Added\n \nfeatures\n \nlike\n \nscoring,\n \nand\n \ncolorful\n \njewel\n \nicons\n \nfor\n \nan\n \nengaging\n \nexperience.Focused\n \non\n \nimproving\n \nUI\n \ndesign\n \nand\n \ngame\n \nmechanics\n \nfor\n \nsmooth\n \nuser\n \ninteraction.\n \n \nCamera\n \nAI\n \nApp\n \nDesigned\n \nan\n \nAI-powered\n \nmobile\n \ncamera\n \napplication\n \nthat\n \ngives\n \nreal-time\n \nsuggestions\n \nto\n \ncapture\n \nbetter\n \npictur... \n\n    KEY SKILLS IDENTIFIED: python, java, javascript, react, node\n\n    =====================================\n\n    INTERVIEW INSTRUCTIONS:\n    - You are conducting a PERSONALIZED interview based on the candidate's actual resume above\n    - Ask questions that reference SPECIFIC details from their resume (companies, projects, technologies)\n    - Make the interview feel realistic by mentioning things you \"noticed\" on their resume\n    - Start with their background, then dive deeper into specific experiences\n    - Ask follow-up questions based on what they mention from their resume\n\n    EXAMPLE GOOD QUESTIONS:\n    - \"I see you worked with python, java, javascript, react, node. Can you tell me about a specific project where you used these?\"\n    - \"I noticed you worked at [mention a company from resume if visible]. What was your role there?\"\n    - \"Walk me through your background and highlight the experiences most relevant to this role.\"\n\n    DO NOT ask generic questions - make it personal to THEIR resume!",
+    "resume_uploaded": true,
+    "current_phase": "resume_deep_dive",
+    "current_round_type": "hr",
+    "current_question_text": "Here is the next behavioral interview question:\n\nCan you describe a specific instance where you integrated an API (like TMDB) into your project, and how did you handle any issues that arose from integrating it? What was the outcome of incorporating this API?",
+    "current_question_id": "q_2",
+    "difficulty_level": 5,
+    "questions_in_current_phase": 1,
+    "conversation_history": [
+      {
+        "question_id": 1,
+        "question": "Can you share an example from your experience on the Movie Recommendation System project, where you had to overcome a technical challenge or unexpected issue? How did you approach it and what was the outcome?",
+        "answer": "It was very difficult. I Salted somehow. I Can't Can't Can't Can't Can't Can't Can't",
+        "evaluation": {
+          "question_id": 1,
+          "round_type": "hr",
+          "scores": {
+            "technical_depth": 20,
+            "concept_accuracy": 0,
+            "structured_thinking": 10,
+            "communication_clarity": 30,
+            "confidence_consistency": 0
+          },
+          "score_details": [
+            {
+              "dimension": "technical_depth",
+              "score": 20,
+              "evidence": "The candidate didn't provide any technical details about the project or the challenge.",
+              "improvement": "Provide more context about the Movie Recommendation System project and the technical challenge."
+            },
+            {
+              "dimension": "concept_accuracy",
+              "score": 0,
+              "evidence": "The candidate's claims are not verifiable, and they seem to be making false statements (\"I Can't Can't...\").",
+              "improvement": "Be more accurate and specific in describing their experience."
+            },
+            {
+              "dimension": "structured_thinking",
+              "score": 10,
+              "evidence": "The candidate didn't follow the STAR method. They didn't provide a clear Situation, Task, Action, or Result.",
+              "improvement": "Use the STAR method to structure their answer and provide specific examples."
+            },
+            {
+              "dimension": "communication_clarity",
+              "score": 30,
+              "evidence": "The candidate's response was unclear due to filler words (\"Can't Can't...\") and lack of coherence.",
+              "improvement": "Practice concise communication by avoiding filler words and rephrasing their answer."
+            }
+          ],
+          "overall_score": 12,
+          "strengths": [
+            "No strengths identified"
+          ],
+          "weaknesses": [
+            "No weaknesses identified"
+          ],
+          "red_flags": [],
+          "requires_followup": false,
+          "followup_reason": null,
+          "suggested_followup": null,
+          "difficulty_adjustment": "maintain"
+        },
+        "phase": "resume_deep_dive",
+        "timestamp": "2026-02-22T10:55:06.989812",
+        "triggered_followup": true,
+        "is_followup_answer": false
+      },
+      {
+        "question_id": 1,
+        "question": "Can you share an example from your experience on the Movie Recommendation System project, where you had to overcome a technical challenge or unexpected issue? How did you approach it and what was the outcome?",
+        "answer": "To this challenge, I learned the importance of data pre-processing and feature engineering. I understood that even a good algorithm will not work properly without clean and well-structured data. In my movie recommendation system project, one major technical challenge I faced was handling inconsistent and messy data from the data set. I was using movie metadata, ratings, and created files, and many columns had missing values, null entries, and incorrect formulas. Because of this, my recommendation results were either inaccurate, or the program was throwing errors. For example, some movies had missing genres, some had empty caste information, and ratings file had user IDs that did not properly match the movie IDs. When I tried to merge the data sets directly, it caused mismatched records and drawing recommendations. To solve this issue, I first carefully analyzed the data set using Python and Pandas. I checked for null values, duplicates, and incorrect data types. When I cleaned the data step by step, I removed unnecessary columns, filled or dropped missing values depending on importance, and ensured that all ID columns had the same data type before merging. Another challenge was improving recommendation accuracy. Initially, I used only basic content-based filtering, but the results were not very personalized. So I and...",
+        "evaluation": {
+          "question_id": 1,
+          "round_type": "hr",
+          "scores": {
+            "technical_depth": 0,
+            "concept_accuracy": 0,
+            "structured_thinking": 0,
+            "communication_clarity": 0,
+            "confidence_consistency": 0
+          },
+          "score_details": [
+            {
+              "dimension": "technical_depth",
+              "score": 0,
+              "evidence": "The candidate mentions data pre-processing, feature engineering, and using Python and Pandas to analyze the dataset.",
+              "improvement": "While they provide some technical details, it would be beneficial to see more specific examples of how they applied these concepts."
+            },
+            {
+              "dimension": "concept_accuracy",
+              "score": 0,
+              "evidence": "The candidate accurately describes the importance of data pre-processing and feature engineering in handling inconsistent data.",
+              "improvement": "None needed; their claims are accurate and verifiable."
+            },
+            {
+              "dimension": "structured_thinking",
+              "score": 0,
+              "evidence": "The candidate starts to describe a situation, but then jumps into the action without clearly stating the task or result. They also start to describe another challenge (improving recommendation accuracy) without wrapping up the first one.",
+              "improvement": "The candidate should focus on completing the STAR method for each example and provide clear results."
+            },
+            {
+              "dimension": "communication_clarity",
+              "score": 0,
+              "evidence": "The candidate's language is mostly clear, but they use some filler words (\"for example\") and could improve sentence structure.",
+              "improvement": "Encourage the candidate to speak more concisely and avoid filler words."
+            },
+            {
+              "dimension": "technical_depth",
+              "score": 0,
+              "evidence": "No evaluation data available from LLM response",
+              "improvement": "Unable to assess - LLM did not return this dimension"
+            },
+            {
+              "dimension": "concept_accuracy",
+              "score": 0,
+              "evidence": "No evaluation data available from LLM response",
+              "improvement": "Unable to assess - LLM did not return this dimension"
+            },
+            {
+              "dimension": "structured_thinking",
+              "score": 0,
+              "evidence": "No evaluation data available from LLM response",
+              "improvement": "Unable to assess - LLM did not return this dimension"
+            },
+            {
+              "dimension": "communication_clarity",
+              "score": 0,
+              "evidence": "No evaluation data available from LLM response",
+              "improvement": "Unable to assess - LLM did not return this dimension"
+            },
+            {
+              "dimension": "confidence_consistency",
+              "score": 0,
+              "evidence": "No evaluation data available from LLM response",
+              "improvement": "Unable to assess - LLM did not return this dimension"
+            }
+          ],
+          "overall_score": 0,
+          "strengths": [
+            "No strengths identified"
+          ],
+          "weaknesses": [
+            "No weaknesses identified"
+          ],
+          "red_flags": [],
+          "requires_followup": false,
+          "followup_reason": null,
+          "suggested_followup": null,
+          "difficulty_adjustment": "maintain"
+        },
+        "phase": "resume_deep_dive",
+        "timestamp": "2026-02-22T11:00:04.125356",
+        "triggered_followup": false,
+        "is_followup_answer": true
+      }
+    ],
+    "overall_score_progression": [
+      12,
+      0
+    ],
+    "total_interruptions": 0,
+    "started_at": "2026-02-24T20:11:51.209959",
+    "actual_question_number": 2,
+    "followup_count": 1
+  },
+  "session_20260222_111311_ef87": {
+    "session_id": "session_20260222_111311_ef87",
+    "resume_context": null,
+    "resume_uploaded": false,
+    "current_phase": "resume_deep_dive",
+    "current_round_type": "hr",
+    "current_question_text": "What was the most significant technical or creative challenge you faced while working on a project or product that didn't meet its initial expectations? How did you reframe your approach, and what specific changes did you make to ultimately deliver a successful outcome?",
+    "current_question_id": "q_2",
+    "difficulty_level": 5,
+    "questions_in_current_phase": 1,
+    "conversation_history": [
+      {
+        "question_id": 1,
+        "question": "Can you describe a project you led from start to finish, where you took ownership of the outcome? What was your role, what were some key challenges you faced, and how did you measure its impact?",
+        "answer": "One project I led from start to finish was my movie recommendation system. I took full ownership of the project from planning and data set selection to model building, API integration and front end development. My role was not only as a developer but also as the project planner. I decided the features, selected the data set, designed the system flow and implemented both the back end and front end. The goal was to build a recommendation system that could suggest similar movies based on user preferences and also displayed detailed information like posters, ratings and trailers. One of the key challenges I faced was handling large and messy data sets. The TMDB data set contained missing values, inconsistent formats and multiple CSV files like movies metadata, ratings and credits. When I tried merging them initially, I encountered errors and incorrect recommendations. I solved this by performing detailed data cleaning using pandas, removing now values, correcting data types and carefully merging data sets based on common IDs. Another major challenge was improving recommendation accuracy. My first model used simple content based filtering but the results were not very personalized. So I enhanced the system by combining multiple features like genres, cast, keywords and overview text into a single feature vector and applied TFIDF with cosine similarity. This improved the relevance significantly. I also integrated the TMDB API to fetch real-time posters and trailers and I handled API errors by adding proper validations and fallback options. Through this project, I learned leadership, problem solving and end-to-end project ownership. It strengthened my technical skills and taught me how to build a complete user-focused system rather than just a model.",
+        "evaluation": {
+          "question_id": 1,
+          "round_type": "hr",
+          "scores": {
+            "technical_depth": 80,
+            "concept_accuracy": 90,
+            "structured_thinking": 95,
+            "communication_clarity": 85,
+            "confidence_consistency": 90
+          },
+          "score_details": [
+            {
+              "dimension": "technical_depth",
+              "score": 80,
+              "evidence": "The candidate provided specific details about their project, including data set selection, model building, API integration, and front-end development.",
+              "improvement": "While they did provide technical details, some aspects could be further elaborated upon."
+            },
+            {
+              "dimension": "concept_accuracy",
+              "score": 90,
+              "evidence": "The candidate's claims are verifiable, and their project outcome is measurable (improved recommendation accuracy).",
+              "improvement": "None needed."
+            },
+            {
+              "dimension": "structured_thinking",
+              "score": 95,
+              "evidence": "The candidate effectively used the STAR method to structure their answer: Situation (movie recommendation system), Task (building a complete user-focused system), Action (data cleaning, model enhancement, API integration, and error handling), Result (improved recommendation accuracy).",
+              "improvement": "None needed."
+            },
+            {
+              "dimension": "communication_clarity",
+              "score": 85,
+              "evidence": "The candidate's answer is generally clear and easy to follow, with minimal filler words.",
+              "improvement": "Some sentences could be rephrased for better clarity."
+            }
+          ],
+          "overall_score": 87,
+          "strengths": [
+            "No strengths identified"
+          ],
+          "weaknesses": [
+            "No weaknesses identified"
+          ],
+          "red_flags": [],
+          "requires_followup": false,
+          "followup_reason": null,
+          "suggested_followup": null,
+          "difficulty_adjustment": "maintain"
+        },
+        "phase": "resume_deep_dive",
+        "timestamp": "2026-02-22T11:21:16.336747",
+        "triggered_followup": false,
+        "is_followup_answer": false
+      }
+    ],
+    "overall_score_progression": [
+      87
+    ],
+    "total_interruptions": 0,
+    "started_at": "2026-02-24T20:11:51.210182",
+    "actual_question_number": 2,
+    "followup_count": 0
+  },
+  "session_20260222_121627_45df": {
+    "session_id": "session_20260222_121627_45df",
+    "resume_context": null,
+    "resume_uploaded": false,
+    "current_phase": "core_skill_assessment",
+    "current_round_type": "hr",
+    "current_question_text": "Can you describe a complex project or problem you encountered where you had to collaborate with multiple stakeholders and teams to develop and implement a solution? What was the situation, what task did you take on, what actions did you take to facilitate collaboration, and what were the key results and outcomes of your efforts?",
+    "current_question_id": "q_3",
+    "difficulty_level": 5,
+    "questions_in_current_phase": 0,
+    "conversation_history": [
+      {
+        "question_id": 1,
+        "question": "Can you tell me about a project or initiative you led from start to finish, where you took ownership of a specific aspect and drove significant results? What was the situation, what task did you take on, what actions did you take, and what were the measurable outcomes you achieved?",
+        "answer": "One project I led from start to finish was my movie recommendation system. I took full ownership of the project from planning and data set selection to model building, API integration and front end development. My role was not only as a developer but also as the project planner. I decided the features, selected the data set, designed the system flow and implemented both the back end and front end. The goal was to build a recommendation system that could suggest similar movies based on user preferences and also displayed detailed information like posters, ratings and trailers. One of the key challenges I faced was handling large and messy data sets. The TMDB data set contained missing values, inconsistent formats and multiple CSV files like movies metadata, ratings and credits. When I tried merging them initially, I encountered errors and incorrect recommendations. I solved this by performing detailed data cleaning using pandas, removing null values, correcting data types and carefully merging data sets based on common IDs. Another major challenge was improving recommendation accuracy. My first model used simple content-based filtering but the results were not very personalized. So I enhanced the system by combining multiple features like genres, cost, keywords and overview text into a single feature vector.",
+        "evaluation": {
+          "question_id": 1,
+          "round_type": "hr",
+          "scores": {
+            "technical_depth": 80,
+            "concept_accuracy": 90,
+            "structured_thinking": 70,
+            "communication_clarity": 90,
+            "confidence_consistency": 80
+          },
+          "score_details": [
+            {
+              "dimension": "technical_depth",
+              "score": 80,
+              "evidence": "The candidate provided some technical details about their project, including data cleaning using pandas.",
+              "improvement": "While the answer shows some technical depth, it would be improved by providing more specific examples and technical terms."
+            },
+            {
+              "dimension": "concept_accuracy",
+              "score": 90,
+              "evidence": "The candidate's claims seem accurate and verifiable. They provided specific details about their project and challenges.",
+              "improvement": "None needed."
+            },
+            {
+              "dimension": "structured_thinking",
+              "score": 70,
+              "evidence": "The candidate partially followed the STAR method, but their answer was more focused on describing the project than providing a clear Situation, Task, Action, and Result.",
+              "improvement": "To improve, they should focus on breaking down their answer into a clear Situation, Task, Action, and Result."
+            },
+            {
+              "dimension": "communication_clarity",
+              "score": 90,
+              "evidence": "The candidate's language is generally clear and easy to follow. They used specific examples to illustrate their points.",
+              "improvement": "None needed."
+            }
+          ],
+          "overall_score": 82,
+          "strengths": [
+            "No strengths identified"
+          ],
+          "weaknesses": [
+            "No weaknesses identified"
+          ],
+          "red_flags": [],
+          "requires_followup": false,
+          "followup_reason": null,
+          "suggested_followup": null,
+          "difficulty_adjustment": "maintain"
+        },
+        "phase": "resume_deep_dive",
+        "timestamp": "2026-02-22T12:22:55.105075",
+        "triggered_followup": false,
+        "is_followup_answer": false
+      },
+      {
+        "question_id": 2,
+        "question": "Can you describe a project or initiative you led from start to finish, highlighting your role, the specific challenges you faced, and the measurable outcomes you achieved? Be sure to include concrete metrics or numbers wherever possible.",
+        "answer": "One project I led from start to finish was a movie recommendation system that I built using Python and machine learning techniques. I took complete ownership of the project from defining the problem statement to deploying a working prototype. My role included selecting the data set, cleaning and pre-processing the data, designing the recommendation algorithm, integrating the TMDAI, building a movie. Details and developing the front end interface. I worked independently and managed the entire project life cycle. One major challenge I faced was handling messy and inconsistent data from multiple CSV files like movies metadata, ratings and credits. Around 15, 20% of the data set contained missing or inconsistent values, which initially caused incorrect recommendations and merge errors.",
+        "evaluation": {
+          "question_id": 2,
+          "round_type": "hr",
+          "scores": {
+            "technical_depth": 80,
+            "concept_accuracy": 90,
+            "structured_thinking": 60,
+            "communication_clarity": 70,
+            "confidence_consistency": 80
+          },
+          "score_details": [
+            {
+              "dimension": "technical_depth",
+              "score": 80,
+              "evidence": "The candidate provided a good overview of their project, including technical details like Python and machine learning techniques.",
+              "improvement": "While they showed some technical depth, it would be great to see more specific examples or metrics on how the project was executed."
+            },
+            {
+              "dimension": "concept_accuracy",
+              "score": 90,
+              "evidence": "The candidate's claims seem accurate and verifiable, with no obvious exaggerations or false statements.",
+              "improvement": "None needed."
+            },
+            {
+              "dimension": "structured_thinking",
+              "score": 60,
+              "evidence": "The candidate started to describe the situation, but then jumped straight into their actions without clearly defining the task or providing measurable outcomes.",
+              "improvement": "They should focus on setting a clear context for the project and breaking it down into specific tasks."
+            },
+            {
+              "dimension": "communication_clarity",
+              "score": 70,
+              "evidence": "The candidate's language is generally clear, but some sentences are a bit long and could be broken up for easier understanding.",
+              "improvement": "They should aim to use shorter sentences and avoid filler words like \"like\" or \"um\"."
+            }
+          ],
+          "overall_score": 77,
+          "strengths": [
+            "No strengths identified"
+          ],
+          "weaknesses": [
+            "No weaknesses identified"
+          ],
+          "red_flags": [],
+          "requires_followup": false,
+          "followup_reason": null,
+          "suggested_followup": null,
+          "difficulty_adjustment": "maintain"
+        },
+        "phase": "resume_deep_dive",
+        "timestamp": "2026-02-22T12:31:17.787504",
+        "triggered_followup": false,
+        "is_followup_answer": false
+      }
+    ],
+    "overall_score_progression": [
+      82,
+      77
+    ],
+    "total_interruptions": 0,
+    "started_at": "2026-02-24T20:11:51.210352",
+    "actual_question_number": 3,
+    "followup_count": 0
+  },
+  "session_20260222_123732_c92d": {
+    "session_id": "session_20260222_123732_c92d",
+    "resume_context": null,
+    "resume_uploaded": false,
+    "current_phase": "resume_deep_dive",
+    "current_round_type": "hr",
+    "current_question_text": "Here's a behavioral interview question:\n\n\"Can you describe a project from your previous experience where you took ownership of a specific component or task, and how did you measure its impact on the overall outcome?\"",
+    "current_question_id": "q_2",
+    "difficulty_level": 5,
+    "questions_in_current_phase": 1,
+    "conversation_history": [
+      {
+        "question_id": 1,
+        "question": "Can you tell me about a project from your previous role where you took ownership of a specific aspect or initiative? How did you approach it, what actions did you take, and what was the outcome?",
+        "answer": "One project I LED from start to finish was a movie recommendation system that I built using Python And machine learning techniques. I took complete ownership of the project from defining the problem statement to deploying a working prototype. My role included selecting the data set, cleaning and preprocessing the data, designing the recommendation algorithm, integrating the TMDB API for real-time movie details, and developing the front end interface. I worked independently and managed the entire project life cycle.",
+        "evaluation": {
+          "question_id": 1,
+          "round_type": "hr",
+          "scores": {
+            "technical_depth": 80,
+            "concept_accuracy": 90,
+            "structured_thinking": 60,
+            "communication_clarity": 70,
+            "confidence_consistency": 80
+          },
+          "score_details": [
+            {
+              "dimension": "technical_depth",
+              "score": 80,
+              "evidence": "The candidate provided a good level of technical detail about their project, including programming languages and machine learning techniques.",
+              "improvement": "To further improve, they could have elaborated on specific technical challenges they faced and how they overcame them."
+            },
+            {
+              "dimension": "concept_accuracy",
+              "score": 90,
+              "evidence": "The candidate's claims seem accurate and verifiable, with no obvious exaggerations or false statements.",
+              "improvement": "None needed."
+            },
+            {
+              "dimension": "structured_thinking",
+              "score": 60,
+              "evidence": "While the candidate mentions taking ownership of the project from start to finish, they don't explicitly break down their approach into Situation, Task, Action, and Result (STAR) components.",
+              "improvement": "To improve, they could have structured their answer using the STAR method."
+            },
+            {
+              "dimension": "communication_clarity",
+              "score": 70,
+              "evidence": "The candidate's language is generally clear, but some sentences are a bit long and convoluted.",
+              "improvement": "They could work on breaking up longer sentences into shorter, more concise ones."
+            }
+          ],
+          "overall_score": 77,
+          "strengths": [
+            "No strengths identified"
+          ],
+          "weaknesses": [
+            "No weaknesses identified"
+          ],
+          "red_flags": [],
+          "requires_followup": false,
+          "followup_reason": null,
+          "suggested_followup": null,
+          "difficulty_adjustment": "maintain"
+        },
+        "phase": "resume_deep_dive",
+        "timestamp": "2026-02-22T12:42:10.206130",
+        "triggered_followup": false,
+        "is_followup_answer": false
+      }
+    ],
+    "overall_score_progression": [
+      77
+    ],
+    "total_interruptions": 0,
+    "started_at": "2026-02-24T20:11:51.210509",
+    "actual_question_number": 2,
+    "followup_count": 0
+  },
+  "session_20260222_124549_a9f7": {
+    "session_id": "session_20260222_124549_a9f7",
+    "resume_context": null,
+    "resume_uploaded": false,
+    "current_phase": "resume_deep_dive",
+    "current_round_type": "hr",
+    "current_question_text": "Here's your first STAR method behavioral interview question:\n\n\"Can you walk me through a specific project or initiative you led from start to finish that showcases your skills and accomplishments, such as [Resume Claim]? What was the situation, what task did you take on, what actions did you take, and what were the key results?\"",
+    "current_question_id": "q_1",
+    "difficulty_level": 5,
+    "questions_in_current_phase": 0,
+    "conversation_history": [],
+    "overall_score_progression": [],
+    "total_interruptions": 0,
+    "started_at": "2026-02-24T20:11:51.210676",
+    "actual_question_number": 1,
+    "followup_count": 0
+  },
+  "session_20260222_133240_bb26": {
+    "session_id": "session_20260222_133240_bb26",
+    "resume_context": null,
+    "resume_uploaded": false,
+    "current_phase": "resume_deep_dive",
+    "current_round_type": "hr",
+    "current_question_text": "Can you tell me about a project or initiative from your past experience where you took ownership of driving results, and how did you measure success? Please walk me through what you were trying to accomplish, the actions you took, and the specific outcome you achieved?",
+    "current_question_id": "q_1",
+    "difficulty_level": 5,
+    "questions_in_current_phase": 0,
+    "conversation_history": [],
+    "overall_score_progression": [],
+    "total_interruptions": 0,
+    "started_at": "2026-02-24T20:11:51.210839",
+    "actual_question_number": 1,
+    "followup_count": 0
+  },
+  "session_20260222_134934_d38d": {
+    "session_id": "session_20260222_134934_d38d",
+    "resume_context": null,
+    "resume_uploaded": false,
+    "current_phase": "resume_deep_dive",
+    "current_round_type": "hr",
+    "current_question_text": "Can you tell me about a project on your resume where you took ownership of a specific initiative, and how you measured its success? Please walk me through the Situation, Task, Action, and Result (STAR) method to describe what you did and what impact it had.",
+    "current_question_id": "q_1",
+    "difficulty_level": 5,
+    "questions_in_current_phase": 0,
+    "conversation_history": [],
+    "overall_score_progression": [],
+    "total_interruptions": 5,
+    "started_at": "2026-02-24T20:11:51.211046",
+    "actual_question_number": 1,
+    "followup_count": 0
+  },
+  "session_20260222_141010_c19d": {
+    "session_id": "session_20260222_141010_c19d",
+    "resume_context": null,
+    "resume_uploaded": false,
+    "current_phase": "resume_deep_dive",
+    "current_round_type": "hr",
+    "current_question_text": "Can you tell me about a project from your previous experience where you took ownership of a specific aspect or task, and how it contributed to the overall outcome? Please use the STAR method to walk me through what happened in that situation.",
+    "current_question_id": "q_1",
+    "difficulty_level": 5,
+    "questions_in_current_phase": 0,
+    "conversation_history": [],
+    "overall_score_progression": [],
+    "total_interruptions": 5,
+    "started_at": "2026-02-24T20:11:51.211215",
+    "actual_question_number": 1,
+    "followup_count": 0
+  },
+  "session_20260222_142304_68fc": {
+    "session_id": "session_20260222_142304_68fc",
+    "resume_context": null,
+    "resume_uploaded": false,
+    "current_phase": "resume_deep_dive",
+    "current_round_type": "hr",
+    "current_question_text": "Can you walk me through your most significant project management experience on your resume? How did you identify the task's importance, what actions did you take to drive its success, and what specific results did you achieve in terms of metrics or outcomes?",
+    "current_question_id": "q_1",
+    "difficulty_level": 5,
+    "questions_in_current_phase": 0,
+    "conversation_history": [],
+    "overall_score_progression": [],
+    "total_interruptions": 5,
+    "started_at": "2026-02-24T20:11:51.211344",
+    "actual_question_number": 1,
+    "followup_count": 0
+  },
+  "session_20260222_143342_a865": {
+    "session_id": "session_20260222_143342_a865",
+    "resume_context": null,
+    "resume_uploaded": false,
+    "current_phase": "resume_deep_dive",
+    "current_round_type": "hr",
+    "current_question_text": "Can you tell me about a project or initiative you led from start to finish where you had to leverage your technical skills and collaboration with cross-functional teams to drive results?",
+    "current_question_id": "q_1",
+    "difficulty_level": 5,
+    "questions_in_current_phase": 0,
+    "conversation_history": [],
+    "overall_score_progression": [],
+    "total_interruptions": 0,
+    "started_at": "2026-02-24T20:11:51.211514",
+    "actual_question_number": 1,
+    "followup_count": 0
+  },
+  "session_20260222_144525_cb2b": {
+    "session_id": "session_20260222_144525_cb2b",
+    "resume_context": null,
+    "resume_uploaded": false,
+    "current_phase": "resume_deep_dive",
+    "current_round_type": "hr",
+    "current_question_text": "Can you share an example of a project or initiative where you took ownership and drove results? It could be from your current or previous role, and I'm interested in hearing about the specific situation, the task you faced, the actions you took to tackle it, and ultimately, the outcome you achieved.",
+    "current_question_id": "q_1",
+    "difficulty_level": 5,
+    "questions_in_current_phase": 0,
+    "conversation_history": [],
+    "overall_score_progression": [],
+    "total_interruptions": 5,
+    "started_at": "2026-02-24T20:11:51.211682",
+    "actual_question_number": 1,
+    "followup_count": 0
+  },
+  "session_20260222_171623_3be5": {
+    "session_id": "session_20260222_171623_3be5",
+    "resume_context": "CANDIDATE'S RESUME SUMMARY:\n    =====================================\n\n     \nSHREYA\n  \nS\n \nAI\n \n&\n \nData\n \nScience\n \nEnthusiast\n \n|\n \nExploring\n \nTechnology,\n \nInnovation\n \nBengaluru-70\n \n8494912356\n \nsshreyakp@gmail.com\n \nhttps://github.com/shreyaaa\na06\n \nPROJECTS\n \n \nMovie\n \nRecommendation\n \nSystem\n \nDeveloped\n \na\n \nmachine\n \nlearning-based\n \nrecommendation\n \nsystem\n \nthat\n \nsuggests\n \nmovies\n \naccording\n \nto\n \nuser\n \npreferences.Integrated\n \nTMDB\n \nAPI\n \nto\n \nfetch\n \nreal-time\n \nmovie\n \nmetadata,\n \nposters,\n \ngenres,\n \nand\n \nratings.\n \nImplemented\n \nsimilarity\n \nmeasures\n \n(cosine\n \nsimilarity)\n \non\n \nuser\n \ndata\n \nand\n \nmovie\n \nfeatures\n \nfor\n \npersonalized\n \nrecommendations.\n \n \nAI\n \nResume\n \nAnalyzer\n \nBuilt\n \na\n \ntool\n \nthat\n \nanalyzes\n \nresumes\n \nand\n \nprovides\n \nan\n \noverall\n \nscore\n \nwith\n \nstrengths\n \nand\n \nareas\n \nof\n \nimprovement.Implemented\n \nkeyword\n \nextraction,\n \nsection\n \nidenti\ufb01cation,\n \nand\n \nscoring\n \nlogic\n \nusing\n \nPython.Helps\n \nstudents\n \nand\n \njob\n \nseekers\n \nimprove\n \ntheir\n \nresumes\n \nfor\n \nbetter\n \nopportunities.\n \n \nMatch\n \nJewel\n \nGaming\n \nApp\n \nCreated\n \na\n \nmatch-three\n \njewel/candy\n \ngame\n \ninspired\n \nby\n \nCandy\n \nCrush\n \nusing\n \nAndroid\n \nStudio\n \nand\n \nFlutter.Added\n \nfeatures\n \nlike\n \nscoring,\n \nand\n \ncolorful\n \njewel\n \nicons\n \nfor\n \nan\n \nengaging\n \nexperience.Focused\n \non\n \nimproving\n \nUI\n \ndesign\n \nand\n \ngame\n \nmechanics\n \nfor\n \nsmooth\n \nuser\n \ninteraction.\n \n \nCamera\n \nAI\n \nApp\n \nDesigned\n \nan\n \nAI-powered\n \nmobile\n \ncamera\n \napplication\n \nthat\n \ngives\n \nreal-time\n \nsuggestions\n \nto\n \ncapture\n \nbetter\n \npictur... \n\n    KEY SKILLS IDENTIFIED: python, java, javascript, react, node\n\n    =====================================\n\n    INTERVIEW INSTRUCTIONS:\n    - You are conducting a PERSONALIZED interview based on the candidate's actual resume above\n    - Ask questions that reference SPECIFIC details from their resume (companies, projects, technologies)\n    - Make the interview feel realistic by mentioning things you \"noticed\" on their resume\n    - Start with their background, then dive deeper into specific experiences\n    - Ask follow-up questions based on what they mention from their resume\n\n    EXAMPLE GOOD QUESTIONS:\n    - \"I see you worked with python, java, javascript, react, node. Can you tell me about a specific project where you used these?\"\n    - \"I noticed you worked at [mention a company from resume if visible]. What was your role there?\"\n    - \"Walk me through your background and highlight the experiences most relevant to this role.\"\n\n    DO NOT ask generic questions - make it personal to THEIR resume!",
+    "resume_uploaded": true,
+    "current_phase": "resume_deep_dive",
+    "current_round_type": "hr",
+    "current_question_text": "Can you walk me through the Movie Recommendation System project you developed, highlighting your specific role, responsibilities, and achievements in building this system?",
+    "current_question_id": "q_1",
+    "difficulty_level": 5,
+    "questions_in_current_phase": 0,
+    "conversation_history": [],
+    "overall_score_progression": [],
+    "total_interruptions": 0,
+    "started_at": "2026-02-24T20:11:51.211823",
+    "actual_question_number": 1,
+    "followup_count": 0
+  },
+  "session_20260222_171808_36da": {
+    "session_id": "session_20260222_171808_36da",
+    "resume_context": "CANDIDATE'S RESUME SUMMARY:\n    =====================================\n\n     \nSHREYA\n  \nS\n \nAI\n \n&\n \nData\n \nScience\n \nEnthusiast\n \n|\n \nExploring\n \nTechnology,\n \nInnovation\n \nBengaluru-70\n \n8494912356\n \nsshreyakp@gmail.com\n \nhttps://github.com/shreyaaa\na06\n \nPROJECTS\n \n \nMovie\n \nRecommendation\n \nSystem\n \nDeveloped\n \na\n \nmachine\n \nlearning-based\n \nrecommendation\n \nsystem\n \nthat\n \nsuggests\n \nmovies\n \naccording\n \nto\n \nuser\n \npreferences.Integrated\n \nTMDB\n \nAPI\n \nto\n \nfetch\n \nreal-time\n \nmovie\n \nmetadata,\n \nposters,\n \ngenres,\n \nand\n \nratings.\n \nImplemented\n \nsimilarity\n \nmeasures\n \n(cosine\n \nsimilarity)\n \non\n \nuser\n \ndata\n \nand\n \nmovie\n \nfeatures\n \nfor\n \npersonalized\n \nrecommendations.\n \n \nAI\n \nResume\n \nAnalyzer\n \nBuilt\n \na\n \ntool\n \nthat\n \nanalyzes\n \nresumes\n \nand\n \nprovides\n \nan\n \noverall\n \nscore\n \nwith\n \nstrengths\n \nand\n \nareas\n \nof\n \nimprovement.Implemented\n \nkeyword\n \nextraction,\n \nsection\n \nidenti\ufb01cation,\n \nand\n \nscoring\n \nlogic\n \nusing\n \nPython.Helps\n \nstudents\n \nand\n \njob\n \nseekers\n \nimprove\n \ntheir\n \nresumes\n \nfor\n \nbetter\n \nopportunities.\n \n \nMatch\n \nJewel\n \nGaming\n \nApp\n \nCreated\n \na\n \nmatch-three\n \njewel/candy\n \ngame\n \ninspired\n \nby\n \nCandy\n \nCrush\n \nusing\n \nAndroid\n \nStudio\n \nand\n \nFlutter.Added\n \nfeatures\n \nlike\n \nscoring,\n \nand\n \ncolorful\n \njewel\n \nicons\n \nfor\n \nan\n \nengaging\n \nexperience.Focused\n \non\n \nimproving\n \nUI\n \ndesign\n \nand\n \ngame\n \nmechanics\n \nfor\n \nsmooth\n \nuser\n \ninteraction.\n \n \nCamera\n \nAI\n \nApp\n \nDesigned\n \nan\n \nAI-powered\n \nmobile\n \ncamera\n \napplication\n \nthat\n \ngives\n \nreal-time\n \nsuggestions\n \nto\n \ncapture\n \nbetter\n \npictur... \n\n    KEY SKILLS IDENTIFIED: python, java, javascript, react, node\n\n    =====================================\n\n    INTERVIEW INSTRUCTIONS:\n    - You are conducting a PERSONALIZED interview based on the candidate's actual resume above\n    - Ask questions that reference SPECIFIC details from their resume (companies, projects, technologies)\n    - Make the interview feel realistic by mentioning things you \"noticed\" on their resume\n    - Start with their background, then dive deeper into specific experiences\n    - Ask follow-up questions based on what they mention from their resume\n\n    EXAMPLE GOOD QUESTIONS:\n    - \"I see you worked with python, java, javascript, react, node. Can you tell me about a specific project where you used these?\"\n    - \"I noticed you worked at [mention a company from resume if visible]. What was your role there?\"\n    - \"Walk me through your background and highlight the experiences most relevant to this role.\"\n\n    DO NOT ask generic questions - make it personal to THEIR resume!",
+    "resume_uploaded": true,
+    "current_phase": "resume_deep_dive",
+    "current_round_type": "hr",
+    "current_question_text": "Can you tell me about a specific project from your Movie Recommendation System where you had to overcome an unexpected challenge or obstacle? What was the situation, what action did you take, and what was the outcome?",
+    "current_question_id": "q_1",
+    "difficulty_level": 5,
+    "questions_in_current_phase": 0,
+    "conversation_history": [],
+    "overall_score_progression": [],
+    "total_interruptions": 0,
+    "started_at": "2026-02-24T20:11:51.211955",
+    "actual_question_number": 1,
+    "followup_count": 0
+  },
+  "session_20260222_181346_ad0f": {
+    "session_id": "session_20260222_181346_ad0f",
+    "resume_context": "CANDIDATE'S RESUME SUMMARY:\n    =====================================\n\n     \nSHREYA\n  \nS\n \nAI\n \n&\n \nData\n \nScience\n \nEnthusiast\n \n|\n \nExploring\n \nTechnology,\n \nInnovation\n \nBengaluru-70\n \n8494912356\n \nsshreyakp@gmail.com\n \nhttps://github.com/shreyaaa\na06\n \nPROJECTS\n \n \nMovie\n \nRecommendation\n \nSystem\n \nDeveloped\n \na\n \nmachine\n \nlearning-based\n \nrecommendation\n \nsystem\n \nthat\n \nsuggests\n \nmovies\n \naccording\n \nto\n \nuser\n \npreferences.Integrated\n \nTMDB\n \nAPI\n \nto\n \nfetch\n \nreal-time\n \nmovie\n \nmetadata,\n \nposters,\n \ngenres,\n \nand\n \nratings.\n \nImplemented\n \nsimilarity\n \nmeasures\n \n(cosine\n \nsimilarity)\n \non\n \nuser\n \ndata\n \nand\n \nmovie\n \nfeatures\n \nfor\n \npersonalized\n \nrecommendations.\n \n \nAI\n \nResume\n \nAnalyzer\n \nBuilt\n \na\n \ntool\n \nthat\n \nanalyzes\n \nresumes\n \nand\n \nprovides\n \nan\n \noverall\n \nscore\n \nwith\n \nstrengths\n \nand\n \nareas\n \nof\n \nimprovement.Implemented\n \nkeyword\n \nextraction,\n \nsection\n \nidenti\ufb01cation,\n \nand\n \nscoring\n \nlogic\n \nusing\n \nPython.Helps\n \nstudents\n \nand\n \njob\n \nseekers\n \nimprove\n \ntheir\n \nresumes\n \nfor\n \nbetter\n \nopportunities.\n \n \nMatch\n \nJewel\n \nGaming\n \nApp\n \nCreated\n \na\n \nmatch-three\n \njewel/candy\n \ngame\n \ninspired\n \nby\n \nCandy\n \nCrush\n \nusing\n \nAndroid\n \nStudio\n \nand\n \nFlutter.Added\n \nfeatures\n \nlike\n \nscoring,\n \nand\n \ncolorful\n \njewel\n \nicons\n \nfor\n \nan\n \nengaging\n \nexperience.Focused\n \non\n \nimproving\n \nUI\n \ndesign\n \nand\n \ngame\n \nmechanics\n \nfor\n \nsmooth\n \nuser\n \ninteraction.\n \n \nCamera\n \nAI\n \nApp\n \nDesigned\n \nan\n \nAI-powered\n \nmobile\n \ncamera\n \napplication\n \nthat\n \ngives\n \nreal-time\n \nsuggestions\n \nto\n \ncapture\n \nbetter\n \npictur... \n\n    KEY SKILLS IDENTIFIED: python, java, javascript, react, node\n\n    =====================================\n\n    INTERVIEW INSTRUCTIONS:\n    - You are conducting a PERSONALIZED interview based on the candidate's actual resume above\n    - Ask questions that reference SPECIFIC details from their resume (companies, projects, technologies)\n    - Make the interview feel realistic by mentioning things you \"noticed\" on their resume\n    - Start with their background, then dive deeper into specific experiences\n    - Ask follow-up questions based on what they mention from their resume\n\n    EXAMPLE GOOD QUESTIONS:\n    - \"I see you worked with python, java, javascript, react, node. Can you tell me about a specific project where you used these?\"\n    - \"I noticed you worked at [mention a company from resume if visible]. What was your role there?\"\n    - \"Walk me through your background and highlight the experiences most relevant to this role.\"\n\n    DO NOT ask generic questions - make it personal to THEIR resume!",
+    "resume_uploaded": true,
+    "current_phase": "resume_deep_dive",
+    "current_round_type": "hr",
+    "current_question_text": "Can you describe the process you followed to integrate the TMDB API into your movie recommendation system project? What specific problems did you encounter during this integration, and how did you troubleshoot and resolve them?",
+    "current_question_id": "q_4",
+    "difficulty_level": 5,
+    "questions_in_current_phase": 1,
+    "conversation_history": [
+      {
+        "question_id": 1,
+        "question": "Here's your question:\n\n\"Can you walk me through your experience with developing the movie recommendation system project mentioned on your resume? What specific tasks did you undertake, and what was the outcome of your efforts?\"",
+        "answer": "And I integrated the TMDB API to bring in live movie posters, trailers and updated metadata. After that I cleaned the data, built a content based filtering model using tfidf and tested it with a small user group. In the end, the system improved relevance by about 25% and user engagement increased by roughly 40%.",
+        "evaluation": {
+          "question_id": 1,
+          "round_type": "hr",
+          "scores": {
+            "technical_depth": 80,
+            "concept_accuracy": 100,
+            "structured_thinking": 90,
+            "communication_clarity": 95,
+            "confidence_consistency": 100
+          },
+          "score_details": [
+            {
+              "dimension": "technical_depth",
+              "score": 80,
+              "evidence": "The candidate mentions integrating the TMDB API, building a content-based filtering model using tfidf, and testing it with a small user group.",
+              "improvement": null
+            },
+            {
+              "dimension": "concept_accuracy",
+              "score": 100,
+              "evidence": "The candidate's claims are accurate and verifiable, providing specific examples of their work on the movie recommendation system project.",
+              "improvement": null
+            },
+            {
+              "dimension": "structured_thinking",
+              "score": 90,
+              "evidence": "The candidate follows a clear STAR structure: Situation (integrating TMDB API), Task (cleaning data and building a content-based filtering model), Action (testing with a small user group), Result (improving relevance by 25% and increasing user engagement by 40%).",
+              "improvement": null
+            },
+            {
+              "dimension": "communication_clarity",
+              "score": 95,
+              "evidence": "The candidate's answer is concise, easy to follow, and free of filler words.",
+              "improvement": null
+            },
+            {
+              "dimension": "confidence_consistency",
+              "score": 100,
+              "evidence": "The candidate delivers their answer confidently, without hesitation or deflection.",
+              "improvement": null
+            }
+          ],
+          "overall_score": 91,
+          "strengths": [
+            "No strengths identified"
+          ],
+          "weaknesses": [
+            "No weaknesses identified"
+          ],
+          "red_flags": [],
+          "requires_followup": false,
+          "followup_reason": null,
+          "suggested_followup": null,
+          "difficulty_adjustment": "maintain"
+        },
+        "phase": "resume_deep_dive",
+        "timestamp": "2026-02-22T18:23:04.251951",
+        "triggered_followup": false,
+        "is_followup_answer": true
+      },
+      {
+        "question_id": 1,
+        "question": "Here's your first behavioral question:\n\n\"Can you tell me about the Movie Recommendation System project you mentioned on your resume? What was the specific task or challenge you faced while developing this system, and how did you overcome it?\"",
+        "answer": "So after users interacted with the system, they bring competitions. Then I use those ratings to fine tune the weighting of the features and another step as I built a small dash to visualize the tap recommendation so I can, you know, spot check and see if they were aligned with user preferences. So all of that together really helps me iterate on the model and, you know, improve its accuracy and relevance.",
+        "evaluation": {
+          "question_id": 1,
+          "round_type": "hr",
+          "scores": {
+            "technical_depth": 60,
+            "concept_accuracy": 80,
+            "structured_thinking": 40,
+            "communication_clarity": 50,
+            "confidence_consistency": 70
+          },
+          "score_details": [
+            {
+              "dimension": "technical_depth",
+              "score": 60,
+              "evidence": "The candidate mentions fine-tuning the weighting of features and building a dashboard, but doesn't provide much technical detail.",
+              "improvement": "Provide more specific examples or technical terms to demonstrate understanding."
+            },
+            {
+              "dimension": "concept_accuracy",
+              "score": 80,
+              "evidence": "The candidate's claims seem accurate, but some vagueness in the language (\"you know\" appears twice).",
+              "improvement": "Use more precise language and avoid filler words."
+            },
+            {
+              "dimension": "structured_thinking",
+              "score": 40,
+              "evidence": "The answer lacks a clear Situation, Task, Action, Result (STAR) structure.",
+              "improvement": "Break down the answer into specific STAR components to improve clarity."
+            },
+            {
+              "dimension": "communication_clarity",
+              "score": 50,
+              "evidence": "The candidate's language is somewhat vague and unclear at times (\"you know\").",
+              "improvement": "Use more concise and direct language to convey ideas."
+            },
+            {
+              "dimension": "confidence_consistency",
+              "score": 70,
+              "evidence": "The candidate seems confident, but some hesitation in their delivery.",
+              "improvement": "Practice delivering answers with more confidence and conviction."
+            }
+          ],
+          "overall_score": 60,
+          "strengths": [
+            "Clear"
+          ],
+          "weaknesses": [
+            "No weaknesses identified"
+          ],
+          "red_flags": [],
+          "requires_followup": false,
+          "followup_reason": null,
+          "suggested_followup": null,
+          "difficulty_adjustment": "maintain"
+        },
+        "phase": "resume_deep_dive",
+        "timestamp": "2026-02-22T18:28:38.912095",
+        "triggered_followup": false,
+        "is_followup_answer": true
+      },
+      {
+        "question_id": 2,
+        "question": "Can you describe a situation where you integrated the TMDB API to fetch real-time movie metadata in your Movie Recommendation System project? What specific challenges did you face, and how did you overcome them?",
+        "answer": "Yeah. So one challenge I faced was when the recommendation started getting less relevant for certain niche genres. So the situation was, you know, the model worked well for mainstream films, but for indie films or less popular genres, the recommendations didn't really fit users tastes. So what I did was I went back and, you know, added more features like director, cast and even user watch history. Then I retrained the model and I also introduced a hybrid approach. Combining both content based filtering with some collaborative filtering. And once I did that, the diversity of recommendations improved and users started giving me more positive feedback, especially for those like niche categories.",
+        "evaluation": {
+          "question_id": 2,
+          "round_type": "hr",
+          "scores": {
+            "technical_depth": 60,
+            "concept_accuracy": 80,
+            "structured_thinking": 40,
+            "communication_clarity": 70,
+            "confidence_consistency": 90
+          },
+          "score_details": [
+            {
+              "dimension": "technical_depth",
+              "score": 60,
+              "evidence": "The candidate mentions adding features like director, cast, and user watch history, but doesn't provide specific details about how they integrated the TMDB API.",
+              "improvement": null
+            },
+            {
+              "dimension": "concept_accuracy",
+              "score": 80,
+              "evidence": "The candidate's claims seem accurate, but there's no concrete evidence to support their statements.",
+              "improvement": null
+            },
+            {
+              "dimension": "structured_thinking",
+              "score": 40,
+              "evidence": "The answer lacks a clear STAR structure. Situation is somewhat defined, Task is vague, Action is unclear, and Result is only partially described (positive feedback).",
+              "improvement": "Encourage the candidate to use the STAR method to provide a clearer narrative."
+            },
+            {
+              "dimension": "communication_clarity",
+              "score": 70,
+              "evidence": "The answer is somewhat concise, but contains filler words (\"you know\") and lacks specific details.",
+              "improvement": "Suggest using more precise language and avoiding filler words."
+            },
+            {
+              "dimension": "confidence_consistency",
+              "score": 90,
+              "evidence": "The candidate delivers their answer with confidence, and their tone remains consistent throughout.",
+              "improvement": null
+            }
+          ],
+          "overall_score": 65,
+          "strengths": [
+            "No strengths identified"
+          ],
+          "weaknesses": [
+            "No weaknesses identified"
+          ],
+          "red_flags": [],
+          "requires_followup": false,
+          "followup_reason": null,
+          "suggested_followup": null,
+          "difficulty_adjustment": "maintain"
+        },
+        "phase": "resume_deep_dive",
+        "timestamp": "2026-02-22T18:30:50.470086",
+        "triggered_followup": false,
+        "is_followup_answer": false
+      }
+    ],
+    "overall_score_progression": [
+      91,
+      60,
+      65
+    ],
+    "total_interruptions": 5,
+    "started_at": "2026-02-24T20:11:51.212091",
+    "actual_question_number": 4,
+    "followup_count": 0
+  },
+  "session_20260222_184627_c532": {
+    "session_id": "session_20260222_184627_c532",
+    "resume_context": null,
+    "resume_uploaded": false,
+    "current_phase": "resume_deep_dive",
+    "current_round_type": "hr",
+    "current_question_text": "Can you tell me about a project from your past experience where you took ownership of driving results, and how you measured its success? What was your role in the project, what actions did you take to achieve the desired outcome, and what were the key results that you delivered?",
+    "current_question_id": "q_2",
+    "difficulty_level": 5,
+    "questions_in_current_phase": 1,
+    "conversation_history": [
+      {
+        "question_id": 1,
+        "question": "Can you walk me through your most significant project management experience on your resume? Specifically, how did you handle the transition from planning to execution, and what specific metrics or outcomes did you achieve as a result of your efforts?",
+        "answer": "Yeah, umm, sure. So one significant project I managed was, uh, the development of a student performance dashboard at my university. So the situation was, umm, I was part of a team and we had a long planning phase. We mapped out requirements with advisors, IT and, uh, the design team. But you know, when it came to execution, umm, we ran into some scope creep. So like additional features kept being added. And, uh, what I did was I, you know, reprioritize tasks with the team and we set really clear sprinkles, umm, using weekly check-ins. And as a result, we delivered the dashboard two weeks ahead of schedule. And one key metric was that advisor response time dropped by about 30% and we also saw 25% increase in customer engagement with the dashboard.",
+        "evaluation": {
+          "question_id": 1,
+          "round_type": "hr",
+          "scores": {
+            "technical_depth": 60,
+            "concept_accuracy": 80,
+            "structured_thinking": 40,
+            "communication_clarity": 70,
+            "confidence_consistency": 50
+          },
+          "score_details": [
+            {
+              "dimension": "technical_depth",
+              "score": 60,
+              "evidence": "The candidate mentions a specific project, but doesn't delve deeper into technical details.",
+              "improvement": "Provide more context about the project, its goals, and how their role contributed to its success."
+            },
+            {
+              "dimension": "concept_accuracy",
+              "score": 80,
+              "evidence": "The candidate's claims seem accurate, but some vagueness in the details makes it hard to verify.",
+              "improvement": "Provide specific numbers or metrics for scope creep and advisor response time."
+            },
+            {
+              "dimension": "structured_thinking",
+              "score": 40,
+              "evidence": "The candidate starts with a situation, but then jumps into action without clearly defining the task. Result is somewhat vague.",
+              "improvement": "Focus on setting clear context (task) before describing actions and results."
+            },
+            {
+              "dimension": "communication_clarity",
+              "score": 70,
+              "evidence": "The candidate's answer is generally easy to follow, but filler words (\"um\", \"you know\") detract from clarity.",
+              "improvement": "Practice concise communication by minimizing filler words and focusing on key points."
+            }
+          ],
+          "overall_score": 61,
+          "strengths": [
+            "No strengths identified"
+          ],
+          "weaknesses": [
+            "No weaknesses identified"
+          ],
+          "red_flags": [],
+          "requires_followup": false,
+          "followup_reason": null,
+          "suggested_followup": null,
+          "difficulty_adjustment": "maintain"
+        },
+        "phase": "resume_deep_dive",
+        "timestamp": "2026-02-22T18:56:19.434107",
+        "triggered_followup": false,
+        "is_followup_answer": false
+      }
+    ],
+    "overall_score_progression": [
+      61
+    ],
+    "total_interruptions": 5,
+    "started_at": "2026-02-24T20:11:51.212220",
+    "actual_question_number": 2,
+    "followup_count": 0
+  },
+  "session_20260222_190114_1ea5": {
+    "session_id": "session_20260222_190114_1ea5",
+    "resume_context": null,
+    "resume_uploaded": false,
+    "current_phase": "resume_deep_dive",
+    "current_round_type": "hr",
+    "current_question_text": "What was a specific project you managed from start to finish, and how did you measure its success? Can you walk me through your thought process, decisions made, and outcomes achieved during that project?",
+    "current_question_id": "q_3",
+    "difficulty_level": 5,
+    "questions_in_current_phase": 1,
+    "conversation_history": [
+      {
+        "question_id": 1,
+        "question": "Can you tell me about a project from your past where you took ownership of a specific aspect, such as leading a team or developing a process? How did you approach it, what actions did you take to ensure its success, and what were the most notable results or outcomes that came from your efforts?",
+        "answer": "Yeah, umm, sure. So one project I took ownership of was, umm, leading A-Team to develop a customer feedback process at my previous job. So the situation was we had all these scattered feedback sources, e-mail, surveys, and, umm, informal chats, and we didn't have a structured way to analyze it. So my role was to, umm, design A repeatable process. I started by mapping out all the feedback sources and then I, uh, created a standardized template to categorize the feedback. I also set up regular meetings with the team to review trends and, umm, I made sure we had dashboards to track key. And the outcome was that we increase the response rate by about 25% and we were able to surface actionable insights faster. So overall, it really improved how we make customer changes.",
+        "evaluation": {
+          "question_id": 1,
+          "round_type": "hr",
+          "scores": {
+            "technical_depth": 60,
+            "concept_accuracy": 80,
+            "structured_thinking": 40,
+            "communication_clarity": 50,
+            "confidence_consistency": 0
+          },
+          "score_details": [
+            {
+              "dimension": "technical_depth",
+              "score": 60,
+              "evidence": "The candidate mentions a specific project, but lacks technical details about the process development.",
+              "improvement": "Provide more context on what \"designing a repeatable process\" entails."
+            },
+            {
+              "dimension": "concept_accuracy",
+              "score": 80,
+              "evidence": "The candidate's claims seem accurate, but lack concrete numbers and metrics.",
+              "improvement": "Quantify the results with specific numbers (e.g., \"25% increase in response rate\")."
+            },
+            {
+              "dimension": "structured_thinking",
+              "score": 40,
+              "evidence": "The answer lacks clear STAR structure, making it difficult to follow. Situation is unclear, Task is vague, Action is scattered, and Result is not well-defined.",
+              "improvement": "Use the STAR method to organize thoughts: \"Situation - We had scattered feedback sources... Task - Design a repeatable process... Action - Mapped out sources, created standardized template, set up regular meetings... Result - 25% increase in response rate and faster insights.\""
+            },
+            {
+              "dimension": "communication_clarity",
+              "score": 50,
+              "evidence": "The answer is somewhat unclear due to filler words (\"um\", \"uh\") and vague language.",
+              "improvement": "Practice concise communication by minimizing filler words and"
+            },
+            {
+              "dimension": "confidence_consistency",
+              "score": 0,
+              "evidence": "No evaluation data available from LLM response",
+              "improvement": "Unable to assess - LLM did not return this dimension"
+            }
+          ],
+          "overall_score": 53,
+          "strengths": [
+            "No strengths identified"
+          ],
+          "weaknesses": [
+            "No weaknesses identified"
+          ],
+          "red_flags": [],
+          "requires_followup": false,
+          "followup_reason": null,
+          "suggested_followup": null,
+          "difficulty_adjustment": "maintain"
+        },
+        "phase": "resume_deep_dive",
+        "timestamp": "2026-02-22T19:14:22.930225",
+        "triggered_followup": true,
+        "is_followup_answer": false
+      },
+      {
+        "question_id": 1,
+        "question": "Can you tell me about a project from your past where you took ownership of a specific aspect, such as leading a team or developing a process? How did you approach it, what actions did you take to ensure its success, and what were the most notable results or outcomes that came from your efforts?",
+        "answer": "Ah, I see, thank you for the clarification. So one project took ownership of was when I led the development of a root disease detection pipeline in a hydroponics research project. So I was responsible for designing the image processing steps. I approached it by first researching best practices for image processing normalization, and I set up a clear step-by-step process for resizing, contrast adjustment, and labeling. I worked closely with the team to test each iteration, and I set up a validation loop. And as a result, the pipeline reduced manual inspection time by about 40% and it allowed the team to detect early stage disease with about 90% accuracy, which was a huge improvement over the previous manual approach.",
+        "evaluation": {
+          "question_id": 1,
+          "round_type": "hr",
+          "scores": {
+            "technical_depth": 80,
+            "concept_accuracy": 90,
+            "structured_thinking": 95,
+            "communication_clarity": 85,
+            "confidence_consistency": 0
+          },
+          "score_details": [
+            {
+              "dimension": "technical_depth",
+              "score": 80,
+              "evidence": "The candidate provided specific details about their role in designing an image processing pipeline, showing a good understanding of technical concepts.",
+              "improvement": "Consider providing more context on how this project contributed to the overall research goals or impact."
+            },
+            {
+              "dimension": "concept_accuracy",
+              "score": 90,
+              "evidence": "The candidate's claims are accurate and verifiable, with specific numbers provided for the results (40% reduction in manual inspection time and 90% accuracy).",
+              "improvement": "None needed."
+            },
+            {
+              "dimension": "structured_thinking",
+              "score": 95,
+              "evidence": "The candidate effectively used the STAR method to structure their answer: Situation (hydroponics research project), Task (designing an image processing pipeline), Action (researching best practices, setting up a process, working with the team), and Result (40% reduction in manual inspection time and 90% accuracy).",
+              "improvement": "None needed."
+            },
+            {
+              "dimension": "communication_clarity",
+              "score": 85,
+              "evidence": "The candidate's answer is generally clear and easy to follow, but there are a few instances of filler words (\"Ah\", \"So\").",
+              "improvement": "Work on minimizing filler words for smoother delivery."
+            },
+            {
+              "dimension": "confidence_consistency",
+              "score": 0,
+              "evidence": "No evaluation data available from LLM response",
+              "improvement": "Unable to assess - LLM did not return this dimension"
+            }
+          ],
+          "overall_score": 78,
+          "strengths": [
+            "No strengths identified"
+          ],
+          "weaknesses": [
+            "No weaknesses identified"
+          ],
+          "red_flags": [],
+          "requires_followup": false,
+          "followup_reason": null,
+          "suggested_followup": null,
+          "difficulty_adjustment": "maintain"
+        },
+        "phase": "resume_deep_dive",
+        "timestamp": "2026-02-22T19:20:15.384768",
+        "triggered_followup": false,
+        "is_followup_answer": true
+      },
+      {
+        "question_id": 1,
+        "question": "What was the most significant technical challenge you faced in one of your previous projects, and how did you collaborate with your team to overcome it?",
+        "answer": "Absolutely. So specifically, I took ownership of designing the feedback categorization framework. I created a structured taxonomy so that all feedback could be tagged consistently. I also built out a regular review cadence where I LED weekly meetings with cross functional teams to discuss trends. I set up a dashboard so we can visualize sentiment over time. And umm, I also implemented a process to escalate urgent fee. As a result, we improved response times by about 30% and we were able to implement actionable product changes based on those insights.",
+        "evaluation": {
+          "question_id": 1,
+          "round_type": "hr",
+          "scores": {
+            "technical_depth": 60,
+            "concept_accuracy": 90,
+            "structured_thinking": 80,
+            "communication_clarity": 70,
+            "confidence_consistency": 0
+          },
+          "score_details": [
+            {
+              "dimension": "technical_depth",
+              "score": 60,
+              "evidence": "The candidate mentions designing a feedback categorization framework, but doesn't provide much technical detail.",
+              "improvement": "Provide more technical context about the framework and its implementation."
+            },
+            {
+              "dimension": "concept_accuracy",
+              "score": 90,
+              "evidence": "The candidate's claims seem accurate and verifiable.",
+              "improvement": "None needed."
+            },
+            {
+              "dimension": "structured_thinking",
+              "score": 80,
+              "evidence": "The candidate uses the STAR method, but with some minor issues (see below).",
+              "improvement": "Work on setting a clearer context in the Situation section and provide more specific details about the Task."
+            },
+            {
+              "dimension": "confidence_consistency",
+              "score": 0,
+              "evidence": "No evaluation data available from LLM response",
+              "improvement": "Unable to assess - LLM did not return this dimension"
+            }
+          ],
+          "overall_score": 67,
+          "strengths": [
+            "No strengths identified"
+          ],
+          "weaknesses": [
+            "No weaknesses identified"
+          ],
+          "red_flags": [],
+          "requires_followup": false,
+          "followup_reason": null,
+          "suggested_followup": null,
+          "difficulty_adjustment": "maintain"
+        },
+        "phase": "resume_deep_dive",
+        "timestamp": "2026-02-22T19:23:15.115392",
+        "triggered_followup": false,
+        "is_followup_answer": true
+      }
+    ],
+    "overall_score_progression": [
+      53,
+      78,
+      67
+    ],
+    "total_interruptions": 5,
+    "started_at": "2026-02-24T20:11:51.212347",
+    "actual_question_number": 3,
+    "followup_count": 1
+  },
+  "session_20260222_201653_ea9c": {
+    "session_id": "session_20260222_201653_ea9c",
+    "resume_context": null,
+    "resume_uploaded": false,
+    "current_phase": "resume_deep_dive",
+    "current_round_type": "hr",
+    "current_question_text": "As described on your resume, you've had significant experience working with cross-functional teams. Can you tell me about a specific project where you collaborated with colleagues from different departments to achieve a noteworthy outcome? What was your role in that project, what actions did you take, and what were the measurable results of your efforts?",
+    "current_question_id": "q_1",
+    "difficulty_level": 5,
+    "questions_in_current_phase": 0,
+    "conversation_history": [],
+    "overall_score_progression": [],
+    "total_interruptions": 5,
+    "started_at": "2026-02-24T20:11:51.212459",
+    "actual_question_number": 1,
+    "followup_count": 0
+  },
+  "session_20260222_214324_95db": {
+    "session_id": "session_20260222_214324_95db",
+    "resume_context": null,
+    "resume_uploaded": false,
+    "current_phase": "resume_deep_dive",
+    "current_round_type": "hr",
+    "current_question_text": "What was the most complex project you managed from start to finish, and how did you measure its success, including any specific metrics or outcomes that demonstrated your impact on the organization?",
+    "current_question_id": "q_2",
+    "difficulty_level": 5,
+    "questions_in_current_phase": 1,
+    "conversation_history": [
+      {
+        "question_id": 1,
+        "question": "Can you tell me about a project or initiative where you took ownership of driving results, and how your unique strengths played a crucial role in achieving those outcomes?",
+        "answer": "Yeah, Umm, sure. So one project where I really took ownership and drove results was, umm, when I led the rollout of a new customer analytics dashboard. So the situation was, umm, we had a lot of disparate customer data and you know, the marketing team was struggling to get a clear picture. So my unique strength was, umm, I guess being able to translate the technical side into something that was. ",
+        "evaluation": {
+          "question_id": 1,
+          "round_type": "hr",
+          "scores": {
+            "technical_depth": 30,
+            "concept_accuracy": 80,
+            "structured_thinking": 40,
+            "communication_clarity": 60,
+            "confidence_consistency": 70
+          },
+          "score_details": [
+            {
+              "dimension": "technical_depth",
+              "score": 30,
+              "evidence": "The candidate mentions a project, but lacks specific details about their role or what they did.",
+              "improvement": "Provide more context about the project and their responsibilities."
+            },
+            {
+              "dimension": "concept_accuracy",
+              "score": 80,
+              "evidence": "The candidate claims to have led the rollout of a new customer analytics dashboard, which seems accurate.",
+              "improvement": "None needed, but it would be helpful to know more about the project's scope and impact."
+            },
+            {
+              "dimension": "structured_thinking",
+              "score": 40,
+              "evidence": "The candidate mentions a situation, but fails to clearly articulate the task or action taken. Result is also unclear.",
+              "improvement": "Use the STAR method to provide a clear Situation, Task, Action, and Result."
+            },
+            {
+              "dimension": "communication_clarity",
+              "score": 60,
+              "evidence": "The candidate's response is somewhat unclear due to filler words (\"um\", \"you know\") and vague language.",
+              "improvement": "Practice concise and clear communication by avoiding filler words and using specific examples."
+            }
+          ],
+          "overall_score": 53,
+          "strengths": [
+            "No strengths identified"
+          ],
+          "weaknesses": [
+            "No weaknesses identified"
+          ],
+          "red_flags": [],
+          "requires_followup": false,
+          "followup_reason": null,
+          "suggested_followup": null,
+          "difficulty_adjustment": "maintain"
+        },
+        "phase": "resume_deep_dive",
+        "timestamp": "2026-02-22T21:47:30.972449",
+        "triggered_followup": true,
+        "is_followup_answer": false
+      },
+      {
+        "question_id": 1,
+        "question": "Can you tell me about a project or initiative where you took ownership of driving results, and how your unique strengths played a crucial role in achieving those outcomes?",
+        "answer": "Yeah, umm, that's a good question. So I let a small team on, umm, a project to streamline our internal data reporting process. And umm, because I have a strong background in Python And data pipelines, I was able to, umm, build a more automated ETL process. So I, uh, worked at the team to identify bottlenecks and umm, I personally coded the scripts that reduced, you know, manual tasks and umm, as a result, we cut recording time by about 50%, which umm, really allowed leadership to make faster data-driven decisions.",
+        "evaluation": {
+          "question_id": 1,
+          "round_type": "hr",
+          "scores": {
+            "technical_depth": 60,
+            "concept_accuracy": 80,
+            "structured_thinking": 40,
+            "communication_clarity": 50,
+            "confidence_consistency": 0
+          },
+          "score_details": [
+            {
+              "dimension": "technical_depth",
+              "score": 60,
+              "evidence": "The candidate mentions their background in Python and data pipelines, but it's not clear how they applied this knowledge to drive results.",
+              "improvement": "Provide specific examples of how their technical skills were used to achieve the project's goals."
+            },
+            {
+              "dimension": "concept_accuracy",
+              "score": 80,
+              "evidence": "The candidate claims to have taken ownership and driven results, but it's not entirely clear what they mean by \"driving results\" or how their unique strengths contributed.",
+              "improvement": "Clarify the specific outcomes achieved and how the candidate's skills played a crucial role."
+            },
+            {
+              "dimension": "structured_thinking",
+              "score": 40,
+              "evidence": "The answer lacks clear STAR method adherence. Situation is unclear, Task is vague, Action is mostly about working with the team, and Result is somewhat measurable but not well-defined.",
+              "improvement": "Use a clear STAR framework to structure the answer, focusing on specific actions taken and measurable outcomes."
+            },
+            {
+              "dimension": "communication_clarity",
+              "score": 50,
+              "evidence": "The candidate uses filler words (\"um\", \"uh\", \"you know\") and lacks concise language.",
+              "improvement": "Practice clear and concise communication by avoiding filler words and using specific examples."
+            },
+            {
+              "dimension": "confidence_consistency",
+              "score": 0,
+              "evidence": "No evaluation data available from LLM response",
+              "improvement": "Unable to assess - LLM did not return this dimension"
+            }
+          ],
+          "overall_score": 53,
+          "strengths": [
+            "No strengths identified"
+          ],
+          "weaknesses": [
+            "No weaknesses identified"
+          ],
+          "red_flags": [],
+          "requires_followup": false,
+          "followup_reason": null,
+          "suggested_followup": null,
+          "difficulty_adjustment": "maintain"
+        },
+        "phase": "resume_deep_dive",
+        "timestamp": "2026-02-22T21:51:26.923984",
+        "triggered_followup": false,
+        "is_followup_answer": true
+      }
+    ],
+    "overall_score_progression": [
+      53,
+      53
+    ],
+    "total_interruptions": 5,
+    "started_at": "2026-02-24T20:11:51.212564",
+    "actual_question_number": 2,
+    "followup_count": 1
+  },
+  "session_20260222_220136_76e2": {
+    "session_id": "session_20260222_220136_76e2",
+    "resume_context": null,
+    "resume_uploaded": false,
+    "current_phase": "core_skill_assessment",
+    "current_round_type": "hr",
+    "current_question_text": "Here's the next question:\n\nWhen working on a cross-functional team to resolve a complex issue, what was a specific point of disagreement you encountered with another team member or stakeholder, and how did you effectively address it and come to a resolution that ultimately benefited the project?",
+    "current_question_id": "q_5",
+    "difficulty_level": 5,
+    "questions_in_current_phase": 0,
+    "conversation_history": [
+      {
+        "question_id": 1,
+        "question": "Can you tell me about a project where you took ownership of a specific area or process, and how you measured its impact on the organization? What specific actions did you take to drive results, and what were some notable outcomes or accomplishments you achieved in that role?",
+        "answer": "Yeah, absolutely. So one project I took ownership of was improving the customer support ticket escalation process. So the situation was we were seeing delays and customers were getting fast enough responses. So I took ownership of mapping out the entire process. I worked with the support team to identify bottleneck and I introduced A prioritization rule. So we flagged. ",
+        "evaluation": {
+          "question_id": 1,
+          "round_type": "hr",
+          "scores": {
+            "technical_depth": 60,
+            "concept_accuracy": 80,
+            "structured_thinking": 40,
+            "communication_clarity": 70,
+            "confidence_consistency": 90
+          },
+          "score_details": [
+            {
+              "dimension": "technical_depth",
+              "score": 60,
+              "evidence": "The candidate mentioned a specific process improvement project, but didn't provide much technical detail about the ticket escalation process or the A prioritization rule.",
+              "improvement": null
+            },
+            {
+              "dimension": "concept_accuracy",
+              "score": 80,
+              "evidence": "The candidate's claims seem accurate and verifiable, but they could have provided more specific numbers or metrics to demonstrate the impact of their work.",
+              "improvement": null
+            },
+            {
+              "dimension": "structured_thinking",
+              "score": 40,
+              "evidence": "The candidate started with a situation statement, but then jumped straight to introducing an A prioritization rule without explaining what the task was or what actions they took. They also didn't provide a clear result.",
+              "improvement": "Start by explaining the task and what needed to be done, then describe specific actions taken, and finally share measurable outcomes."
+            },
+            {
+              "dimension": "communication_clarity",
+              "score": 70,
+              "evidence": "The candidate's answer was somewhat concise, but they used some filler words (\"Yeah\", \"So\") and didn't always use clear language.",
+              "improvement": "Practice using more precise language and avoiding filler words."
+            }
+          ],
+          "overall_score": 65,
+          "strengths": [
+            "No strengths identified"
+          ],
+          "weaknesses": [
+            "No weaknesses identified"
+          ],
+          "red_flags": [],
+          "requires_followup": false,
+          "followup_reason": null,
+          "suggested_followup": null,
+          "difficulty_adjustment": "maintain"
+        },
+        "phase": "resume_deep_dive",
+        "timestamp": "2026-02-22T22:06:54.732507",
+        "triggered_followup": false,
+        "is_followup_answer": false
+      },
+      {
+        "question_id": 1,
+        "question": "Can you tell me about a specific project or initiative where you took ownership and drove results? Be sure to describe the situation, task, actions you took, and the outcome - what did you achieve and how did it impact your organization?",
+        "answer": "Yeah, absolutely. So one project I took ownership of was improving the customer support ticket escalation process. So the situation was we were seeing delays and customers were getting fast enough responses. So I took ownership of mapping out the entire process. I worked with the support team to identify bottleneck and I introduced A prioritization rule. So we flagged. ",
+        "evaluation": {
+          "question_id": 1,
+          "round_type": "hr",
+          "scores": {
+            "technical_depth": 60,
+            "concept_accuracy": 80,
+            "structured_thinking": 40,
+            "communication_clarity": 70,
+            "confidence_consistency": 90
+          },
+          "score_details": [
+            {
+              "dimension": "technical_depth",
+              "score": 60,
+              "evidence": "The candidate mentions a specific project, but doesn't provide much technical detail about the process or its context.",
+              "improvement": "Provide more context about the customer support ticket escalation process and how it affects the organization."
+            },
+            {
+              "dimension": "concept_accuracy",
+              "score": 80,
+              "evidence": "The candidate's claims seem accurate, but there's no concrete evidence to back up their statements.",
+              "improvement": "Provide specific numbers or metrics to demonstrate the impact of the project."
+            },
+            {
+              "dimension": "structured_thinking",
+              "score": 40,
+              "evidence": "The candidate starts with a situation, but then jumps straight to actions without explaining the task or what needed to be done.",
+              "improvement": "Use the STAR method more effectively by clearly explaining the task and how it was addressed."
+            },
+            {
+              "dimension": "communication_clarity",
+              "score": 70,
+              "evidence": "The candidate's response is somewhat clear, but could be improved with more concise language and fewer filler words.",
+              "improvement": "Practice concise communication by focusing on key points and avoiding unnecessary words."
+            }
+          ],
+          "overall_score": 65,
+          "strengths": [
+            "No strengths identified"
+          ],
+          "weaknesses": [
+            "No weaknesses identified"
+          ],
+          "red_flags": [],
+          "requires_followup": false,
+          "followup_reason": null,
+          "suggested_followup": null,
+          "difficulty_adjustment": "maintain"
+        },
+        "phase": "resume_deep_dive",
+        "timestamp": "2026-02-22T22:10:27.979199",
+        "triggered_followup": false,
+        "is_followup_answer": false
+      },
+      {
+        "question_id": 1,
+        "question": "Can you describe a project where you applied your analytical skills to identify and address a specific business problem or opportunity, and how did you measure the success of your efforts? What were some key insights you gained from the process, and what tangible outcomes did you achieve as a result?",
+        "answer": "Team or process myself in a workplace sense since I'm an AI and not the person. But I do help guide people in structuring and improving processes so I can certainly help you think through examples or approaches. Did you have a specific scenario you wanted to discuss?",
+        "evaluation": {
+          "question_id": 1,
+          "round_type": "hr",
+          "scores": {
+            "technical_depth": 30,
+            "concept_accuracy": 80,
+            "structured_thinking": 20,
+            "communication_clarity": 60,
+            "confidence_consistency": 80
+          },
+          "score_details": [
+            {
+              "dimension": "technical_depth",
+              "score": 30,
+              "evidence": "The AI candidate failed to provide any specific technical details about their analytical skills or experience.",
+              "improvement": "Provide concrete examples of how they applied their analytical skills in previous projects."
+            },
+            {
+              "dimension": "concept_accuracy",
+              "score": 80,
+              "evidence": "The AI candidate accurately acknowledged that they don't have personal experiences, but offered to help structure and improve processes for the interviewer.",
+              "improvement": "None needed; the AI candidate was transparent about their limitations."
+            },
+            {
+              "dimension": "structured_thinking",
+              "score": 20,
+              "evidence": "The AI candidate failed to provide a clear STAR (Situation, Task, Action, Result) example or structure for their approach.",
+              "improvement": "Encourage the AI candidate to use the STAR method to describe their thought process and actions."
+            },
+            {
+              "dimension": "communication_clarity",
+              "score": 60,
+              "evidence": "The AI candidate's response was somewhat unclear due to the lack of specific examples or details about their analytical skills.",
+              "improvement": "Encourage the AI candidate to provide concise, clear language that effectively conveys their ideas."
+            }
+          ],
+          "overall_score": 50,
+          "strengths": [
+            "No strengths identified"
+          ],
+          "weaknesses": [
+            "No weaknesses identified"
+          ],
+          "red_flags": [],
+          "requires_followup": false,
+          "followup_reason": null,
+          "suggested_followup": null,
+          "difficulty_adjustment": "maintain"
+        },
+        "phase": "core_skill_assessment",
+        "timestamp": "2026-02-22T22:15:02.954001",
+        "triggered_followup": false,
+        "is_followup_answer": true
+      },
+      {
+        "question_id": 1,
+        "question": "When faced with conflicting priorities from different stakeholders in a project, can you describe a specific situation where you had to navigate these competing demands while maintaining effective communication and collaboration? What steps did you take to reach a consensus, and what was the resulting outcome or impact on the project's success?",
+        "answer": "Ah, I see what you're getting at. I don't have personal projects since I'm not an individual, but I can walk you through a common example that people often use. For instance, A-Team might lead a sales funnel optimization project where they streamlined lead qualification, reduced handoff delays, and boosted conversion rates. If you'd like, I can help you shape a specific example for your experience.",
+        "evaluation": {
+          "question_id": 1,
+          "round_type": "hr",
+          "scores": {
+            "technical_depth": 60,
+            "concept_accuracy": 80,
+            "structured_thinking": 40,
+            "communication_clarity": 70,
+            "confidence_consistency": 50
+          },
+          "score_details": [
+            {
+              "dimension": "technical_depth",
+              "score": 60,
+              "evidence": "The candidate provided a hypothetical scenario, but didn't share their own experience.",
+              "improvement": "Provide a real-life example from your past experiences."
+            },
+            {
+              "dimension": "concept_accuracy",
+              "score": 80,
+              "evidence": "The candidate's description of the A-Team project is accurate and consistent with common practices in sales funnel optimization.",
+              "improvement": "None needed, as the concept is accurate."
+            },
+            {
+              "dimension": "structured_thinking",
+              "score": 40,
+              "evidence": "The candidate didn't provide a specific situation (Situation) or clear task (Task). They did describe some actions (Action), but no measurable outcomes (Result).",
+              "improvement": "Provide a clear Situation, Task, Action, and Result to demonstrate structured thinking."
+            },
+            {
+              "dimension": "communication_clarity",
+              "score": 70,
+              "evidence": "The candidate's response is somewhat unclear due to the hypothetical scenario and lack of specific details.",
+              "improvement": "Use concrete examples and provide more context to make your message clearer."
+            }
+          ],
+          "overall_score": 61,
+          "strengths": [
+            "No strengths identified"
+          ],
+          "weaknesses": [
+            "No weaknesses identified"
+          ],
+          "red_flags": [],
+          "requires_followup": false,
+          "followup_reason": null,
+          "suggested_followup": null,
+          "difficulty_adjustment": "maintain"
+        },
+        "phase": "core_skill_assessment",
+        "timestamp": "2026-02-22T22:18:34.249084",
+        "triggered_followup": false,
+        "is_followup_answer": true
+      }
+    ],
+    "overall_score_progression": [
+      65,
+      65,
+      50,
+      61
+    ],
+    "total_interruptions": 4,
+    "started_at": "2026-02-24T20:11:51.212649",
+    "actual_question_number": 5,
+    "followup_count": 0
+  },
+  "session_20260222_223000_c6ea": {
+    "session_id": "session_20260222_223000_c6ea",
+    "resume_context": null,
+    "resume_uploaded": false,
+    "current_phase": "resume_deep_dive",
+    "current_round_type": "hr",
+    "current_question_text": "Can you describe a project from your past experience where you took ownership of a significant initiative, highlighting the specific situation, task, and actions you took to drive results? How did your efforts impact the organization or team?",
+    "current_question_id": "q_2",
+    "difficulty_level": 5,
+    "questions_in_current_phase": 1,
+    "conversation_history": [
+      {
+        "question_id": 1,
+        "question": "Can you walk me through a specific project you led from start to finish, highlighting your key responsibilities, challenges you faced, and the measurable outcomes you achieved?",
+        "answer": "Yeah, absolutely. So one project I LED from start to finish was developing a student engagement dashboard for university department. So my key responsibility was gathering requirements from both the academic and IT teams, and then I oversaw the design of the dashboard layout. One big challenge I faced was integrating real-time data for multiple sources, which didn't always align perfectly. So I worked closely with it to set up a stable data pipeline and then we also ran a few user testing cycles. The outcome is that we launched it on time and it led to a 30% increase in student. Participation in optional programs and that was a huge success for the department.",
+        "evaluation": {
+          "question_id": 1,
+          "round_type": "hr",
+          "scores": {
+            "technical_depth": 60,
+            "concept_accuracy": 80,
+            "structured_thinking": 70,
+            "communication_clarity": 90,
+            "confidence_consistency": 80
+          },
+          "score_details": [
+            {
+              "dimension": "technical_depth",
+              "score": 60,
+              "evidence": "The candidate mentions gathering requirements, designing the dashboard layout, and integrating real-time data.",
+              "improvement": "While they provide some technical details, it would be beneficial to see more specific examples of their role in the project."
+            },
+            {
+              "dimension": "concept_accuracy",
+              "score": 80,
+              "evidence": "The candidate's claims seem accurate, and they provide a clear overview of the project.",
+              "improvement": "None needed; the answer is consistent with previous statements."
+            },
+            {
+              "dimension": "structured_thinking",
+              "score": 70,
+              "evidence": "The candidate mentions Situation (developing a student engagement dashboard), Task (gathering requirements, designing layout), Action (working closely with IT to set up data pipeline and running user testing cycles), but the Result could be more specific.",
+              "improvement": "Encourage the candidate to provide more measurable outcomes in the STAR method."
+            },
+            {
+              "dimension": "communication_clarity",
+              "score": 90,
+              "evidence": "The candidate's answer is concise, easy to follow, and free of filler words.",
+              "improvement": "None needed; the answer is well-organized and clear."
+            }
+          ],
+          "overall_score": 73,
+          "strengths": [
+            "No strengths identified"
+          ],
+          "weaknesses": [
+            "No weaknesses identified"
+          ],
+          "red_flags": [],
+          "requires_followup": false,
+          "followup_reason": null,
+          "suggested_followup": null,
+          "difficulty_adjustment": "maintain"
+        },
+        "phase": "resume_deep_dive",
+        "timestamp": "2026-02-22T22:38:19.693023",
+        "triggered_followup": false,
+        "is_followup_answer": false
+      }
+    ],
+    "overall_score_progression": [
+      73
+    ],
+    "total_interruptions": 0,
+    "started_at": "2026-02-24T20:11:51.212828",
+    "actual_question_number": 2,
+    "followup_count": 0
+  },
+  "session_20260223_173842_d408": {
+    "session_id": "session_20260223_173842_d408",
+    "resume_context": null,
+    "resume_uploaded": false,
+    "current_phase": "resume_deep_dive",
+    "current_round_type": "hr",
+    "current_question_text": "Can you tell me about a project or initiative where you took ownership of driving results, and how did your actions specifically lead to measurable outcomes, such as cost savings, efficiency gains, or improved customer satisfaction?",
+    "current_question_id": "q_2",
+    "difficulty_level": 5,
+    "questions_in_current_phase": 1,
+    "conversation_history": [
+      {
+        "question_id": 1,
+        "question": "Can you walk me through your most significant project involving data analysis during your previous role as a Senior Business Analyst at XYZ Corporation? What specific task did you focus on, what actions did you take to drive results, and what measurable outcome did you achieve that made a notable impact on the organization?",
+        "answer": "Of course, let me finish that thought. So once we launch the dashboard, it really helped the academic advisors get a clearer picture of student engagement. And that be a notable impact because the department was better able to identify at risk students early and we saw a big improvement in retention rates, about a 15% increase in student persistence. So that was really impactful organization.",
+        "evaluation": {
+          "question_id": 1,
+          "round_type": "hr",
+          "scores": {
+            "technical_depth": 60,
+            "concept_accuracy": 80,
+            "structured_thinking": 40,
+            "communication_clarity": 80,
+            "confidence_consistency": 70
+          },
+          "score_details": [
+            {
+              "dimension": "technical_depth",
+              "score": 60,
+              "evidence": "The candidate mentions a specific project, but doesn't delve deeper into technical details.",
+              "improvement": null
+            },
+            {
+              "dimension": "concept_accuracy",
+              "score": 80,
+              "evidence": "The candidate's claims seem accurate and verifiable, but some vague terms (\"launch the dashboard\") could be clarified.",
+              "improvement": "Clarify what \"launching the dashboard\" means."
+            },
+            {
+              "dimension": "structured_thinking",
+              "score": 40,
+              "evidence": "The answer lacks a clear Situation, Task, Action, and Result (STAR) structure. It's mostly focused on the outcome.",
+              "improvement": "Provide specific context for the project, describe the task, outline actions taken, and share measurable results."
+            },
+            {
+              "dimension": "communication_clarity",
+              "score": 80,
+              "evidence": "The candidate is generally easy to follow, but could improve by avoiding filler words (\"Of course, let me finish that thought\").",
+              "improvement": "Minimize filler words and rephrase sentences for better clarity."
+            }
+          ],
+          "overall_score": 65,
+          "strengths": [
+            "No strengths identified"
+          ],
+          "weaknesses": [
+            "No weaknesses identified"
+          ],
+          "red_flags": [],
+          "requires_followup": false,
+          "followup_reason": null,
+          "suggested_followup": null,
+          "difficulty_adjustment": "maintain"
+        },
+        "phase": "resume_deep_dive",
+        "timestamp": "2026-02-23T17:48:30.239230",
+        "triggered_followup": false,
+        "is_followup_answer": false
+      }
+    ],
+    "overall_score_progression": [
+      65
+    ],
+    "total_interruptions": 0,
+    "started_at": "2026-02-24T20:11:51.213007",
+    "actual_question_number": 2,
+    "followup_count": 0
+  },
+  "session_20260223_174957_0ae4": {
+    "session_id": "session_20260223_174957_0ae4",
+    "resume_context": null,
+    "resume_uploaded": false,
+    "current_phase": "resume_deep_dive",
+    "current_round_type": "hr",
+    "current_question_text": "Can you walk me through your most significant project experience listed on your resume? What specific task or objective were you responsible for achieving, and how did you approach it, ultimately resulting in what outcome or impact?",
+    "current_question_id": "q_1",
+    "difficulty_level": 5,
+    "questions_in_current_phase": 0,
+    "conversation_history": [],
+    "overall_score_progression": [],
+    "total_interruptions": 0,
+    "started_at": "2026-02-24T20:11:51.213168",
+    "actual_question_number": 1,
+    "followup_count": 0
+  },
+  "session_20260223_175727_e899": {
+    "session_id": "session_20260223_175727_e899",
+    "resume_context": null,
+    "resume_uploaded": false,
+    "current_phase": "resume_deep_dive",
+    "current_round_type": "hr",
+    "current_question_text": "Can you describe a project or initiative where you took ownership of a specific aspect, such as process improvement, team leadership, or technical development? How did your contributions impact the overall outcome and what metrics or results can you share to illustrate your role in that success?",
+    "current_question_id": "q_1",
+    "difficulty_level": 5,
+    "questions_in_current_phase": 0,
+    "conversation_history": [],
+    "overall_score_progression": [],
+    "total_interruptions": 5,
+    "started_at": "2026-02-24T20:11:51.213303",
+    "actual_question_number": 1,
+    "followup_count": 0
+  },
+  "session_20260223_183748_b01f": {
+    "session_id": "session_20260223_183748_b01f",
+    "resume_context": null,
+    "resume_uploaded": false,
+    "current_phase": "resume_deep_dive",
+    "current_round_type": "hr",
+    "current_question_text": "As you've demonstrated your projects and achievements on your resume, can you walk me through a specific instance where you took ownership of a project from start to finish, made tough decisions along the way, and ultimately drove measurable results? Please provide a concrete example that showcases how you utilized your skills and expertise to drive success.",
+    "current_question_id": "q_1",
+    "difficulty_level": 5,
+    "questions_in_current_phase": 0,
+    "conversation_history": [],
+    "overall_score_progression": [],
+    "total_interruptions": 0,
+    "started_at": "2026-02-24T20:11:51.213521",
+    "actual_question_number": 1,
+    "followup_count": 0
+  },
+  "session_20260223_183955_f5ac": {
+    "session_id": "session_20260223_183955_f5ac",
+    "resume_context": null,
+    "resume_uploaded": false,
+    "current_phase": "resume_deep_dive",
+    "current_round_type": "hr",
+    "current_question_text": "Can you tell me about a project from your previous role where you took ownership of a specific problem or goal, and how did you go about addressing it? Please walk me through what you saw as the situation, the task you were given, the actions you took, and the results you achieved?",
+    "current_question_id": "q_2",
+    "difficulty_level": 5,
+    "questions_in_current_phase": 1,
+    "conversation_history": [
+      {
+        "question_id": 1,
+        "question": "Can you tell me about a project where you took ownership of a process or system and implemented changes to improve efficiency or productivity? What specific actions did you take, what results did you achieve, and what did you learn from the experience?",
+        "answer": "So 1 project right took ownership redesigning the way our team handled monthly financial reporting. So the situation was we were manually pulling data from strategies and systems and it took about two days every month just to compile everything. So I am to go to the hospital decentralized data pipeline using a combination of people and then combination scripts in Python. Sorry, first identified the key data sources and then I set up a monthly refresh schedule where everything was automatically pulled into a single dashboard and I also LED training sessions so that the finance can use it confidently. And as a result, we have the reporting cycle down to about half a day. So it's a 75% time reduction. And what I learned was, you know, the importance of really involving the team early on because once they were trained, they felt a lot more confident and selfish and that business could be faster. Smart decisions.",
+        "evaluation": {
+          "question_id": 1,
+          "round_type": "hr",
+          "scores": {
+            "technical_depth": 80,
+            "concept_accuracy": 90,
+            "structured_thinking": 85,
+            "communication_clarity": 95,
+            "confidence_consistency": 90
+          },
+          "score_details": [
+            {
+              "dimension": "technical_depth",
+              "score": 80,
+              "evidence": "The candidate mentions Python scripts, decentralized data pipeline, and a single dashboard, showing some technical understanding.",
+              "improvement": "None needed."
+            },
+            {
+              "dimension": "concept_accuracy",
+              "score": 90,
+              "evidence": "The candidate's claims seem accurate, with specific numbers (75% time reduction) and details about the process improvement.",
+              "improvement": "None needed."
+            },
+            {
+              "dimension": "structured_thinking",
+              "score": 85,
+              "evidence": "The candidate follows the STAR method somewhat, but could improve by providing more context in the Situation section and a clearer Task description.",
+              "improvement": "Encourage the candidate to provide more context about the team's challenges with manual reporting and what needed to be done."
+            },
+            {
+              "dimension": "communication_clarity",
+              "score": 95,
+              "evidence": "The candidate's language is clear, concise, and easy to follow.",
+              "improvement": "None needed."
+            },
+            {
+              "dimension": "confidence_consistency",
+              "score": 90,
+              "evidence": "The candidate delivers the answer with confidence and ownership.",
+              "improvement": "None needed."
+            }
+          ],
+          "overall_score": 86,
+          "strengths": [
+            "Clear communication",
+            "Involving the team early on",
+            "Measurable results"
+          ],
+          "weaknesses": [
+            "No weaknesses identified"
+          ],
+          "red_flags": [],
+          "requires_followup": false,
+          "followup_reason": null,
+          "suggested_followup": null,
+          "difficulty_adjustment": "maintain"
+        },
+        "phase": "resume_deep_dive",
+        "timestamp": "2026-02-23T18:49:29.780455",
+        "triggered_followup": false,
+        "is_followup_answer": false
+      }
+    ],
+    "overall_score_progression": [
+      86
+    ],
+    "total_interruptions": 5,
+    "started_at": "2026-02-24T20:11:51.213607",
+    "actual_question_number": 2,
+    "followup_count": 0
+  },
+  "session_20260224_163811_170b": {
+    "session_id": "session_20260224_163811_170b",
+    "resume_context": null,
+    "resume_uploaded": false,
+    "current_phase": "completed",
+    "current_round_type": "hr",
+    "current_question_text": "When faced with conflicting information or unclear expectations from stakeholders, can you walk me through a specific instance where you had to negotiate and clarify requirements while still meeting project timelines? What was the outcome of your efforts, and what did you learn from this experience about effective communication in high-pressure situations?",
+    "current_question_id": "q_5",
+    "difficulty_level": 5,
+    "questions_in_current_phase": 1,
+    "conversation_history": [
+      {
+        "question_id": 1,
+        "question": "Can you tell me about a project where you took ownership of a process or initiative at your previous organization? What specific challenges did you face, and how did you measure its success?",
+        "answer": "Yeah, absolutely. So at my previous organization, I took ownership of improving the monthly sales reporting process. So the challenge was that we were relying on a lot of manual data entry across different spreadsheets and it was really prone to errors and delays. So what I did was I took the lead on automated. ",
+        "evaluation": {
+          "question_id": 1,
+          "round_type": "hr",
+          "scores": {
+            "technical_depth": 60,
+            "concept_accuracy": 80,
+            "structured_thinking": 40,
+            "communication_clarity": 70,
+            "confidence_consistency": 80
+          },
+          "score_details": [
+            {
+              "dimension": "technical_depth",
+              "score": 60,
+              "evidence": "The candidate mentions improving a monthly sales reporting process, but doesn't provide much technical detail.",
+              "improvement": "Provide more context about the process and what \"automated\" means in this scenario."
+            },
+            {
+              "dimension": "concept_accuracy",
+              "score": 80,
+              "evidence": "The candidate claims to have taken ownership of improving a process, which seems accurate.",
+              "improvement": "None needed."
+            },
+            {
+              "dimension": "structured_thinking",
+              "score": 40,
+              "evidence": "The answer lacks clear Situation, Task, Action, and Result (STAR) structure. The candidate mentions challenges but doesn't describe specific actions taken to address them.",
+              "improvement": "Use the STAR method to organize the story."
+            },
+            {
+              "dimension": "communication_clarity",
+              "score": 70,
+              "evidence": "The answer is generally clear, but could be more concise and free of filler words (\"Yeah\", \"So\").",
+              "improvement": "Practice concise communication and minimize filler words."
+            },
+            {
+              "dimension": "confidence_consistency",
+              "score": 80,
+              "evidence": "The candidate seems confident in their ability to take ownership, but could be more specific about the results.",
+              "improvement": "Share concrete"
+            }
+          ],
+          "overall_score": 64,
+          "strengths": [
+            "No strengths identified"
+          ],
+          "weaknesses": [
+            "No weaknesses identified"
+          ],
+          "red_flags": [],
+          "requires_followup": false,
+          "followup_reason": null,
+          "suggested_followup": null,
+          "difficulty_adjustment": "maintain"
+        },
+        "phase": "resume_deep_dive",
+        "timestamp": "2026-02-24T16:43:28.449356",
+        "triggered_followup": false,
+        "is_followup_answer": false
+      },
+      {
+        "question_id": 1,
+        "question": "Can you share an example of a project you led or contributed to where you had to balance competing priorities? What specific steps did you take to manage those expectations, and what was the outcome?",
+        "answer": "Yeah, absolutely. So at my previous organization, I took ownership of improving the monthly sales reporting process. So the challenge was that we were relying on a lot of manual data entry across different spreadsheets and it was really prone to errors and delays. So what I did was I took the lead on automated. ",
+        "evaluation": {
+          "question_id": 1,
+          "round_type": "hr",
+          "scores": {
+            "technical_depth": 60,
+            "concept_accuracy": 80,
+            "structured_thinking": 40,
+            "communication_clarity": 60,
+            "confidence_consistency": 70
+          },
+          "score_details": [
+            {
+              "dimension": "technical_depth",
+              "score": 60,
+              "evidence": "The candidate mentions improving monthly sales reporting, but doesn't provide much technical detail about the process or automation.",
+              "improvement": null
+            },
+            {
+              "dimension": "concept_accuracy",
+              "score": 80,
+              "evidence": "The candidate's claims seem accurate and verifiable, but we need more specific information to confirm.",
+              "improvement": null
+            },
+            {
+              "dimension": "structured_thinking",
+              "score": 40,
+              "evidence": "The answer lacks a clear Situation, Task, Action, Result (STAR) structure. The candidate jumps straight into the action without setting context or explaining the task.",
+              "improvement": "Encourage the candidate to provide more context and break down their thought process."
+            },
+            {
+              "dimension": "communication_clarity",
+              "score": 60,
+              "evidence": "The answer is somewhat unclear, with some vague language (\"improving the monthly sales reporting process\").",
+              "improvement": "Suggest using more specific language to convey ideas."
+            },
+            {
+              "dimension": "confidence_consistency",
+              "score": 70,
+              "evidence": "The candidate seems confident in their answer, but could be more specific about their role and accomplishments.",
+              "improvement": "Encourage the candidate to take ownership"
+            }
+          ],
+          "overall_score": 62,
+          "strengths": [
+            "No strengths identified"
+          ],
+          "weaknesses": [
+            "No weaknesses identified"
+          ],
+          "red_flags": [],
+          "requires_followup": false,
+          "followup_reason": null,
+          "suggested_followup": null,
+          "difficulty_adjustment": "maintain"
+        },
+        "phase": "resume_deep_dive",
+        "timestamp": "2026-02-24T16:45:32.795294",
+        "triggered_followup": false,
+        "is_followup_answer": false
+      },
+      {
+        "question_id": 1,
+        "question": "What was the most significant impact you made in a project or initiative where you collaborated with an external partner or vendor? What specific actions did you take to ensure successful collaboration, and what were the measurable outcomes of this partnership?",
+        "answer": "Yeah, absolutely. So at my previous organization, I took ownership of improving the monthly sales reporting process. So the challenge was that we were relying on a lot of manual data entry across different spreadsheets and it was really prone to errors and delays. So what I did was I took the lead on automated. ",
+        "evaluation": {
+          "question_id": 1,
+          "round_type": "hr",
+          "scores": {
+            "technical_depth": 60,
+            "concept_accuracy": 80,
+            "structured_thinking": 40,
+            "communication_clarity": 70,
+            "confidence_consistency": 90
+          },
+          "score_details": [
+            {
+              "dimension": "technical_depth",
+              "score": 60,
+              "evidence": "The candidate mentions improving monthly sales reporting, but doesn't provide much technical detail about the process or the automation efforts.",
+              "improvement": "Provide more specific examples of the manual data entry challenges and how automation improved the process."
+            },
+            {
+              "dimension": "concept_accuracy",
+              "score": 80,
+              "evidence": "The candidate claims to have taken ownership of improving the sales reporting process, which seems accurate.",
+              "improvement": "None needed."
+            },
+            {
+              "dimension": "structured_thinking",
+              "score": 40,
+              "evidence": "The answer lacks a clear Situation, Task, Action, and Result (STAR) structure. The candidate jumps straight into describing their actions without setting the context or explaining what needed to be done.",
+              "improvement": "Encourage the candidate to follow the STAR method and provide more specific examples."
+            },
+            {
+              "dimension": "communication_clarity",
+              "score": 70,
+              "evidence": "The answer is somewhat unclear, with some filler words (\"Yeah\", \"absolutely\"), but it's still possible to understand what the candidate is saying.",
+              "improvement": "Encourage the candidate to speak more clearly and concisely."
+            }
+          ],
+          "overall_score": 65,
+          "strengths": [
+            "No strengths identified"
+          ],
+          "weaknesses": [
+            "No weaknesses identified"
+          ],
+          "red_flags": [],
+          "requires_followup": false,
+          "followup_reason": null,
+          "suggested_followup": null,
+          "difficulty_adjustment": "maintain"
+        },
+        "phase": "core_skill_assessment",
+        "timestamp": "2026-02-24T16:49:04.750430",
+        "triggered_followup": false,
+        "is_followup_answer": false
+      },
+      {
+        "question_id": 1,
+        "question": "When working on a team project that involved multiple stakeholders with differing opinions, you noticed a critical issue that required immediate attention. However, one key stakeholder was not available to provide input or approval. How did you handle this situation, and what steps did you take to ensure the project stayed on track?",
+        "answer": "Yeah, I did. So at my previous organization, I LED a small cross functional team that was focused on streamlining our customer onboarding process. I was responsible for coordinating tasks, setting deadlines and making sure communication stayed clear across teams. So that really helped improve how quickly and smoothly new customers got set up and it significantly reduced onboarding time.",
+        "evaluation": {
+          "question_id": 1,
+          "round_type": "hr",
+          "scores": {
+            "technical_depth": 50,
+            "concept_accuracy": 80,
+            "structured_thinking": 30,
+            "communication_clarity": 60,
+            "confidence_consistency": 70
+          },
+          "score_details": [
+            {
+              "dimension": "technical_depth",
+              "score": 50,
+              "evidence": "The candidate mentions a previous project, but doesn't provide much technical detail about their role or actions.",
+              "improvement": "Provide more specific examples of how they handled the situation."
+            },
+            {
+              "dimension": "concept_accuracy",
+              "score": 80,
+              "evidence": "The candidate's claims seem accurate and verifiable. However, there is no direct connection to the original question about handling a critical issue with multiple stakeholders.",
+              "improvement": "Clarify how their previous experience relates to the current scenario."
+            },
+            {
+              "dimension": "structured_thinking",
+              "score": 30,
+              "evidence": "The candidate doesn't follow the STAR method. They start by mentioning a previous project, but don't provide a clear situation, task, action, or result.",
+              "improvement": "Use the STAR method to structure their answer."
+            },
+            {
+              "dimension": "communication_clarity",
+              "score": 60,
+              "evidence": "The candidate's language is somewhat unclear. They use filler words (\"Yeah\"), and it takes a few sentences to get to the point.",
+              "improvement": "Practice concise communication by avoiding unnecessary words and getting straight to the point."
+            }
+          ],
+          "overall_score": 57,
+          "strengths": [
+            "No strengths identified"
+          ],
+          "weaknesses": [
+            "No weaknesses identified"
+          ],
+          "red_flags": [],
+          "requires_followup": false,
+          "followup_reason": null,
+          "suggested_followup": null,
+          "difficulty_adjustment": "maintain"
+        },
+        "phase": "core_skill_assessment",
+        "timestamp": "2026-02-24T16:51:11.388500",
+        "triggered_followup": false,
+        "is_followup_answer": true
+      },
+      {
+        "question_id": 1,
+        "question": "When faced with conflicting information or unclear expectations from stakeholders, can you walk me through a specific instance where you had to negotiate and clarify requirements while still meeting project timelines? What was the outcome of your efforts, and what did you learn from this experience about effective communication in high-pressure situations?",
+        "answer": "Yes, definitely. After we implemented the new onboarding process, we reduced the average setup time by about 30% and we also saw a drop in customer support inquiries related to onboarding by roughly 20%, which was a huge improvement.",
+        "evaluation": {
+          "question_id": 1,
+          "round_type": "hr",
+          "scores": {
+            "technical_depth": 0,
+            "concept_accuracy": 0,
+            "structured_thinking": 0,
+            "communication_clarity": 0,
+            "confidence_consistency": 0
+          },
+          "score_details": [
+            {
+              "dimension": "technical_depth",
+              "score": 0,
+              "evidence": "The candidate only talks about the outcome (30% reduction in setup time and 20% drop in customer support inquiries) without explaining their role in achieving this outcome.",
+              "improvement": null
+            },
+            {
+              "dimension": "concept_accuracy",
+              "score": 0,
+              "evidence": "The candidate mentions a specific project and outcome, which is good.",
+              "improvement": null
+            },
+            {
+              "dimension": "structured_thinking",
+              "score": 0,
+              "evidence": "The candidate mentions a specific project outcome, but it's not framed as a story.",
+              "improvement": "The candidate should provide more context about the situation, task, and actions they took to achieve the outcome."
+            },
+            {
+              "dimension": "technical_depth",
+              "score": 0,
+              "evidence": "No evaluation data available from LLM response",
+              "improvement": "Unable to assess - LLM did not return this dimension"
+            },
+            {
+              "dimension": "concept_accuracy",
+              "score": 0,
+              "evidence": "No evaluation data available from LLM response",
+              "improvement": "Unable to assess - LLM did not return this dimension"
+            },
+            {
+              "dimension": "structured_thinking",
+              "score": 0,
+              "evidence": "No evaluation data available from LLM response",
+              "improvement": "Unable to assess - LLM did not return this dimension"
+            },
+            {
+              "dimension": "communication_clarity",
+              "score": 0,
+              "evidence": "No evaluation data available from LLM response",
+              "improvement": "Unable to assess - LLM did not return this dimension"
+            },
+            {
+              "dimension": "confidence_consistency",
+              "score": 0,
+              "evidence": "No evaluation data available from LLM response",
+              "improvement": "Unable to assess - LLM did not return this dimension"
+            }
+          ],
+          "overall_score": 0,
+          "strengths": [
+            "No strengths identified"
+          ],
+          "weaknesses": [
+            "No weaknesses identified"
+          ],
+          "red_flags": [],
+          "requires_followup": false,
+          "followup_reason": null,
+          "suggested_followup": null,
+          "difficulty_adjustment": "maintain"
+        },
+        "phase": "core_skill_assessment",
+        "timestamp": "2026-02-24T16:54:25.343711",
+        "triggered_followup": false,
+        "is_followup_answer": true
+      }
+    ],
+    "overall_score_progression": [
+      64,
+      62,
+      65,
+      57,
+      0
+    ],
+    "total_interruptions": 5,
+    "started_at": "2026-02-24T20:11:51.213669",
+    "actual_question_number": 5,
+    "followup_count": 0
+  },
+  "session_20260224_194003_7e9b": {
+    "session_id": "session_20260224_194003_7e9b",
+    "resume_context": null,
+    "resume_uploaded": false,
+    "current_phase": "resume_deep_dive",
+    "current_round_type": "hr",
+    "current_question_text": "Can you tell me about a project or initiative where you took ownership of a specific aspect, such as leading a team, developing a solution, or driving results? What was your role in it, what actions did you take to deliver the outcome, and how did you measure its impact?",
+    "current_question_id": "q_2",
+    "difficulty_level": 5,
+    "questions_in_current_phase": 1,
+    "conversation_history": [
+      {
+        "question_id": 1,
+        "question": "Can you tell me about a project from your previous role where you leveraged your technical skills to drive business results? What specific task or challenge were you trying to address, and how did you approach it?",
+        "answer": "Yeah, of course. So in my previous role, I was working on a sales analytics project, and the specific challenge I was trying to address was that the team was struggling to predict which leads were most likely to convert. So I leverage my technical skills by building a predictive model using Python And Scikit learn. I gathered historical sales data, I cleaned the data, and then I trained A logistic regression model to score leads. Once I had a baseline. Options to integrate those lead scores directly into the CRM. And then once we rolled that out, we sat about a 15% lift in conversion rates, which was really significant because it helped us prioritize the right accounts and ultimately drove a lot more revenue.",
+        "evaluation": {
+          "question_id": 1,
+          "round_type": "hr",
+          "scores": {
+            "technical_depth": 80,
+            "concept_accuracy": 90,
+            "structured_thinking": 85,
+            "communication_clarity": 95,
+            "confidence_consistency": 90
+          },
+          "score_details": [
+            {
+              "dimension": "technical_depth",
+              "score": 80,
+              "evidence": "The candidate explains their technical skills in building a predictive model using Python and Scikit-learn, but could provide more details about the project's scope and complexity.",
+              "improvement": "Provide more context on the sales analytics project, such as its size, timeline, and stakeholders involved."
+            },
+            {
+              "dimension": "concept_accuracy",
+              "score": 90,
+              "evidence": "The candidate accurately describes their role in building a predictive model to address the challenge of predicting lead conversions.",
+              "improvement": "None"
+            },
+            {
+              "dimension": "structured_thinking",
+              "score": 85,
+              "evidence": "The candidate provides some details about the situation and task, but could improve on describing specific actions taken (Action) and measurable outcomes (Result).",
+              "improvement": "Focus on providing more specific examples of actions taken to build the predictive model, such as data cleaning techniques used or iterations made during model training."
+            },
+            {
+              "dimension": "communication_clarity",
+              "score": 95,
+              "evidence": "The candidate's response is clear and concise, making it easy to follow their thought process.",
+              "improvement": "None"
+            }
+          ],
+          "overall_score": 86,
+          "strengths": [
+            "No strengths identified"
+          ],
+          "weaknesses": [
+            "No weaknesses identified"
+          ],
+          "red_flags": [],
+          "requires_followup": false,
+          "followup_reason": null,
+          "suggested_followup": null,
+          "difficulty_adjustment": "maintain"
+        },
+        "phase": "resume_deep_dive",
+        "timestamp": "2026-02-24T19:51:49.671952",
+        "triggered_followup": false,
+        "is_followup_answer": false
+      }
+    ],
+    "overall_score_progression": [
+      86
+    ],
+    "total_interruptions": 5,
+    "started_at": "2026-02-24T20:11:51.213858",
+    "actual_question_number": 2,
+    "followup_count": 0
+  },
+  "session_20260224_195509_722a": {
+    "session_id": "session_20260224_195509_722a",
+    "resume_context": null,
+    "resume_uploaded": false,
+    "current_phase": "resume_deep_dive",
+    "current_round_type": "hr",
+    "current_question_text": "Can you describe a project or initiative where you applied your technical skills to solve a complex business problem, and how did that impact the organization's bottom line? What was the specific task you were trying to accomplish, what actions did you take, and what measurable results did you achieve?",
+    "current_question_id": "q_3",
+    "difficulty_level": 5,
+    "questions_in_current_phase": 1,
+    "conversation_history": [
+      {
+        "question_id": 1,
+        "question": "Can you tell me about a project or initiative you led from start to finish, where you took ownership of the outcome and drove tangible results? What was the situation, what was your task, how did you approach it, and what were the key outcomes you achieved?",
+        "answer": "Yeah, of course. So the situation was that our sales team was struggling to prioritize which leads were worth pursuing. My task was to develop a system that could rank those leads based on likelihood. I approached my first gathering historical sales data, things like lead Gen. demographics, prior interactions and outcomes. Then I use Python And Psychic learn to build a logistic regression model. I iteratively tested different features, and once we had a stable model, I worked with it. Directly into our CRM system.",
+        "evaluation": {
+          "question_id": 1,
+          "round_type": "hr",
+          "scores": {
+            "technical_depth": 80,
+            "concept_accuracy": 90,
+            "structured_thinking": 60,
+            "communication_clarity": 70,
+            "confidence_consistency": 80
+          },
+          "score_details": [
+            {
+              "dimension": "technical_depth",
+              "score": 80,
+              "evidence": "The candidate provided some technical details about their approach, but could have gone deeper.",
+              "improvement": "Encourage more specific technical details and context."
+            },
+            {
+              "dimension": "concept_accuracy",
+              "score": 90,
+              "evidence": "The candidate's claims appear accurate and verifiable.",
+              "improvement": "None needed."
+            },
+            {
+              "dimension": "structured_thinking",
+              "score": 60,
+              "evidence": "The candidate started with a situation, but the task was unclear. They did describe their approach (Action) and outcome (Result), but it's not entirely clear what they were trying to achieve.",
+              "improvement": "Encourage the candidate to provide more clarity on the task and ensure all STAR elements are present."
+            },
+            {
+              "dimension": "communication_clarity",
+              "score": 70,
+              "evidence": "The candidate's language is generally clear, but there are some vague terms (\"things like\").",
+              "improvement": "Encourage more precise language and minimal filler words."
+            },
+            {
+              "dimension": "confidence_consistency",
+              "score": 80,
+              "evidence": "The candidate appears confident in their delivery.",
+              "improvement": "None needed."
+            }
+          ],
+          "overall_score": 77,
+          "strengths": [
+            "Clear ownership of the outcome,"
+          ],
+          "weaknesses": [
+            "No weaknesses identified"
+          ],
+          "red_flags": [],
+          "requires_followup": false,
+          "followup_reason": null,
+          "suggested_followup": null,
+          "difficulty_adjustment": "maintain"
+        },
+        "phase": "resume_deep_dive",
+        "timestamp": "2026-02-24T20:00:52.600003",
+        "triggered_followup": false,
+        "is_followup_answer": false
+      },
+      {
+        "question_id": 1,
+        "question": "Can you tell me about a project from your past experience where you had to leverage your technical skills to drive business results? Please walk me through what you did in terms of Situation, Task, Action, and Result, and how this experience showcases your strengths as a professional.",
+        "answer": "Yeah, absolutely. So one project I LED from start to finish was the implementation of a new internal knowledge management system. So the situation was at my previous company, we had a lot of scattered documentation across different platforms and it was hard for teams to find the right information. So my task was to take ownership of evaluating, selecting and implementing A centralized platform. I started by gathering requirements from different departments, so sales marketing it and then I did a market comparison of different tools. Once we chose a platform, I let the roll out, so I coordinated with it for integration and I worked with each team to migrate their key documents. I also set up training sessions and, umm, A governance process. Any outcomes are really strong. Our document retrieval time dropped by about 40% and we saw a 25% increase in costing collaboration and I learned how push it is to keep it.",
+        "evaluation": {
+          "question_id": 1,
+          "round_type": "hr",
+          "scores": {
+            "technical_depth": 80,
+            "concept_accuracy": 90,
+            "structured_thinking": 85,
+            "communication_clarity": 70,
+            "confidence_consistency": 0
+          },
+          "score_details": [
+            {
+              "dimension": "technical_depth",
+              "score": 80,
+              "evidence": "The candidate provided a clear overview of their project, including technical details about implementing a new internal knowledge management system.",
+              "improvement": "While they didn't go into extreme technical depth, they showed a good understanding of the project's technical aspects."
+            },
+            {
+              "dimension": "concept_accuracy",
+              "score": 90,
+              "evidence": "The candidate's claims seem accurate and verifiable. They provided specific numbers (40% drop in document retrieval time, 25% increase in costing collaboration) that support their outcomes.",
+              "improvement": "None needed."
+            },
+            {
+              "dimension": "structured_thinking",
+              "score": 85,
+              "evidence": "The candidate followed the STAR method fairly well. They set a clear Situation (scattered documentation), defined a Task (implementing a centralized platform), described specific Actions they took, and shared measurable Results.",
+              "improvement": "While their Action section was good, it could be more detailed. For example, what specific steps did they take to gather requirements from different departments?"
+            },
+            {
+              "dimension": "confidence_consistency",
+              "score": 0,
+              "evidence": "No evaluation data available from LLM response",
+              "improvement": "Unable to assess - LLM did not return this dimension"
+            }
+          ],
+          "overall_score": 74,
+          "strengths": [
+            "No strengths identified"
+          ],
+          "weaknesses": [
+            "No weaknesses identified"
+          ],
+          "red_flags": [],
+          "requires_followup": false,
+          "followup_reason": null,
+          "suggested_followup": null,
+          "difficulty_adjustment": "maintain"
+        },
+        "phase": "resume_deep_dive",
+        "timestamp": "2026-02-24T20:08:59.226819",
+        "triggered_followup": false,
+        "is_followup_answer": true
+      }
+    ],
+    "overall_score_progression": [
+      77,
+      74
+    ],
+    "total_interruptions": 5,
+    "started_at": "2026-02-24T20:11:51.214076",
+    "actual_question_number": 3,
+    "followup_count": 0
+  },
+  "session_20260224_201201_8348": {
+    "session_id": "session_20260224_201201_8348",
+    "resume_context": null,
+    "resume_uploaded": false,
+    "current_phase": "resume_deep_dive",
+    "current_round_type": "hr",
+    "current_question_text": "Can you share an example from your previous experience where you took ownership of a project or initiative, and how you ensured its successful outcome? What specific steps did you take to drive results, and what was the measurable impact of your efforts?",
+    "current_question_id": "q_2",
+    "difficulty_level": 5,
+    "questions_in_current_phase": 1,
+    "conversation_history": [
+      {
+        "question_id": 1,
+        "question": "As you mentioned, it's the first question of the resume deep dive phase. Here's the question:\n\n\"Can you walk me through your most significant project or initiative from your previous role, and how you leveraged your strengths to drive its success?\"",
+        "answer": "So in my previous role, I was leading a customer analytics initiative, and one of the core challenges was that the marketing team didn't have a unified way to track customer engagement across channels. So my task was to build a centralized reporting system. I really leverage my strengths and data analysis and visualization tools. So I started together with them through marketing and sales, and I analyzed all the customer touch points. Then I built a dashboard in Tableau that connected to our CRM, web analytics and mobile platforms. My approach is really iterative. I ran pilot tests with the marketing team, incorporated their feedback and kept refining the metrics. And so the result was that we increased campaign ROI by about 20% because we could see which channels were driving domestication. When you know this really showcase my ability to take a complex problem, break it down and deliver a technical solution that had real business impact.",
+        "evaluation": {
+          "question_id": 1,
+          "round_type": "hr",
+          "scores": {
+            "technical_depth": 80,
+            "concept_accuracy": 90,
+            "structured_thinking": 95,
+            "communication_clarity": 85,
+            "confidence_consistency": 90
+          },
+          "score_details": [
+            {
+              "dimension": "technical_depth",
+              "score": 80,
+              "evidence": "The candidate provided some technical details about building a centralized reporting system using Tableau.",
+              "improvement": "While they mentioned data analysis and visualization tools, it would be great to hear more specific examples of how they applied these skills."
+            },
+            {
+              "dimension": "concept_accuracy",
+              "score": 90,
+              "evidence": "The candidate's claims seem accurate and verifiable. They provided a clear description of the project and its outcome.",
+              "improvement": "None needed, as their answer is consistent with previous answers."
+            },
+            {
+              "dimension": "structured_thinking",
+              "score": 95,
+              "evidence": "The candidate used the STAR method effectively, providing a clear Situation, Task, Action, and Result. Their narrative flowed logically.",
+              "improvement": "None needed; they did an excellent job of structuring their answer."
+            },
+            {
+              "dimension": "communication_clarity",
+              "score": 85,
+              "evidence": "The candidate's language is generally clear, but there are some minor issues with filler words (\"So\" and \"Then\").",
+              "improvement": "Encourage the candidate to use more concise language and avoid filler words."
+            }
+          ],
+          "overall_score": 87,
+          "strengths": [
+            "No strengths identified"
+          ],
+          "weaknesses": [
+            "No weaknesses identified"
+          ],
+          "red_flags": [],
+          "requires_followup": false,
+          "followup_reason": null,
+          "suggested_followup": null,
+          "difficulty_adjustment": "maintain"
+        },
+        "phase": "resume_deep_dive",
+        "timestamp": "2026-02-24T20:24:57.073590",
+        "triggered_followup": false,
+        "is_followup_answer": false
+      }
+    ],
+    "overall_score_progression": [
+      87
+    ],
+    "total_interruptions": 5,
+    "started_at": "2026-02-24T20:12:01.901392",
+    "actual_question_number": 2,
+    "followup_count": 0
+  },
+  "session_20260224_202505_325b": {
+    "session_id": "session_20260224_202505_325b",
+    "resume_context": null,
+    "resume_uploaded": false,
+    "current_phase": "resume_deep_dive",
+    "current_round_type": "hr",
+    "current_question_text": "Can you tell me about a project on your resume where you took ownership of leading a cross-functional team to drive significant results? What was the situation, what task did you undertake, and how did you measure the outcome?",
+    "current_question_id": "q_1",
+    "difficulty_level": 5,
+    "questions_in_current_phase": 0,
+    "conversation_history": [],
+    "overall_score_progression": [],
+    "total_interruptions": 2,
+    "started_at": "2026-02-24T20:25:05.272588",
+    "actual_question_number": 1,
+    "followup_count": 0
+  },
+  "session_20260224_202633_7c66": {
+    "session_id": "session_20260224_202633_7c66",
+    "resume_context": null,
+    "resume_uploaded": false,
+    "current_phase": "resume_deep_dive",
+    "current_round_type": "hr",
+    "current_question_text": "Can you describe a project from your previous experience where you took ownership of a specific task or process, and how did you measure its impact on the organization's goals?",
+    "current_question_id": "q_2",
+    "difficulty_level": 5,
+    "questions_in_current_phase": 1,
+    "conversation_history": [
+      {
+        "question_id": 1,
+        "question": "Can you tell me about a specific project or initiative you led or contributed to where you had to balance multiple competing priorities, and how did you ensure you were meeting each stakeholder's expectations while staying true to your own goals?",
+        "answer": "Yeah, absolutely. So a project I LED that comes to mind was building a new customer portal for our support team. So the situation was we had multiple departments, customer support, IT and product who all had different priorities for the portal. ",
+        "evaluation": {
+          "question_id": 1,
+          "round_type": "hr",
+          "scores": {
+            "technical_depth": 60,
+            "concept_accuracy": 80,
+            "structured_thinking": 40,
+            "communication_clarity": 70,
+            "confidence_consistency": 0
+          },
+          "score_details": [
+            {
+              "dimension": "technical_depth",
+              "score": 60,
+              "evidence": "The candidate mentions a specific project, but doesn't provide much technical detail about the customer portal or its features.",
+              "improvement": "Provide more context about the project, such as what kind of data was being shared, how it improved customer experience, etc."
+            },
+            {
+              "dimension": "concept_accuracy",
+              "score": 80,
+              "evidence": "The candidate's claims seem accurate and verifiable. They mention multiple departments having different priorities for the portal.",
+              "improvement": "None needed."
+            },
+            {
+              "dimension": "structured_thinking",
+              "score": 40,
+              "evidence": "The candidate starts with a situation, but then jumps straight to the task without explaining what they actually did (Action). They also don't provide measurable outcomes (Result).",
+              "improvement": "Break down the story into clear STAR components. For example, \"The situation was... We had multiple departments with different priorities for the portal. The task was to balance these competing demands while staying true to our own goals. I took action by... And as a result, we were able to...\""
+            },
+            {
+              "dimension": "confidence_consistency",
+              "score": 0,
+              "evidence": "No evaluation data available from LLM response",
+              "improvement": "Unable to assess - LLM did not return this dimension"
+            }
+          ],
+          "overall_score": 56,
+          "strengths": [
+            "No strengths identified"
+          ],
+          "weaknesses": [
+            "No weaknesses identified"
+          ],
+          "red_flags": [],
+          "requires_followup": false,
+          "followup_reason": null,
+          "suggested_followup": null,
+          "difficulty_adjustment": "maintain"
+        },
+        "phase": "resume_deep_dive",
+        "timestamp": "2026-02-24T20:32:15.589717",
+        "triggered_followup": false,
+        "is_followup_answer": false
+      }
+    ],
+    "overall_score_progression": [
+      56
+    ],
+    "total_interruptions": 3,
+    "started_at": "2026-02-24T20:26:33.763338",
+    "actual_question_number": 2,
+    "followup_count": 0
+  },
+  "session_20260224_203900_b70a": {
+    "session_id": "session_20260224_203900_b70a",
+    "resume_context": null,
+    "resume_uploaded": false,
+    "current_phase": "resume_deep_dive",
+    "current_round_type": "hr",
+    "current_question_text": "As we dive deeper into your resume, can you tell me about a project or initiative where you took ownership of a key aspect, such as process improvement, team leadership, or strategic planning? What specific task did you tackle, and how did you approach it to achieve the desired outcome?",
+    "current_question_id": "q_1",
+    "difficulty_level": 5,
+    "questions_in_current_phase": 0,
+    "conversation_history": [],
+    "overall_score_progression": [],
+    "total_interruptions": 0,
+    "started_at": "2026-02-24T20:39:00.711264",
+    "actual_question_number": 1,
+    "followup_count": 0
   }
 }

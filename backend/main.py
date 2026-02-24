@@ -473,12 +473,15 @@ async def check_interruption(request: InterruptionCheckRequest):
                 "all_triggers": analysis.get("all_triggers", [])
             })
             
-            save_interruption(
-                session_id=request.session_id,
-                reason=reason,
-                triggered_at=request.recording_duration,
-                partial_transcript=request.partial_transcript or ""
-            )
+            try:
+                save_interruption(
+                    session_id=request.session_id,
+                    reason=reason,
+                    triggered_at=request.recording_duration,
+                    partial_transcript=request.partial_transcript or ""
+                )
+            except Exception as save_err:
+                print(f"⚠️ Could not save interruption (non-critical): {save_err}")
             
             print(f"🔥 INTERRUPTION!")
             print(f"   Reason: {reason}")

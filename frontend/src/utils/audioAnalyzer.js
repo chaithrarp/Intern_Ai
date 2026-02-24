@@ -109,10 +109,11 @@ class AudioAnalyzer {
       this.currentPauseDuration = now - this.lastSoundTime;
       
       if (this.currentPauseDuration > this.EXCESSIVE_PAUSE_THRESHOLD) {
-        const wasExcessivePause = (now - this.EXCESSIVE_PAUSE_THRESHOLD) <= (this.lastSoundTime + this.EXCESSIVE_PAUSE_THRESHOLD);
-        if (!wasExcessivePause) {
+        // Only count once per excessive pause event, not every 100ms
+        if (!this.excessivePauseLogged) {
           this.excessivePauseCount++;
-          console.log(`🚨 Excessive pause: ${(this.currentPauseDuration / 1000).toFixed(1)}s`);
+          this.excessivePauseLogged = true;
+          console.log(`🚨 Excessive pause detected`);
         }
       }
       else if (this.currentPauseDuration > this.LONG_PAUSE_THRESHOLD) {
@@ -136,6 +137,7 @@ class AudioAnalyzer {
       
       this.lastSoundTime = now;
       this.currentPauseDuration = 0;
+      this.excessivePauseLogged = false;
     }
   }
 

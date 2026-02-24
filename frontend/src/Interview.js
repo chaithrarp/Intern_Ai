@@ -35,6 +35,7 @@ function Interview({ resumeData, onBack }) {
   const [interruptionData, setInterruptionData] = useState(null);
   const [showInterruptionAlert, setShowInterruptionAlert] = useState(false);
   const [originalQuestion, setOriginalQuestion] = useState(null);
+  const interruptionActiveRef = useRef(false);
 
   // Warning State
   const [liveWarning, setLiveWarning] = useState(null);
@@ -42,6 +43,7 @@ function Interview({ resumeData, onBack }) {
   // Feedback State
   const [lastFeedback, setLastFeedback] = useState(null);
   const [showFeedback, setShowFeedback] = useState(false);
+
 
   // Voice State
   const [isQuestionSpeaking, setIsQuestionSpeaking] = useState(false);
@@ -220,11 +222,12 @@ function Interview({ resumeData, onBack }) {
   // ============================================
   // HANDLE INTERRUPTION
   // ============================================
-  const handleInterruption = (interruption) => {
+  const handleInterruption = async (interruption, partialTranscript) => {
+    interruptionActiveRef.current = true;
     console.log('🔥 INTERRUPTION:', interruption);
 
     soundEffects.playInterruption();
-    voiceService.stop();
+    
 
     if (currentQuestion) {
       setOriginalQuestion({
@@ -233,29 +236,50 @@ function Interview({ resumeData, onBack }) {
       });
     }
 
+    // Submit partial answer silently before showing interruption
+    if (partialTranscript && partialTranscript.trim().length > 0) {
+      try {
+        await fetch('http://localhost:8000/interview/answer', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            session_id: sessionId,
+            question_id: currentQuestion?.question_number || questionNumber,
+            answer_text: partialTranscript,
+            recording_duration: 0,
+            was_interrupted: true,
+            is_followup_answer: currentQuestion?.is_followup || false
+          })
+        });
+        console.log('✅ Partial answer submitted before interruption');
+      } catch (err) {
+        console.error('Failed to submit partial answer:', err);
+      }
+    }
+
     setInterruptionData(interruption);
     setShowInterruptionAlert(true);
     setAiState('speaking');
   };
 
   const handleInterruptionAcknowledged = () => {
+    interruptionActiveRef.current = false;
     console.log('✅ Interruption acknowledged');
-
+    
     setShowInterruptionAlert(false);
-
-    // Update question to follow-up
+    
     if (interruptionData) {
+      const followupText = interruptionData.followup_question;
       setCurrentQuestion({
-        text: interruptionData.followup_question,
-        question_number: currentQuestion?.question_number || questionNumber,
+        text: followupText,
+        question_number: (currentQuestion?.question_number || questionNumber),
         is_followup: true
       });
-      
-      // Reset to allow follow-up to be read
-      lastReadQuestionId.current = null;
+      lastReadQuestionId.current = currentQuestion?.question_number || questionNumber; // prevent re-reading
       isProcessingAnswer.current = false;
     }
-
+    
+    setInterruptionData(null);
     setAiState('idle');
   };
 
@@ -293,7 +317,7 @@ function Interview({ resumeData, onBack }) {
           question_id: currentQuestion?.question_number || questionNumber,
           answer_text: audioData.transcript,
           recording_duration: audioData.recording_duration,
-          was_interrupted: interruptionData !== null,
+          was_interrupted: true,
           is_followup_answer: currentQuestion?.is_followup || false  // ← NEW: Track follow-ups
         })
       });
@@ -309,6 +333,7 @@ function Interview({ resumeData, onBack }) {
       // Clear interruption state
       setInterruptionData(null);
       setOriginalQuestion(null);
+      setShowInterruptionAlert(false);
       setLiveWarning(null);
 
       // Show immediate feedback
@@ -385,8 +410,11 @@ function Interview({ resumeData, onBack }) {
     
     if (recordingState) {
       setAiState('listening');
-      voiceService.stop();
-      setIsQuestionSpeaking(false);
+      // Only stop voice if not showing interruption alert
+      if (!interruptionActiveRef.current) {
+        voiceService.stop();
+        setIsQuestionSpeaking(false);
+      }
       setLiveWarning(null);
     } else if (!loading) {
       setAiState('idle');
@@ -674,6 +702,7 @@ function Interview({ resumeData, onBack }) {
           <label>Your Answer (Voice):</label>
           {currentQuestion && sessionId && (
             <AudioRecorder
+              key={`${currentQuestion.question_number}-${currentQuestion.is_followup ? 'followup' : 'main'}-${currentQuestion.text?.substring(0, 20)}`}
               sessionId={sessionId}
               questionId={currentQuestion.question_number || questionNumber}
               currentQuestionText={currentQuestion.text}

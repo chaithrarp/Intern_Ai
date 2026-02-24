@@ -55,6 +55,7 @@ backend/
       - claim_analyzer.py             (Claim analysis engine)
       - claim_extractor.py            (Claim extraction logic)
       - final_report.py               (Final interview report generation)
+      - followup_generator.py
       - immediate_feedback.py         (Real-time candidate feedback)
       - interruption_analyzer.py      (Interruption detection and analysis)
       - interruption_decision.py      (Interruption decision logic)
@@ -89,6 +90,7 @@ backend/
   
   Testing & Validation:
     - test_intelligent_interruptions.py  (Intelligent interruption testing)
+    - test_STANDALONE.py
     - test_whisper.py                    (Whisper service testing)
     - validate_integration.py            (Integration validation and tests)
   

@@ -14,9 +14,11 @@ function AudioRecorder({ onAudioReady, questionId, sessionId, onRecordingStateCh
   const [wasInterrupted, setWasInterrupted] = useState(false);
   const [liveWarning, setLiveWarning] = useState(null);
   const [audioAnalyzer, setAudioAnalyzer] = useState(null);
-  
+  const audioAnalyzerRef = useRef(null);
+  const realtimeTranscriptRef = useRef('');
   // PHASE 5: Real-time detection states
   const [realtimeTranscript, setRealtimeTranscript] = useState('');
+  const [interimTranscript, setInterimTranscript] = useState('');
   const [fillerWarning, setFillerWarning] = useState(null);
   const [silenceWarning, setSilenceWarning] = useState(false);
   
@@ -30,7 +32,10 @@ function AudioRecorder({ onAudioReady, questionId, sessionId, onRecordingStateCh
   const recognitionRef = useRef(null);
   const lastSpeechTime = useRef(null);
   const silenceCheckInterval = useRef(null);
+  const manuallyStoppedRef = useRef(false);
+  
 
+  const interruptedRef = useRef(false);
   // PHASE 5: Filler word detection
   const FILLER_WORDS = ['um', 'uh', 'like', 'you know', 'basically', 'actually', 'literally', 'kind of', 'sort of'];
   const SILENCE_THRESHOLD = 5000; // 5 seconds of silence (increased from 4)
@@ -87,37 +92,34 @@ function AudioRecorder({ onAudioReady, questionId, sessionId, onRecordingStateCh
       recognition.lang = 'en-US';
       
       recognition.onresult = (event) => {
-        let interimTranscript = '';
-        let finalTranscript = '';
-        
-        for (let i = event.resultIndex; i < event.results.length; i++) {
-          const transcript = event.results[i][0].transcript;
-          if (event.results[i].isFinal) {
-            finalTranscript += transcript + ' ';
-          } else {
-            interimTranscript += transcript;
-          }
+      let finalTranscript = '';
+      let interimTranscript = '';
+      
+      for (let i = event.resultIndex; i < event.results.length; i++) {
+        const transcript = event.results[i][0].transcript;
+        if (event.results[i].isFinal) {
+          finalTranscript += transcript + ' ';
+        } else {
+          interimTranscript += transcript;
         }
-        
-        // Update real-time transcript
-        const fullTranscript = finalTranscript + interimTranscript;
-        setRealtimeTranscript(prev => prev + finalTranscript);
-        
-        // Update last speech time and clear silence warning
-        lastSpeechTime.current = Date.now();
-        setSilenceWarning(false);
-        
-        // Check for filler words
-        const fillerDetection = detectFillers(fullTranscript);
-        if (fillerDetection) {
-          setFillerWarning(fillerDetection);
-
-          // PHASE 8: Play warning sound
-  soundEffects.playWarning();
-          // Clear warning after 2 seconds
-          setTimeout(() => setFillerWarning(null), 2000);
-        }
-      };
+      }
+      
+      // Update confirmed text + show interim text live
+      realtimeTranscriptRef.current += finalTranscript;
+      setRealtimeTranscript(realtimeTranscriptRef.current);
+      setInterimTranscript(interimTranscript); // ← new state
+      
+      lastSpeechTime.current = Date.now();
+      setSilenceWarning(false);
+      
+      // Filler detection (unchanged)
+      const fillerDetection = detectFillers(finalTranscript + interimTranscript);
+      if (fillerDetection) {
+        setFillerWarning(fillerDetection);
+        soundEffects.playWarning();
+        setTimeout(() => setFillerWarning(null), 2000);
+      }
+    };
       
       recognition.onerror = (event) => {
         console.error('Speech recognition error:', event.error);
@@ -196,80 +198,102 @@ function AudioRecorder({ onAudioReady, questionId, sessionId, onRecordingStateCh
 
   // PHASE 5: Check for interruptions during recording
   useEffect(() => {
-  if (isRecording && audioAnalyzer) {
-    // Check every 3 seconds if interruption should trigger
-    interruptionCheckInterval.current = setInterval(async () => {
-      const duration = (Date.now() - recordingStartTime.current) / 1000;
-      
-      // Get audio analysis report from analyzer
-      const audioReport = audioAnalyzer.getAnalysisReport();
-      
-      // Use real-time transcript for interruption check
-      const transcriptForCheck = realtimeTranscript || '';
-      
-      // Check with backend if interruption should happen
-      try {
-        const response = await fetch(
-          `http://localhost:8000/interview/check-interruption?session_id=${sessionId}&question_id=${questionId}&recording_duration=${duration}&partial_transcript=${encodeURIComponent(transcriptForCheck)}`,
-          {
-            method: 'POST',
-            headers: {
-              'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({
-              current_question_text: currentQuestionText || '',
-              audio_analysis: audioReport  // ← STEP 3.2: Send audio analysis
-            })
-          }
-        );
-        
-        const data = await response.json();
-        
-        // Handle LIVE WARNINGS (non-interrupting)
-        if (data.should_warn && data.warning) {
-          console.log('⚠️ Live warning:', data.warning.message);
-          setLiveWarning(data.warning);
-          
-          // Clear warning after duration
-          setTimeout(() => {
-            setLiveWarning(null);
-          }, (data.warning.show_duration || 3) * 1000);
-        }
-        
-        // Handle INTERRUPTIONS
-        if (data.should_interrupt) {
-          console.log('🔥 INTERRUPTION TRIGGERED!', data);
-          
-          // Mark that interruption happened (but keep recording!)
-          setWasInterrupted(true);
-          
-          // Trigger interruption alert in parent (recording continues!)
-          if (onInterruption) {
-            onInterruption(data);
-          }
-          
-          // Stop checking for more interruptions (only one per answer)
-          if (interruptionCheckInterval.current) {
-            clearInterval(interruptionCheckInterval.current);
-          }
-        }
-      } catch (error) {
-        console.error('Error checking interruption:', error);
-      }
-    }, 3000); // Check every 3 seconds (increased from 2s)
-  } else {
-    // Clear interval when not recording
+  if (!isRecording) {
     if (interruptionCheckInterval.current) {
       clearInterval(interruptionCheckInterval.current);
     }
+    return;
   }
+
+  // Start checking immediately, don't wait for audioAnalyzer state
+  interruptionCheckInterval.current = setInterval(async () => {
+    const duration = (Date.now() - recordingStartTime.current) / 1000;
+    
+    // Use ref directly — always has latest value
+    const audioReport = audioAnalyzerRef.current 
+      ? audioAnalyzerRef.current.getAnalysisReport() 
+      : {};
+    
+    const transcriptForCheck = realtimeTranscriptRef.current || '';
+
+    console.log('🔍 Checking interruption:', {
+      duration,
+      transcriptLength: transcriptForCheck.length,
+      hasAudioData: !!audioAnalyzerRef.current,
+      detectedIssues: audioReport?.detected_issues?.length || 0
+    });
+
+    try {
+      const response = await fetch(
+        `http://localhost:8000/interview/check-interruption`,
+        {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            session_id: sessionId,
+            recording_duration: duration,
+            partial_transcript: transcriptForCheck,
+            audio_metrics: audioReport
+          })
+        }
+      );
+      
+      const data = await response.json();
+      
+      if (data.should_warn && data.warning) {
+        console.log('⚠️ Live warning:', data.warning.message);
+        setLiveWarning(data.warning);
+        setTimeout(() => setLiveWarning(null), (data.warning.show_duration || 3) * 1000);
+      }
+      
+      if (data.should_interrupt && !manuallyStoppedRef.current && !interruptedRef.current) {
+        interruptedRef.current = true; // ← ADD THIS as first line inside
+        console.log('🔥 INTERRUPTION TRIGGERED!', data);
+        
+        // Stop recording immediately when interrupted
+        if (mediaRecorderRef.current && isRecording) {
+          // Stop everything completely
+          if (audioAnalyzerRef.current) {
+            audioAnalyzerRef.current.stop();
+            audioAnalyzerRef.current.cleanup();
+            audioAnalyzerRef.current = null;
+            setAudioAnalyzer(null);
+          }
+          if (recognitionRef.current) {
+            recognitionRef.current.stop();
+            recognitionRef.current = null;
+          }
+          mediaRecorderRef.current.stop();
+          setIsRecording(false);
+          clearInterval(timerRef.current);
+          clearInterval(interruptionCheckInterval.current);
+        }
+        // Save transcript but DON'T show playback screen
+        const partialText = realtimeTranscriptRef.current.trim();
+        if (partialText) {
+          setTranscript(partialText);
+        }
+        // Don't set audioBlob — keeps UI clean for interruption
+        
+        setWasInterrupted(true);
+        if (onInterruption) {
+          onInterruption(data, realtimeTranscriptRef.current);
+        }
+        if (interruptionCheckInterval.current) {
+          clearInterval(interruptionCheckInterval.current);
+        }
+      }
+    } catch (error) {
+      console.error('Error checking interruption:', error);
+    }
+  }, 3000);
 
   return () => {
     if (interruptionCheckInterval.current) {
       clearInterval(interruptionCheckInterval.current);
     }
   };
-}, [isRecording, sessionId, questionId, onInterruption, realtimeTranscript, audioAnalyzer]);
+}, [isRecording, sessionId, questionId, onInterruption]);
 
   // Start Recording
   const startRecording = async () => {
@@ -297,6 +321,7 @@ function AudioRecorder({ onAudioReady, questionId, sessionId, onRecordingStateCh
       const initialized = await analyzer.initialize(stream);
       if (initialized) {
       analyzer.start();
+      audioAnalyzerRef.current = analyzer;
       setAudioAnalyzer(analyzer);
       console.log('✅ Audio analyzer initialized and started');
     } else {
@@ -314,18 +339,17 @@ function AudioRecorder({ onAudioReady, questionId, sessionId, onRecordingStateCh
       };
 
       mediaRecorder.onstop = async () => {
-        const blob = new Blob(chunksRef.current, { type: 'audio/webm' });
-        setAudioBlob(blob);
-        
         stream.getTracks().forEach(track => track.stop());
-        
-        // Notify parent that recording stopped
-        if (onRecordingStateChange) {
-          onRecordingStateChange(false);
+        // Only show playback screen if NOT interrupted
+        if (!interruptedRef.current) {
+          const blob = new Blob(chunksRef.current, { type: 'audio/webm' });
+          setAudioBlob(blob);
+          if (onRecordingStateChange) {
+            onRecordingStateChange(false);
+          }
         }
-        
-        // Auto-transcribe with Whisper (final accurate transcript)
-        await transcribeAudio(blob);
+        // If interrupted, don't call onRecordingStateChange
+        // so voiceService.stop() never gets called
       };
 
        mediaRecorder.start();
@@ -364,19 +388,27 @@ function AudioRecorder({ onAudioReady, questionId, sessionId, onRecordingStateCh
   // Stop Recording
   const stopRecording = () => {
     if (mediaRecorderRef.current && isRecording) {
-      // STEP 3.2: Stop audio analyzer
-      if (audioAnalyzer) {
-        audioAnalyzer.stop();
-        audioAnalyzer.cleanup();
+      manuallyStoppedRef.current = true;
+      
+      if (audioAnalyzerRef.current) {
+        audioAnalyzerRef.current.stop();
+        audioAnalyzerRef.current.cleanup();
+        audioAnalyzerRef.current = null;
         setAudioAnalyzer(null);
       }
       mediaRecorderRef.current.stop();
       setIsRecording(false);
       clearInterval(timerRef.current);
-       soundEffects.playRecordingStop();
-      // Clear interruption check interval
+      soundEffects.playRecordingStop();
       if (interruptionCheckInterval.current) {
         clearInterval(interruptionCheckInterval.current);
+      }
+
+      // Use live transcript directly — skip Whisper entirely
+      const finalText = realtimeTranscript.trim();
+      if (finalText) {
+        console.log('✅ Using live transcript directly:', finalText);
+        setTranscript(finalText);
       }
 
       console.log(`Recording stopped. Was interrupted: ${wasInterrupted}`);
@@ -401,6 +433,7 @@ function AudioRecorder({ onAudioReady, questionId, sessionId, onRecordingStateCh
       );
 
       const data = await response.json();
+      console.log('Backend response:', JSON.stringify(data));
       console.log('Transcription response:', data);
 
       if (data.success) {
@@ -443,10 +476,17 @@ function AudioRecorder({ onAudioReady, questionId, sessionId, onRecordingStateCh
     setFillerWarning(null);
     setSilenceWarning(false);
     setLiveWarning(null);
-    if (audioAnalyzer) {
-    audioAnalyzer.cleanup();
-    setAudioAnalyzer(null);
-}
+    setInterimTranscript('');
+    realtimeTranscriptRef.current = '';
+    manuallyStoppedRef.current = false;
+    interruptedRef.current = false;
+    
+    
+    if (audioAnalyzerRef.current) {
+      audioAnalyzerRef.current.cleanup();
+      audioAnalyzerRef.current = null;
+      setAudioAnalyzer(null);
+    }
   };
 
   const formatTime = (seconds) => {
@@ -508,11 +548,22 @@ function AudioRecorder({ onAudioReady, questionId, sessionId, onRecordingStateCh
               </AnimatePresence>
               {/* STEP 3.2: Live Warning Component */}
               <LiveWarning warning={liveWarning} />
+              {/* LIVE TRANSCRIPT */}
+              {(realtimeTranscript || interimTranscript) && (
+                <motion.div className="live-transcript" initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
+                  <p className="live-transcript-label">🎙️ Live transcript:</p>
+                  <p className="live-transcript-text">
+                    {realtimeTranscript}
+                    <span style={{ color: 'rgba(255,255,255,0.45)' }}>{interimTranscript}</span>
+                  </p>
+                </motion.div>
+              )}
               
               {/* Show if interrupted (but keep recording!) */}
               {wasInterrupted && (
                 <motion.div
                   className="interrupted-badge"
+                  
                   initial={{ opacity: 0, y: -10 }}
                   animate={{ opacity: 1, y: 0 }}
                 >
