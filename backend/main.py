@@ -429,7 +429,105 @@ async def submit_answer(session_id: str, submission: AnswerSubmission):
             "completed": False,
             "error": f"AI generation failed, using fallback: {str(e)}"
         }
+<<<<<<< Updated upstream
     
+=======
+        
+    except Exception as e:
+        print(f"❌ Error generating report: {str(e)}")
+        raise HTTPException(status_code=500, detail=str(e))
+
+# ============================================================
+# ADD THESE TWO ENDPOINTS TO main.py
+# Place them after the existing /interview/final-report endpoint
+# ============================================================
+
+@app.get("/interview/sessions/history")
+async def get_sessions_history():
+    """
+    Return list of completed sessions with scores for SessionHistory.js
+    Reads from the orchestrator's in-memory sessions + active_sessions.json
+    """
+    try:
+        orchestrator = get_interview_orchestrator()
+        history = []
+
+        for session_id, state in orchestrator.sessions.items():
+            # Only include sessions that have at least one answered question
+            if not state.conversation_history:
+                continue
+
+            overall_avg = 0
+            if state.overall_score_progression:
+                overall_avg = int(sum(state.overall_score_progression) / len(state.overall_score_progression))
+
+            history.append({
+                "session_id": session_id,
+                "round_type": state.current_round_type.value,
+                "overall_score": overall_avg,
+                "dimension_scores": {k: int(v) for k, v in (state.average_scores or {}).items()},
+                "total_questions": len(state.conversation_history),
+                "total_interruptions": state.total_interruptions,
+                "duration_seconds": (
+                    (state.completed_at - state.started_at).total_seconds()
+                    if state.completed_at else
+                    (datetime.now() - state.started_at).total_seconds()
+                ),
+                "started_at": state.started_at.isoformat() if state.started_at else None,
+                "completed_at": state.completed_at.isoformat() if state.completed_at else None,
+                "current_phase": state.current_phase.value,
+            })
+
+        # Sort newest first
+        history.sort(key=lambda x: x["completed_at"] or x["started_at"] or "", reverse=True)
+
+        return {"success": True, "history": history, "total": len(history)}
+
+    except Exception as e:
+        print(f"❌ Error fetching history: {e}")
+        import traceback; traceback.print_exc()
+        raise HTTPException(status_code=500, detail=str(e))
+
+
+# ============================================================
+# ALSO REPLACE the existing /interview/final-report/{session_id}
+# endpoint with this fixed version (removes session_eval arg):
+# ============================================================
+
+@app.get("/interview/final-report/{session_id}")
+async def get_final_report(session_id: str):
+    """Generate comprehensive final report"""
+    try:
+        orchestrator = get_interview_orchestrator()
+        report_gen   = get_final_report_generator()
+
+        session = orchestrator.get_session(session_id)
+        if not session:
+            raise HTTPException(status_code=404, detail="Session not found")
+
+        if session.current_phase != InterviewPhase.COMPLETED:
+            session.current_phase = InterviewPhase.COMPLETED
+            session.completed_at  = datetime.now()
+
+        # ← FIXED: no second argument
+        report = report_gen.generate_report(session)
+
+        print(f"📋 Generated final report for session: {session_id}")
+
+        return {"success": True, "report": report.dict()}
+
+    except HTTPException:
+        raise
+    except Exception as e:
+        print(f"❌ Error generating report: {str(e)}")
+        import traceback; traceback.print_exc()
+        raise HTTPException(status_code=500, detail=str(e))
+    
+
+# ============================================
+# AUDIO UPLOAD (UNCHANGED)
+# ============================================
+>>>>>>> Stashed changes
 @app.post("/interview/upload-audio")
 async def upload_audio(
     session_id: str,
@@ -544,6 +642,83 @@ async def upload_audio(
         }
 
 
+
+@app.get("/metrics/history")
+async def get_metrics_history(limit: int = 20):
+    """
+    Return list of past sessions for SessionHistory.js dashboard.
+    Expected fields: session_id, completed_at, started_at, total_questions,
+    avg_hesitation_score, avg_words_per_minute, total_filler_words, interruption_count
+    """
+    try:
+        orchestrator = get_interview_orchestrator()
+        history = []
+
+        for session_id, state in orchestrator.sessions.items():
+            if not state.conversation_history:
+                continue
+
+            # Derive hesitation score from interruptions + low scores
+            # Lower is better (like a penalty score)
+            interruption_count = state.total_interruptions
+            avg_score = (
+                sum(state.overall_score_progression) / len(state.overall_score_progression)
+                if state.overall_score_progression else 0
+            )
+            # Hesitation score: inverse of performance, 0-100 scale
+            avg_hesitation_score = max(0, round(100 - avg_score + (interruption_count * 5), 1))
+
+            # Estimate WPM from conversation history
+            total_words = 0
+            total_duration = 0
+            total_filler_words = 0
+
+            for qa in state.conversation_history:
+                answer = qa.get("answer", "")
+                word_count = len(answer.split())
+                total_words += word_count
+                # Count common filler words
+                answer_lower = answer.lower()
+                for filler in ["um", "uh", "like", "you know", "basically", "literally", "actually"]:
+                    total_filler_words += answer_lower.count(f" {filler} ")
+
+            # Estimate duration
+            duration_seconds = (
+                (state.completed_at - state.started_at).total_seconds()
+                if state.completed_at and state.started_at
+                else (datetime.now() - state.started_at).total_seconds()
+                if state.started_at else 0
+            )
+            avg_wpm = round((total_words / (duration_seconds / 60)), 1) if duration_seconds > 0 else 0
+
+            history.append({
+                "session_id": session_id,
+                "started_at": state.started_at.isoformat() if state.started_at else None,
+                "completed_at": state.completed_at.isoformat() if state.completed_at else None,
+                "total_questions": len(state.conversation_history),
+                "avg_hesitation_score": avg_hesitation_score,
+                "avg_words_per_minute": avg_wpm,
+                "total_filler_words": total_filler_words,
+                "interruption_count": interruption_count,
+                "round_type": state.current_round_type.value,
+                "overall_score": int(avg_score),
+            })
+
+        # Sort newest first, apply limit
+        history.sort(
+            key=lambda x: x["completed_at"] or x["started_at"] or "",
+            reverse=True
+        )
+        history = history[:limit]
+
+        return {"success": True, "history": history, "total": len(history)}
+
+    except Exception as e:
+        print(f"❌ Error fetching metrics history: {e}")
+        import traceback
+        traceback.print_exc()
+        raise HTTPException(status_code=500, detail=str(e))
+    
 # ============================================
 # PHASE 5: INTERRUPTION ENDPOINTS
 # ============================================
