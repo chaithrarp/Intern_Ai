@@ -400,7 +400,7 @@
       0
     ],
     "total_interruptions": 0,
-    "started_at": "2026-02-15T23:12:59.440383",
+    "started_at": "2026-02-24T22:54:40.460076",
     "actual_question_number": 0,
     "followup_count": 0
   },
@@ -539,7 +539,7 @@
       82
     ],
     "total_interruptions": 0,
-    "started_at": "2026-02-15T23:12:59.444356",
+    "started_at": "2026-02-24T22:54:40.460376",
     "actual_question_number": 0,
     "followup_count": 0
   },
@@ -672,7 +672,7 @@
       78
     ],
     "total_interruptions": 0,
-    "started_at": "2026-02-15T23:12:59.446878",
+    "started_at": "2026-02-24T22:54:40.461115",
     "actual_question_number": 0,
     "followup_count": 0
   },
@@ -1181,7 +1181,7 @@
       60
     ],
     "total_interruptions": 0,
-    "started_at": "2026-02-15T23:12:59.452602",
+    "started_at": "2026-02-24T22:54:40.462377",
     "actual_question_number": 0,
     "followup_count": 0
   },
@@ -1455,7 +1455,7 @@
       0
     ],
     "total_interruptions": 0,
-    "started_at": "2026-02-15T23:12:59.454088",
+    "started_at": "2026-02-24T22:54:40.463063",
     "actual_question_number": 0,
     "followup_count": 0
   },
@@ -1905,7 +1905,7 @@
       74
     ],
     "total_interruptions": 0,
-    "started_at": "2026-02-15T23:12:59.460918",
+    "started_at": "2026-02-24T22:54:40.463422",
     "actual_question_number": 0,
     "followup_count": 0
   },
@@ -2217,7 +2217,7 @@
       52
     ],
     "total_interruptions": 0,
-    "started_at": "2026-02-15T23:12:59.467716",
+    "started_at": "2026-02-24T22:54:40.463601",
     "actual_question_number": 0,
     "followup_count": 0
   },
@@ -2356,7 +2356,7 @@
       3
     ],
     "total_interruptions": 0,
-    "started_at": "2026-02-15T23:12:59.472523",
+    "started_at": "2026-02-24T22:54:40.464674",
     "actual_question_number": 0,
     "followup_count": 0
   },
@@ -2616,7 +2616,7 @@
       0
     ],
     "total_interruptions": 0,
-    "started_at": "2026-02-15T23:12:59.473252",
+    "started_at": "2026-02-24T22:54:40.465070",
     "actual_question_number": 0,
     "followup_count": 0
   },
@@ -3071,7 +3071,7 @@
       86
     ],
     "total_interruptions": 0,
-    "started_at": "2026-02-15T23:12:59.473687",
+    "started_at": "2026-02-24T22:54:40.465275",
     "actual_question_number": 0,
     "followup_count": 0
   },
@@ -3211,7 +3211,7 @@
       3
     ],
     "total_interruptions": 0,
-    "started_at": "2026-02-15T23:12:59.474022",
+    "started_at": "2026-02-24T22:54:40.465523",
     "actual_question_number": 0,
     "followup_count": 0
   },
@@ -3293,7 +3293,7 @@
       3
     ],
     "total_interruptions": 0,
-    "started_at": "2026-02-15T23:12:59.474375",
+    "started_at": "2026-02-24T22:54:40.465717",
     "actual_question_number": 0,
     "followup_count": 0
   },
@@ -3426,7 +3426,7 @@
       0
     ],
     "total_interruptions": 0,
-    "started_at": "2026-02-15T23:12:59.475498",
+    "started_at": "2026-02-24T22:54:40.466537",
     "actual_question_number": 0,
     "followup_count": 0
   },
@@ -3808,7 +3808,7 @@
       74
     ],
     "total_interruptions": 0,
-    "started_at": "2026-02-15T23:12:59.478587",
+    "started_at": "2026-02-24T22:54:40.468388",
     "actual_question_number": 0,
     "followup_count": 0
   },
@@ -4235,7 +4235,7 @@
       74
     ],
     "total_interruptions": 0,
-    "started_at": "2026-02-15T23:12:59.480965",
+    "started_at": "2026-02-24T22:54:40.468587",
     "actual_question_number": 0,
     "followup_count": 0
   },
@@ -4752,7 +4752,7 @@
       78
     ],
     "total_interruptions": 0,
-    "started_at": "2026-02-15T23:12:59.483352",
+    "started_at": "2026-02-24T22:54:40.468848",
     "actual_question_number": 0,
     "followup_count": 0
   },
@@ -5104,7 +5104,433 @@
       80
     ],
     "total_interruptions": 0,
-    "started_at": "2026-02-15T23:13:34.960867",
+    "started_at": "2026-02-24T22:54:40.469048",
+    "actual_question_number": 5,
+    "followup_count": 1
+  },
+  "session_20260224_224015_cfca": {
+    "session_id": "session_20260224_224015_cfca",
+    "resume_context": "CANDIDATE'S RESUME SUMMARY:\n    =====================================\n\n    R P CHAITHRA\n\uf095 +91 6360303317  \uf0e0 rp.chaithr a07@gmail.c om \uf041 Beng aluru\n\uf0e1 linkedin.c om/in/r -p-chaithr a-ab7bba334  \uf0ac github.c om/chaithr arp\nSUMMARY\nThird-year B.E. in Ar\u0000\u0000cial In telligence & Da ta Science s tuden t at MSRIT , main taining an e xcep\u0000onal C GPA of 9.4 while ac\u0000v ely\nexcelling in c ompe \u0000\u0000ve tech ar enas. Curr ently adv anced t o the sec ond r ound of the Samsung PRISM Hack athon 2025, demons tra\u0000ng\nstrong applied skills alongside e xperience in Hack2Skill and E cell IdeaRise. Combines this c ompe \u0000\u0000ve, hands-on appr oach with a\nproven ability t o build and deplo y prac\u0000c al so\u0000w are and ML solu\u0000ons. E ager to contribut e a r obus t technic al founda \u0000on and a\nresults-driv en mindse t to the Summer In tern t eam a t Fidelity In vestmen ts.\nPROJECTS\nSmart Camer a Assis tant - AI-po wered phot ography assis tant with r eal-\u0000me scene analy sis and aut oma \u0000c se \u0000ngs op \u0000miz a\u0000on\nfor enhanced mobile phot ography experience.\nPneumonia Classi\u0000er  - Medic al diagnos \u0000c system using CNN deep learning t o analy ze ches t X-rays with hea tmap visualiz a\u0000on and\nhealthc are integra\u0000on.\nDrish \u0000 Herit age Guide  - Augmen ted reality cultur al pla \u0000orm f eaturing 3D monumen t models and mul\u0000lingual v oice guidance f or\nimmer sive his torical explor a\u0000on.\nKannada PDF T oolkit  - Go vernmen t internship pr oject de veloping documen t processing s ystem f or Kannada Unic ode oper a\u0000ons\nand r egional languag e text extrac\u0000on.\nMovie R ecommender S ystem - Machine learning pla \u0000... \n\n    KEY SKILLS IDENTIFIED: python, react, node, sql, machine learning\n\n    =====================================\n\n    INTERVIEW INSTRUCTIONS:\n    - You are conducting a PERSONALIZED interview based on the candidate's actual resume above\n    - Ask questions that reference SPECIFIC details from their resume (companies, projects, technologies)\n    - Make the interview feel realistic by mentioning things you \"noticed\" on their resume\n    - Start with their background, then dive deeper into specific experiences\n    - Ask follow-up questions based on what they mention from their resume\n\n    EXAMPLE GOOD QUESTIONS:\n    - \"I see you worked with python, react, node, sql, machine learning. Can you tell me about a specific project where you used these?\"\n    - \"I noticed you worked at [mention a company from resume if visible]. What was your role there?\"\n    - \"Walk me through your background and highlight the experiences most relevant to this role.\"\n\n    DO NOT ask generic questions - make it personal to THEIR resume!",
+    "resume_uploaded": true,
+    "current_phase": "resume_deep_dive",
+    "current_round_type": "hr",
+    "current_question_text": "Here's the first question:\n\nAs you've pursued your undergraduate degree in Artificial Intelligence & Data Science at MSRIT, can you describe a project or experience that showcases your ability to leverage AI and data analytics skills to drive meaningful insights or solutions? Please walk me through the Situation, Task, Action, and Result of this experience.",
+    "current_question_id": "q_1",
+    "difficulty_level": 5,
+    "questions_in_current_phase": 0,
+    "conversation_history": [],
+    "overall_score_progression": [],
+    "total_interruptions": 0,
+    "started_at": "2026-02-24T22:54:40.469274",
+    "actual_question_number": 1,
+    "followup_count": 0
+  },
+  "session_20260224_224610_10b1": {
+    "session_id": "session_20260224_224610_10b1",
+    "resume_context": "CANDIDATE'S RESUME SUMMARY:\n    =====================================\n\n    R P CHAITHRA\n\uf095 +91 6360303317  \uf0e0 rp.chaithr a07@gmail.c om \uf041 Beng aluru\n\uf0e1 linkedin.c om/in/r -p-chaithr a-ab7bba334  \uf0ac github.c om/chaithr arp\nSUMMARY\nThird-year B.E. in Ar\u0000\u0000cial In telligence & Da ta Science s tuden t at MSRIT , main taining an e xcep\u0000onal C GPA of 9.4 while ac\u0000v ely\nexcelling in c ompe \u0000\u0000ve tech ar enas. Curr ently adv anced t o the sec ond r ound of the Samsung PRISM Hack athon 2025, demons tra\u0000ng\nstrong applied skills alongside e xperience in Hack2Skill and E cell IdeaRise. Combines this c ompe \u0000\u0000ve, hands-on appr oach with a\nproven ability t o build and deplo y prac\u0000c al so\u0000w are and ML solu\u0000ons. E ager to contribut e a r obus t technic al founda \u0000on and a\nresults-driv en mindse t to the Summer In tern t eam a t Fidelity In vestmen ts.\nPROJECTS\nSmart Camer a Assis tant - AI-po wered phot ography assis tant with r eal-\u0000me scene analy sis and aut oma \u0000c se \u0000ngs op \u0000miz a\u0000on\nfor enhanced mobile phot ography experience.\nPneumonia Classi\u0000er  - Medic al diagnos \u0000c system using CNN deep learning t o analy ze ches t X-rays with hea tmap visualiz a\u0000on and\nhealthc are integra\u0000on.\nDrish \u0000 Herit age Guide  - Augmen ted reality cultur al pla \u0000orm f eaturing 3D monumen t models and mul\u0000lingual v oice guidance f or\nimmer sive his torical explor a\u0000on.\nKannada PDF T oolkit  - Go vernmen t internship pr oject de veloping documen t processing s ystem f or Kannada Unic ode oper a\u0000ons\nand r egional languag e text extrac\u0000on.\nMovie R ecommender S ystem - Machine learning pla \u0000... \n\n    KEY SKILLS IDENTIFIED: python, react, node, sql, machine learning\n\n    =====================================\n\n    INTERVIEW INSTRUCTIONS:\n    - You are conducting a PERSONALIZED interview based on the candidate's actual resume above\n    - Ask questions that reference SPECIFIC details from their resume (companies, projects, technologies)\n    - Make the interview feel realistic by mentioning things you \"noticed\" on their resume\n    - Start with their background, then dive deeper into specific experiences\n    - Ask follow-up questions based on what they mention from their resume\n\n    EXAMPLE GOOD QUESTIONS:\n    - \"I see you worked with python, react, node, sql, machine learning. Can you tell me about a specific project where you used these?\"\n    - \"I noticed you worked at [mention a company from resume if visible]. What was your role there?\"\n    - \"Walk me through your background and highlight the experiences most relevant to this role.\"\n\n    DO NOT ask generic questions - make it personal to THEIR resume!",
+    "resume_uploaded": true,
+    "current_phase": "resume_deep_dive",
+    "current_round_type": "hr",
+    "current_question_text": "What did you learn from a project or experience that involved working with a diverse group of people, and how did you contribute to its success?",
+    "current_question_id": "q_1",
+    "difficulty_level": 5,
+    "questions_in_current_phase": 0,
+    "conversation_history": [],
+    "overall_score_progression": [],
+    "total_interruptions": 0,
+    "started_at": "2026-02-24T22:54:40.469510",
+    "actual_question_number": 1,
+    "followup_count": 0
+  },
+  "session_20260224_225104_cb4f": {
+    "session_id": "session_20260224_225104_cb4f",
+    "resume_context": "CANDIDATE'S RESUME SUMMARY:\n    =====================================\n\n    R P CHAITHRA\n\uf095 +91 6360303317  \uf0e0 rp.chaithr a07@gmail.c om \uf041 Beng aluru\n\uf0e1 linkedin.c om/in/r -p-chaithr a-ab7bba334  \uf0ac github.c om/chaithr arp\nSUMMARY\nThird-year B.E. in Ar\u0000\u0000cial In telligence & Da ta Science s tuden t at MSRIT , main taining an e xcep\u0000onal C GPA of 9.4 while ac\u0000v ely\nexcelling in c ompe \u0000\u0000ve tech ar enas. Curr ently adv anced t o the sec ond r ound of the Samsung PRISM Hack athon 2025, demons tra\u0000ng\nstrong applied skills alongside e xperience in Hack2Skill and E cell IdeaRise. Combines this c ompe \u0000\u0000ve, hands-on appr oach with a\nproven ability t o build and deplo y prac\u0000c al so\u0000w are and ML solu\u0000ons. E ager to contribut e a r obus t technic al founda \u0000on and a\nresults-driv en mindse t to the Summer In tern t eam a t Fidelity In vestmen ts.\nPROJECTS\nSmart Camer a Assis tant - AI-po wered phot ography assis tant with r eal-\u0000me scene analy sis and aut oma \u0000c se \u0000ngs op \u0000miz a\u0000on\nfor enhanced mobile phot ography experience.\nPneumonia Classi\u0000er  - Medic al diagnos \u0000c system using CNN deep learning t o analy ze ches t X-rays with hea tmap visualiz a\u0000on and\nhealthc are integra\u0000on.\nDrish \u0000 Herit age Guide  - Augmen ted reality cultur al pla \u0000orm f eaturing 3D monumen t models and mul\u0000lingual v oice guidance f or\nimmer sive his torical explor a\u0000on.\nKannada PDF T oolkit  - Go vernmen t internship pr oject de veloping documen t processing s ystem f or Kannada Unic ode oper a\u0000ons\nand r egional languag e text extrac\u0000on.\nMovie R ecommender S ystem - Machine learning pla \u0000... \n\n    KEY SKILLS IDENTIFIED: python, react, node, sql, machine learning\n\n    =====================================\n\n    INTERVIEW INSTRUCTIONS:\n    - You are conducting a PERSONALIZED interview based on the candidate's actual resume above\n    - Ask questions that reference SPECIFIC details from their resume (companies, projects, technologies)\n    - Make the interview feel realistic by mentioning things you \"noticed\" on their resume\n    - Start with their background, then dive deeper into specific experiences\n    - Ask follow-up questions based on what they mention from their resume\n\n    EXAMPLE GOOD QUESTIONS:\n    - \"I see you worked with python, react, node, sql, machine learning. Can you tell me about a specific project where you used these?\"\n    - \"I noticed you worked at [mention a company from resume if visible]. What was your role there?\"\n    - \"Walk me through your background and highlight the experiences most relevant to this role.\"\n\n    DO NOT ask generic questions - make it personal to THEIR resume!",
+    "resume_uploaded": true,
+    "current_phase": "resume_deep_dive",
+    "current_round_type": "hr",
+    "current_question_text": "What would you like to achieve in your first year as a professional, and how have your academic experiences and skills prepared you for this milestone?",
+    "current_question_id": "q_1",
+    "difficulty_level": 5,
+    "questions_in_current_phase": 0,
+    "conversation_history": [],
+    "overall_score_progression": [],
+    "total_interruptions": 0,
+    "started_at": "2026-02-24T22:54:40.469713",
+    "actual_question_number": 1,
+    "followup_count": 0
+  },
+  "session_20260224_225500_dba6": {
+    "session_id": "session_20260224_225500_dba6",
+    "resume_context": "CANDIDATE'S RESUME SUMMARY:\n    =====================================\n\n    R P CHAITHRA\n\uf095 +91 6360303317  \uf0e0 rp.chaithr a07@gmail.c om \uf041 Beng aluru\n\uf0e1 linkedin.c om/in/r -p-chaithr a-ab7bba334  \uf0ac github.c om/chaithr arp\nSUMMARY\nThird-year B.E. in Ar\u0000\u0000cial In telligence & Da ta Science s tuden t at MSRIT , main taining an e xcep\u0000onal C GPA of 9.4 while ac\u0000v ely\nexcelling in c ompe \u0000\u0000ve tech ar enas. Curr ently adv anced t o the sec ond r ound of the Samsung PRISM Hack athon 2025, demons tra\u0000ng\nstrong applied skills alongside e xperience in Hack2Skill and E cell IdeaRise. Combines this c ompe \u0000\u0000ve, hands-on appr oach with a\nproven ability t o build and deplo y prac\u0000c al so\u0000w are and ML solu\u0000ons. E ager to contribut e a r obus t technic al founda \u0000on and a\nresults-driv en mindse t to the Summer In tern t eam a t Fidelity In vestmen ts.\nPROJECTS\nSmart Camer a Assis tant - AI-po wered phot ography assis tant with r eal-\u0000me scene analy sis and aut oma \u0000c se \u0000ngs op \u0000miz a\u0000on\nfor enhanced mobile phot ography experience.\nPneumonia Classi\u0000er  - Medic al diagnos \u0000c system using CNN deep learning t o analy ze ches t X-rays with hea tmap visualiz a\u0000on and\nhealthc are integra\u0000on.\nDrish \u0000 Herit age Guide  - Augmen ted reality cultur al pla \u0000orm f eaturing 3D monumen t models and mul\u0000lingual v oice guidance f or\nimmer sive his torical explor a\u0000on.\nKannada PDF T oolkit  - Go vernmen t internship pr oject de veloping documen t processing s ystem f or Kannada Unic ode oper a\u0000ons\nand r egional languag e text extrac\u0000on.\nMovie R ecommender S ystem - Machine learning pla \u0000... \n\n    KEY SKILLS IDENTIFIED: python, react, node, sql, machine learning\n\n    =====================================\n\n    INTERVIEW INSTRUCTIONS:\n    - You are conducting a PERSONALIZED interview based on the candidate's actual resume above\n    - Ask questions that reference SPECIFIC details from their resume (companies, projects, technologies)\n    - Make the interview feel realistic by mentioning things you \"noticed\" on their resume\n    - Start with their background, then dive deeper into specific experiences\n    - Ask follow-up questions based on what they mention from their resume\n\n    EXAMPLE GOOD QUESTIONS:\n    - \"I see you worked with python, react, node, sql, machine learning. Can you tell me about a specific project where you used these?\"\n    - \"I noticed you worked at [mention a company from resume if visible]. What was your role there?\"\n    - \"Walk me through your background and highlight the experiences most relevant to this role.\"\n\n    DO NOT ask generic questions - make it personal to THEIR resume!",
+    "resume_uploaded": true,
+    "current_phase": "scenario_solving",
+    "current_round_type": "hr",
+    "current_question_text": "Imagine you are in a situation where a key project stakeholder has suddenly changed their priorities, requiring a significant adjustment to the project scope and timeline. How would you handle the communication and planning necessary to adapt to this new information, and what steps would you take to ensure that all stakeholders remained informed and aligned?",
+    "current_question_id": "q_5",
+    "difficulty_level": 5,
+    "questions_in_current_phase": 0,
+    "conversation_history": [
+      {
+        "question_id": 0,
+        "question": "Tell me a bit about yourself \u2014 who you are, what you've been working on, and what brings you here today.",
+        "answer": "experiences and how you",
+        "evaluation": {
+          "question_id": 0,
+          "round_type": "hr",
+          "scores": {
+            "technical_depth": 50,
+            "concept_accuracy": 80,
+            "structured_thinking": 20,
+            "communication_clarity": 60,
+            "confidence_consistency": 70
+          },
+          "score_details": [
+            {
+              "dimension": "technical_depth",
+              "score": 50,
+              "evidence": "The candidate mentions experiences, but doesn't provide specific details about what they've been working on.",
+              "improvement": "Provide concrete examples of projects or initiatives you've led or contributed to."
+            },
+            {
+              "dimension": "concept_accuracy",
+              "score": 80,
+              "evidence": "The candidate's claims seem accurate and verifiable, but the answer is quite general.",
+              "improvement": "None needed; however, providing more specific examples would strengthen the answer."
+            },
+            {
+              "dimension": "structured_thinking",
+              "score": 20,
+              "evidence": "The candidate doesn't follow a clear STAR structure (Situation, Task, Action, Result).",
+              "improvement": "Start with a clear situation or context, then describe the task or challenge you faced, followed by specific actions taken and measurable results achieved."
+            },
+            {
+              "dimension": "communication_clarity",
+              "score": 60,
+              "evidence": "The candidate's language is somewhat vague, making it difficult to follow their train of thought.",
+              "improvement": "Use more concise language and avoid filler words (\"um\", \"like\", \"you know\")."
+            }
+          ],
+          "overall_score": 55,
+          "strengths": [
+            "No strengths identified"
+          ],
+          "weaknesses": [
+            "No weaknesses identified"
+          ],
+          "red_flags": [],
+          "requires_followup": false,
+          "followup_reason": null,
+          "suggested_followup": null,
+          "difficulty_adjustment": "maintain"
+        },
+        "phase": "resume_deep_dive",
+        "timestamp": "2026-02-24T22:58:01.148593",
+        "triggered_followup": true,
+        "is_followup_answer": false
+      },
+      {
+        "question_id": 0,
+        "question": "Tell me a bit about yourself \u2014 who you are, what you've been working on, and what brings you here today.",
+        "answer": "Absolutely. In my last project I built a customer turn model that helped reduce turn by 15%. That taught me how to turn complex data into clear actionable strategies. Exactly what I'll bring to your team's current challenges.",
+        "evaluation": {
+          "question_id": 0,
+          "round_type": "hr",
+          "scores": {
+            "technical_depth": 80,
+            "concept_accuracy": 90,
+            "structured_thinking": 60,
+            "communication_clarity": 70,
+            "confidence_consistency": 80
+          },
+          "score_details": [
+            {
+              "dimension": "technical_depth",
+              "score": 80,
+              "evidence": "The candidate mentions a specific project and metric (15% reduction in turn), showing some understanding of their role.",
+              "improvement": "While they mention a project, it would be great to hear more about the technical aspects of building the customer turn model."
+            },
+            {
+              "dimension": "concept_accuracy",
+              "score": 90,
+              "evidence": "The candidate's claims seem accurate and verifiable. They provide a specific example of their work.",
+              "improvement": "None needed, as the answer is consistent with previous statements."
+            },
+            {
+              "dimension": "structured_thinking",
+              "score": 60,
+              "evidence": "The candidate mentions a project and its outcome, but lacks clear Situation, Task, Action, and Result (STAR) structure.",
+              "improvement": "Encourage them to use the STAR method in their answers."
+            },
+            {
+              "dimension": "communication_clarity",
+              "score": 70,
+              "evidence": "The candidate's answer is generally easy to follow, but could be more concise.",
+              "improvement": "Suggest they focus on key points and avoid filler words."
+            }
+          ],
+          "overall_score": 77,
+          "strengths": [
+            "No strengths identified"
+          ],
+          "weaknesses": [
+            "No weaknesses identified"
+          ],
+          "red_flags": [],
+          "requires_followup": false,
+          "followup_reason": null,
+          "suggested_followup": null,
+          "difficulty_adjustment": "maintain"
+        },
+        "phase": "resume_deep_dive",
+        "timestamp": "2026-02-24T22:58:53.801466",
+        "triggered_followup": false,
+        "is_followup_answer": true
+      },
+      {
+        "question_id": 1,
+        "question": "Can you walk me through a project where you had to balance multiple competing priorities and tight deadlines, and how you managed to deliver results within those constraints?",
+        "answer": "Sure, in a previous project I had to deliver both a model deployment and a dashboard within two weeks. I prioritized tasks by impact, delegated visualization work to a teammate, and automated model training.",
+        "evaluation": {
+          "question_id": 1,
+          "round_type": "hr",
+          "scores": {
+            "technical_depth": 80,
+            "concept_accuracy": 90,
+            "structured_thinking": 70,
+            "communication_clarity": 85,
+            "confidence_consistency": 0
+          },
+          "score_details": [
+            {
+              "dimension": "technical_depth",
+              "score": 80,
+              "evidence": "The candidate mentions specific project details (model deployment, dashboard) and technical terms (automated model training).",
+              "improvement": "While they provide some context, it would be helpful to know more about the project's goals, stakeholders, or technical challenges."
+            },
+            {
+              "dimension": "concept_accuracy",
+              "score": 90,
+              "evidence": "The candidate claims to have prioritized tasks by impact and delegated work to a teammate, which is verifiable.",
+              "improvement": "None needed; their claims seem accurate and consistent with previous answers."
+            },
+            {
+              "dimension": "structured_thinking",
+              "score": 70,
+              "evidence": "The candidate mentions the situation (prioritizing tasks) and task (delivering results within constraints), but could improve on action and result.",
+              "improvement": "They should provide more specific details about the actions they took to prioritize tasks, delegate work, or automate model training."
+            },
+            {
+              "dimension": "communication_clarity",
+              "score": 85,
+              "evidence": "The candidate's language is clear, but some sentences are a bit vague (e.g., \"prioritized tasks by impact\").",
+              "improvement": "They could provide more concrete examples to support their claims and avoid filler words."
+            }
+          ],
+          "overall_score": 73,
+          "strengths": [
+            "No strengths identified"
+          ],
+          "weaknesses": [
+            "No weaknesses identified"
+          ],
+          "red_flags": [],
+          "requires_followup": false,
+          "followup_reason": null,
+          "suggested_followup": null,
+          "difficulty_adjustment": "maintain"
+        },
+        "phase": "resume_deep_dive",
+        "timestamp": "2026-02-24T22:59:47.042070",
+        "triggered_followup": false,
+        "is_followup_answer": false
+      },
+      {
+        "question_id": 2,
+        "question": "When leading a team project, you realized that one of your teammates was struggling to meet their responsibilities, which was impacting the overall project timeline. How did you handle the situation and what was the outcome?",
+        "answer": "I scheduled a private check in with that team made to understand the challenges. We redistributed some of their tasks to others and set clearer, more manageable milestones. By adjusting early, we got back on track and we completed the project just on time with everyone contributing.",
+        "evaluation": {
+          "question_id": 2,
+          "round_type": "hr",
+          "scores": {
+            "technical_depth": 80,
+            "concept_accuracy": 90,
+            "structured_thinking": 85,
+            "communication_clarity": 95,
+            "confidence_consistency": 90
+          },
+          "score_details": [
+            {
+              "dimension": "technical_depth",
+              "score": 80,
+              "evidence": "The candidate mentions scheduling a private check-in, which shows an understanding of the importance of addressing the issue promptly.",
+              "improvement": "None needed."
+            },
+            {
+              "dimension": "concept_accuracy",
+              "score": 90,
+              "evidence": "The candidate's claims seem accurate and verifiable. They provide specific details about how they handled the situation.",
+              "improvement": "None needed."
+            },
+            {
+              "dimension": "structured_thinking",
+              "score": 85,
+              "evidence": "The candidate uses a clear STAR structure, but could improve by providing more specific examples of the \"Action\" and \"Result\" parts. They also mention setting clearer milestones, which is a good step.",
+              "improvement": "Encourage the candidate to provide more concrete details about what they did specifically to help the struggling team member."
+            },
+            {
+              "dimension": "communication_clarity",
+              "score": 95,
+              "evidence": "The candidate's answer is concise and easy to follow. They use simple language, making it easy for the interviewer to understand.",
+              "improvement": "None needed."
+            }
+          ],
+          "overall_score": 86,
+          "strengths": [
+            "No strengths identified"
+          ],
+          "weaknesses": [
+            "No weaknesses identified"
+          ],
+          "red_flags": [],
+          "requires_followup": false,
+          "followup_reason": null,
+          "suggested_followup": null,
+          "difficulty_adjustment": "maintain"
+        },
+        "phase": "core_skill_assessment",
+        "timestamp": "2026-02-24T23:00:46.412193",
+        "triggered_followup": false,
+        "is_followup_answer": false
+      },
+      {
+        "question_id": 3,
+        "question": "When collaborating with a cross-functional team on a complex problem, you noticed that some team members were not fully understanding the technical aspects of the issue. As the team lead, how did you ensure that everyone's strengths and weaknesses were utilized effectively, and what was the outcome of your approach?",
+        "answer": "I organized a few brief focus knowledge sharing sessions where I explained the key technical concepts using simple analogies. I also paired less technical members with those stronger in that area. As a result, everyone felt more confident and we came up with a solution that combined technical accuracy with practical business impact.",
+        "evaluation": {
+          "question_id": 3,
+          "round_type": "hr",
+          "scores": {
+            "technical_depth": 80,
+            "concept_accuracy": 90,
+            "structured_thinking": 85,
+            "communication_clarity": 95,
+            "confidence_consistency": 90
+          },
+          "score_details": [
+            {
+              "dimension": "technical_depth",
+              "score": 80,
+              "evidence": "The candidate explained the key technical concepts using simple analogies, showing some understanding of the technical context.",
+              "improvement": "None needed."
+            },
+            {
+              "dimension": "concept_accuracy",
+              "score": 90,
+              "evidence": "The candidate's claims are verifiable and consistent with previous answers. No false claims or exaggerations detected.",
+              "improvement": "None needed."
+            },
+            {
+              "dimension": "structured_thinking",
+              "score": 85,
+              "evidence": "The candidate followed the STAR method, providing a clear Situation (organizing knowledge sharing sessions), Task (ensuring everyone's strengths and weaknesses were utilized effectively), Action (pairing team members and explaining technical concepts), and Result (everyone felt more confident and they came up with a solution).",
+              "improvement": "The candidate could have provided more specific numbers or metrics on the outcome, but overall, their approach is well-structured."
+            },
+            {
+              "dimension": "communication_clarity",
+              "score": 95,
+              "evidence": "The candidate's answer is concise and easy to follow. They use simple language and provide a clear narrative.",
+              "improvement": "None needed."
+            }
+          ],
+          "overall_score": 86,
+          "strengths": [
+            "No strengths identified"
+          ],
+          "weaknesses": [
+            "No weaknesses identified"
+          ],
+          "red_flags": [],
+          "requires_followup": false,
+          "followup_reason": null,
+          "suggested_followup": null,
+          "difficulty_adjustment": "maintain"
+        },
+        "phase": "core_skill_assessment",
+        "timestamp": "2026-02-24T23:01:57.064144",
+        "triggered_followup": false,
+        "is_followup_answer": false
+      },
+      {
+        "question_id": 4,
+        "question": "Tell me about a time when you had to communicate complex technical information to a non-technical audience, such as a stakeholder or manager, and how you approached this task to ensure that your message was effectively conveyed.",
+        "answer": "Sure, in one project I needed to explain how a predictive model worked to a marketing manager. I avoided technical jargon and used a real-world analogy like comparing it to a weather forecast. I kept it focused on business outcomes, and as a result they clearly understood how the model could help target campaigns, which drove better decisions.",
+        "evaluation": {
+          "question_id": 4,
+          "round_type": "hr",
+          "scores": {
+            "technical_depth": 60,
+            "concept_accuracy": 90,
+            "structured_thinking": 80,
+            "communication_clarity": 70,
+            "confidence_consistency": 70
+          },
+          "score_details": [
+            {
+              "dimension": "technical_depth",
+              "score": 60,
+              "evidence": "The candidate explained a real-world scenario where they had to communicate complex technical information, but didn't provide much detail about the predictive model itself.",
+              "improvement": "Provide more context about the predictive model and its technical aspects."
+            },
+            {
+              "dimension": "concept_accuracy",
+              "score": 90,
+              "evidence": "The candidate's claims seem accurate and verifiable. They used a real-world analogy to explain complex information, which is a good approach.",
+              "improvement": "None needed."
+            },
+            {
+              "dimension": "structured_thinking",
+              "score": 80,
+              "evidence": "The candidate partially followed the STAR method. They mentioned the Situation (project) and Task (explaining the model), but didn't explicitly describe their Actions or Results.",
+              "improvement": "Emphasize specific actions taken to communicate the information effectively."
+            },
+            {
+              "dimension": "communication_clarity",
+              "score": 70,
+              "evidence": "The candidate's answer is clear, but could be more concise. They used simple language and a relatable analogy, which helped.",
+              "improvement": "Minimize filler words (\"like\") and focus on the main points."
+            }
+          ],
+          "overall_score": 74,
+          "strengths": [
+            "No strengths identified"
+          ],
+          "weaknesses": [
+            "No weaknesses identified"
+          ],
+          "red_flags": [
+            "Contradiction detected: They clearly understood how the model could help target camp..."
+          ],
+          "requires_followup": false,
+          "followup_reason": null,
+          "suggested_followup": null,
+          "difficulty_adjustment": "maintain"
+        },
+        "phase": "core_skill_assessment",
+        "timestamp": "2026-02-24T23:03:50.965604",
+        "triggered_followup": false,
+        "is_followup_answer": false
+      }
+    ],
+    "overall_score_progression": [
+      55,
+      77,
+      73,
+      86,
+      86,
+      74
+    ],
+    "total_interruptions": 0,
+    "started_at": "2026-02-24T22:55:00.772366",
     "actual_question_number": 5,
     "followup_count": 1
   }

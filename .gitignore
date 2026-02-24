@@ -42,11 +42,14 @@ recordings/
 # =====================
 # Project structure docs (IGNORE THESE)
 # =====================
-DETAILED_PROJECT_STRUCTURE.md
-PROJECT_STRUCTURE_COMPACT.md
+CODEBASE_DOCUMENTATION.md
 
 # =====================
 # OS junk
 # =====================
 .DS_Store
 Thumbs.db
+
+
+backend/active_sessions.json
+backend/resume_uploads/

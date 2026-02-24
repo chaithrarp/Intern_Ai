@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useState, useRef, useEffect, useCallback } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import './Interview.css';
 import AudioRecorder from './AudioRecorder';
@@ -10,11 +10,13 @@ import soundEffects from './utils/soundEffects';
 import voiceService from './utils/voiceService';
 
 /**
- * Interview Component - FIXED VERSION
- * 
- * FIX: Questions now read aloud immediately when received
+ * Interview Component - OPTIMIZED FOR SPEED
+ *
+ * KEY CHANGE: Next question arrives in the /interview/answer response
+ * and is stored immediately. When feedback closes it appears instantly —
+ * no extra API call, no extra Ollama round-trip.
  */
-function Interview({ resumeData, onBack }) {
+function Interview({ resumeData, onBack, onViewHistory }) {
   // Session State
   const [sessionId, setSessionId] = useState(null);
   const [currentQuestion, setCurrentQuestion] = useState(null);
@@ -47,107 +49,84 @@ function Interview({ resumeData, onBack }) {
   const [isQuestionSpeaking, setIsQuestionSpeaking] = useState(false);
   const [isRecording, setIsRecording] = useState(false);
   const [voiceEnabled, setVoiceEnabled] = useState(true);
-  
-  // Track last read question to prevent duplicates
+
+  // ── KEY: store the pre-fetched next question so it displays instantly ──
+  const pendingNextQuestion = useRef(null);
   const lastReadQuestionId = useRef(null);
   const isProcessingAnswer = useRef(false);
 
-  // ============================================
-  // INITIALIZATION
-  // ============================================
+  // ============================================================
+  // INIT
+  // ============================================================
   useEffect(() => {
     const initSound = () => {
       soundEffects.initAudioContext();
       document.removeEventListener('click', initSound);
     };
     document.addEventListener('click', initSound);
-
     return () => {
       document.removeEventListener('click', initSound);
       voiceService.stop();
     };
   }, []);
 
-  // ============================================
-  // READ QUESTION ALOUD - FIXED VERSION
-  // ============================================
+  // ============================================================
+  // READ QUESTION ALOUD
+  // ============================================================
   useEffect(() => {
-    // SIMPLIFIED LOGIC - Read question when:
-    // 1. Question exists
-    // 2. Not recording
-    // 3. Voice enabled
-    // 4. Haven't read this exact question before
-    // 5. Not currently processing an answer
-    
     const questionId = currentQuestion?.question_number;
-    
-    if (!currentQuestion || !currentQuestion.text) {
-      return; // No question to read
-    }
-    
-    if (isRecording) {
-      return; // Don't interrupt recording
-    }
-    
-    if (!voiceEnabled) {
-      return; // Voice disabled
-    }
-    
-    if (questionId === lastReadQuestionId.current) {
-      return; // Already read this question
-    }
-    
-    if (isProcessingAnswer.current) {
-      return; // Wait for answer processing to complete
-    }
+    if (!currentQuestion?.text) return;
+    if (isRecording) return;
+    if (!voiceEnabled) return;
+    if (questionId === lastReadQuestionId.current) return;
+    if (isProcessingAnswer.current) return;
 
-    // All conditions passed - READ THE QUESTION!
     console.log('🔊 Reading question:', questionId);
     lastReadQuestionId.current = questionId;
     setIsQuestionSpeaking(true);
-    
-    voiceService.speak(currentQuestion.text)
-      .then(() => {
-        console.log('✅ Finished reading question');
-        setIsQuestionSpeaking(false);
-      })
-      .catch((error) => {
-        console.error('❌ Voice error:', error);
-        setIsQuestionSpeaking(false);
-      });
 
-    return () => {
-      // Cleanup if question changes mid-read
-      if (questionId !== currentQuestion?.question_number) {
-        voiceService.stop();
-      }
-    };
+    voiceService.speak(currentQuestion.text)
+      .then(() => setIsQuestionSpeaking(false))
+      .catch(() => setIsQuestionSpeaking(false));
   }, [currentQuestion, isRecording, voiceEnabled]);
 
-  // ============================================
-  // VOICE CONTROL BUTTON HANDLER
-  // ============================================
+  // ============================================================
+  // VOICE TOGGLE BUTTON
+  // ============================================================
   const handleVoiceToggle = () => {
     if (isQuestionSpeaking) {
       voiceService.stop();
       setIsQuestionSpeaking(false);
-    } else if (currentQuestion && currentQuestion.text) {
+    } else if (currentQuestion?.text) {
       setIsQuestionSpeaking(true);
-      
       voiceService.speak(currentQuestion.text)
-        .then(() => {
-          setIsQuestionSpeaking(false);
-        })
-        .catch((error) => {
-          console.error('Voice error:', error);
-          setIsQuestionSpeaking(false);
-        });
+        .then(() => setIsQuestionSpeaking(false))
+        .catch(() => setIsQuestionSpeaking(false));
     }
   };
 
-  // ============================================
+  // ============================================================
+  // ADVANCE TO NEXT QUESTION (called after feedback closes)
+  // ============================================================
+  const advanceToNextQuestion = useCallback(() => {
+    const next = pendingNextQuestion.current;
+    if (!next) return;
+
+    pendingNextQuestion.current = null;
+    lastReadQuestionId.current = null;
+    isProcessingAnswer.current = false;
+
+    setCurrentQuestion(next.question);
+    setQuestionNumber(next.questionNumber);
+    if (next.phase) setCurrentPhase(next.phase);
+
+    setAiState('speaking');
+    setTimeout(() => setAiState('idle'), 1500);
+  }, []);
+
+  // ============================================================
   // START INTERVIEW
-  // ============================================
+  // ============================================================
   const handleStartInterview = async (selectedRoundType) => {
     setLoading(true);
     setAiState('thinking');
@@ -165,45 +144,42 @@ function Interview({ resumeData, onBack }) {
       });
 
       const data = await response.json();
-
-      if (!data.success) {
-        throw new Error('Failed to start interview');
-      }
-
-      console.log('✅ Interview started:', data);
+      if (!data.success) throw new Error('Failed to start interview');
 
       setSessionId(data.session_id);
       setRoundType(selectedRoundType);
       setQuestionNumber(data.question_number);
       setTotalQuestions(6);
       setCurrentPhase(data.current_phase);
-      
-      // Reset flags
+
       lastReadQuestionId.current = null;
       isProcessingAnswer.current = false;
-      
-      // FIX: Read introduction FIRST, then show question
+      pendingNextQuestion.current = null;
+
       if (data.introduction) {
-        console.log('🔊 Reading introduction...');
-        setAiState('speaking');
-        
-        try {
-          await voiceService.speak(data.introduction);
-          console.log('✅ Finished reading introduction');
-          
-          // NOW set the question after introduction
-          setCurrentQuestion(data.question);
-          
-        } catch (error) {
-          console.error('Voice error:', error);
-          // Still show question even if voice fails
-          setCurrentQuestion(data.question);
-        }
-      } else {
-        // No introduction, just show question
-        setCurrentQuestion(data.question);
+      setAiState('speaking');
+      // Show introduction as a "question card" first
+      setCurrentQuestion({
+        text: data.introduction,
+        question_number: 0,
+        is_introduction: true
+      });
+      try {
+        await voiceService.speak(data.introduction);
+      } catch (e) {
+        console.error('Voice error:', e);
       }
-      
+      // After intro finishes speaking, show real Q1
+      // Store Q1 as pending so user sees intro first
+      pendingNextQuestion.current = {
+        question: data.question,
+        questionNumber: data.question_number,
+        phase: data.current_phase
+      };
+    } else {
+      setCurrentQuestion(data.question);
+    }
+
       setAiState('idle');
       soundEffects.playSuccess();
       setLoading(false);
@@ -217,71 +193,50 @@ function Interview({ resumeData, onBack }) {
     }
   };
 
-  // ============================================
+  // ============================================================
   // HANDLE INTERRUPTION
-  // ============================================
+  // ============================================================
   const handleInterruption = (interruption) => {
-    console.log('🔥 INTERRUPTION:', interruption);
-
     soundEffects.playInterruption();
     voiceService.stop();
-
     if (currentQuestion) {
-      setOriginalQuestion({
-        text: currentQuestion.text,
-        id: currentQuestion.question_number
-      });
+      setOriginalQuestion({ text: currentQuestion.text, id: currentQuestion.question_number });
     }
-
     setInterruptionData(interruption);
     setShowInterruptionAlert(true);
     setAiState('speaking');
   };
 
   const handleInterruptionAcknowledged = () => {
-    console.log('✅ Interruption acknowledged');
-
     setShowInterruptionAlert(false);
-
-    // Update question to follow-up
     if (interruptionData) {
       setCurrentQuestion({
         text: interruptionData.followup_question,
         question_number: currentQuestion?.question_number || questionNumber,
         is_followup: true
       });
-      
-      // Reset to allow follow-up to be read
       lastReadQuestionId.current = null;
       isProcessingAnswer.current = false;
     }
-
     setAiState('idle');
   };
 
-  // ============================================
-  // HANDLE LIVE WARNING
-  // ============================================
+  // ============================================================
+  // LIVE WARNING
+  // ============================================================
   const handleLiveWarning = (warning) => {
-    console.log('⚠️ LIVE WARNING:', warning);
     setLiveWarning(warning);
-
-    setTimeout(() => {
-      setLiveWarning(null);
-    }, 5000);
+    setTimeout(() => setLiveWarning(null), 5000);
   };
 
-  // ============================================
-  // HANDLE AUDIO SUBMISSION - FIXED
-  // ============================================
+  // ============================================================
+  // SUBMIT ANSWER — OPTIMIZED
+  // ============================================================
   const handleAudioSubmitted = async (audioData) => {
     console.log('📝 Submitting answer...');
-
     soundEffects.playSuccess();
     setAiState('thinking');
     setLoading(true);
-    
-    // Mark that we're processing an answer
     isProcessingAnswer.current = true;
 
     try {
@@ -294,34 +249,20 @@ function Interview({ resumeData, onBack }) {
           answer_text: audioData.transcript,
           recording_duration: audioData.recording_duration,
           was_interrupted: interruptionData !== null,
-          is_followup_answer: currentQuestion?.is_followup || false  // ← NEW: Track follow-ups
+          is_followup_answer: currentQuestion?.is_followup || false
         })
       });
 
       const data = await response.json();
+      if (!data.success) throw new Error('Failed to submit answer');
 
-      if (!data.success) {
-        throw new Error('Failed to submit answer');
-      }
+      console.log('✅ Answer response received');
 
-      console.log('✅ Answer submitted, response:', data);
-
-      // Clear interruption state
       setInterruptionData(null);
       setOriginalQuestion(null);
       setLiveWarning(null);
 
-      // Show immediate feedback
-      if (data.immediate_feedback) {
-        setLastFeedback(data.immediate_feedback);
-        setShowFeedback(true);
-        
-        setTimeout(() => {
-          setShowFeedback(false);
-        }, 5000);
-      }
-
-      // Check if completed
+      // ── COMPLETED ────────────────────────────────────────────
       if (data.completed) {
         setIsComplete(true);
         setAiState('idle');
@@ -331,42 +272,62 @@ function Interview({ resumeData, onBack }) {
         return;
       }
 
-      // ========================================
-      // HANDLE FOLLOW-UP QUESTIONS - FIXED
-      // ========================================
+      // ── FOLLOW-UP ─────────────────────────────────────────────
       if (data.requires_followup && data.followup_question) {
-        console.log('🔍 Follow-up required:', data.followup_question);
-        
+        console.log('🔍 Follow-up required');
+
+        // Store the NEXT real question (pre-fetched, arrives later via separate answer)
+        // For now just show the follow-up
         setCurrentQuestion({
           text: data.followup_question,
           question_number: currentQuestion?.question_number,
           is_followup: true
         });
-        
-        // Reset to allow follow-up to be read
         lastReadQuestionId.current = null;
         isProcessingAnswer.current = false;
-        
+
+        // Show feedback briefly
+        if (data.immediate_feedback) {
+          setLastFeedback(data.immediate_feedback);
+          setShowFeedback(true);
+          setTimeout(() => setShowFeedback(false), 4000);
+        }
+
         setAiState('speaking');
-        setTimeout(() => setAiState('idle'), 2000);
+        setTimeout(() => setAiState('idle'), 1500);
         setLoading(false);
         return;
       }
 
-      // ========================================
-      // CONTINUE TO NEXT QUESTION - FIXED
-      // ========================================
-      setCurrentQuestion(data.question);
-      setQuestionNumber(data.question_number);
-      setCurrentPhase(data.current_phase);
-      
-      // Reset flags for new question
-      lastReadQuestionId.current = null;
-      isProcessingAnswer.current = false;
-      
-      setAiState('speaking');
-      setTimeout(() => setAiState('idle'), 2000);
-      setLoading(false);
+      // ── NEXT QUESTION — store it, show feedback, then reveal ──
+      if (data.question) {
+        // Stash the next question — DO NOT set it yet
+        pendingNextQuestion.current = {
+          question: data.question,
+          questionNumber: data.question_number,
+          phase: data.current_phase
+        };
+      }
+
+      // Show feedback popup
+      if (data.immediate_feedback) {
+        setLastFeedback(data.immediate_feedback);
+        setShowFeedback(true);
+        setLoading(false);
+        setAiState('idle');
+
+        // After feedback auto-closes, advance instantly (no extra API call)
+        setTimeout(() => {
+          setShowFeedback(false);
+          // Small buffer so the fade-out looks clean
+          setTimeout(advanceToNextQuestion, 300);
+        }, 4000); // 4s feedback display
+
+      } else {
+        // No feedback — advance immediately
+        setLoading(false);
+        advanceToNextQuestion();
+      }
 
     } catch (error) {
       console.error('Error submitting answer:', error);
@@ -377,12 +338,11 @@ function Interview({ resumeData, onBack }) {
     }
   };
 
-  // ============================================
-  // RECORDING STATE CHANGE
-  // ============================================
+  // ============================================================
+  // RECORDING STATE
+  // ============================================================
   const handleRecordingStateChange = (recordingState) => {
     setIsRecording(recordingState);
-    
     if (recordingState) {
       setAiState('listening');
       voiceService.stop();
@@ -393,9 +353,9 @@ function Interview({ resumeData, onBack }) {
     }
   };
 
-  // ============================================
-  // RESET INTERVIEW
-  // ============================================
+  // ============================================================
+  // RESET
+  // ============================================================
   const handleResetInterview = () => {
     voiceService.stop();
     setSessionId(null);
@@ -412,178 +372,98 @@ function Interview({ resumeData, onBack }) {
     setRoundType(null);
     lastReadQuestionId.current = null;
     isProcessingAnswer.current = false;
+    pendingNextQuestion.current = null;
   };
 
-  // ============================================
+  // ============================================================
   // RENDER: ROUND SELECTOR
-  // ============================================
+  // ============================================================
   if (showRoundSelector) {
     return (
       <div className="interview-container">
-        <motion.div
-          className="round-selector"
-          initial={{ opacity: 0, scale: 0.9 }}
-          animate={{ opacity: 1, scale: 1 }}
-        >
+        <motion.div className="round-selector" initial={{ opacity: 0, scale: 0.9 }} animate={{ opacity: 1, scale: 1 }}>
           <h2>Select Interview Round</h2>
-          <p className="round-subtitle">
-            Choose the type of interview you want to practice
-          </p>
-
+          <p className="round-subtitle">Choose the type of interview you want to practice</p>
           <div className="round-options">
-            {/* HR Round */}
-            <motion.button
-              className="round-option hr-round"
-              onClick={() => handleStartInterview('hr')}
-              whileHover={{ scale: 1.05 }}
-              whileTap={{ scale: 0.95 }}
-            >
+            <motion.button className="round-option hr-round" onClick={() => handleStartInterview('hr')} whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
               <div className="round-icon">👔</div>
               <h3>HR / Behavioral</h3>
               <p>STAR method, storytelling, soft skills</p>
-              <div className="round-focus">
-                <span>• Problem-solving stories</span>
-                <span>• Team dynamics</span>
-                <span>• Career goals</span>
-              </div>
+              <div className="round-focus"><span>• Problem-solving stories</span><span>• Team dynamics</span><span>• Career goals</span></div>
             </motion.button>
-
-            {/* Technical Round */}
-            <motion.button
-              className="round-option technical-round"
-              onClick={() => handleStartInterview('technical')}
-              whileHover={{ scale: 1.05 }}
-              whileTap={{ scale: 0.95 }}
-            >
+            <motion.button className="round-option technical-round" onClick={() => handleStartInterview('technical')} whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
               <div className="round-icon">💻</div>
               <h3>Technical</h3>
               <p>Algorithms, data structures, coding concepts</p>
-              <div className="round-focus">
-                <span>• Technical depth</span>
-                <span>• Problem decomposition</span>
-                <span>• Trade-offs & complexity</span>
-              </div>
+              <div className="round-focus"><span>• Technical depth</span><span>• Problem decomposition</span><span>• Trade-offs & complexity</span></div>
             </motion.button>
-
-            {/* System Design Round */}
-            <motion.button
-              className="round-option sysdesign-round"
-              onClick={() => handleStartInterview('system_design')}
-              whileHover={{ scale: 1.05 }}
-              whileTap={{ scale: 0.95 }}
-            >
+            <motion.button className="round-option sysdesign-round" onClick={() => handleStartInterview('system_design')} whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
               <div className="round-icon">🏗️</div>
               <h3>System Design</h3>
               <p>Architecture, scalability, distributed systems</p>
-              <div className="round-focus">
-                <span>• High-level architecture</span>
-                <span>• Scalability strategies</span>
-                <span>• Bottleneck identification</span>
-              </div>
+              <div className="round-focus"><span>• High-level architecture</span><span>• Scalability strategies</span><span>• Bottleneck identification</span></div>
             </motion.button>
           </div>
-
-          {resumeData && (
-            <div className="resume-badge">
-              ✅ Resume uploaded - questions will be personalized
-            </div>
-          )}
-
-          <button className="btn-back" onClick={onBack}>
-            ← Back to Home
-          </button>
+          {resumeData && <div className="resume-badge">✅ Resume uploaded - questions will be personalized</div>}
+          <button className="btn-back" onClick={onBack}>← Back to Home</button>
         </motion.div>
       </div>
     );
   }
 
-  // ============================================
+  // ============================================================
   // RENDER: LOADING
-  // ============================================
+  // ============================================================
   if (loading && !currentQuestion) {
     return (
       <div className="interview-container">
-        <motion.div
-          className="loading-interview-screen"
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-        >
-          <motion.div
-            className="loading-orb"
-            animate={{
-              scale: [1, 1.2, 1],
-              rotate: [0, 180, 360]
-            }}
-            transition={{
-              duration: 2,
-              repeat: Infinity,
-              ease: "easeInOut"
-            }}
-          >
-            🤖
-          </motion.div>
+        <motion.div className="loading-interview-screen" initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
+          <motion.div className="loading-orb" animate={{ scale: [1, 1.2, 1], rotate: [0, 180, 360] }} transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}>🤖</motion.div>
           <h2>AI Interviewer is preparing...</h2>
-          <p className="loading-subtitle">
-            Generating your first {roundType} question
-          </p>
+          <p className="loading-subtitle">Generating your first {roundType} question</p>
         </motion.div>
       </div>
     );
   }
 
-  // ============================================
-  // RENDER: INTERVIEW COMPLETE
-  // ============================================
+  // ============================================================
+  // RENDER: COMPLETE
+  // ============================================================
   if (isComplete) {
-    return (
-      <FeedbackScreen
-        sessionId={sessionId}
-        onNewInterview={handleResetInterview}
-      />
-    );
+    return <FeedbackScreen sessionId={sessionId} onNewInterview={handleResetInterview} onViewHistory={onViewHistory} />;
   }
 
-  // ============================================
+  // ============================================================
   // RENDER: ACTIVE INTERVIEW
-  // ============================================
+  // ============================================================
   return (
     <div className="interview-container">
-      
-      {/* Interruption Alert Overlay */}
+
       {showInterruptionAlert && interruptionData && (
-        <InterruptionAlert
-          interruption={interruptionData}
-          onAcknowledge={handleInterruptionAcknowledged}
-        />
+        <InterruptionAlert interruption={interruptionData} onAcknowledge={handleInterruptionAcknowledged} />
       )}
 
-      {/* Live Warning (floating) */}
       {liveWarning && <LiveWarning warning={liveWarning} />}
 
-      {/* Immediate Feedback (after answer) */}
-      {showFeedback && lastFeedback && (
-        <motion.div
-          className="immediate-feedback-popup"
-          initial={{ opacity: 0, y: -20 }}
-          animate={{ opacity: 1, y: 0 }}
-          exit={{ opacity: 0, y: -20 }}
-        >
-          <div className="feedback-score">
-            {lastFeedback.emoji} {lastFeedback.overall_score}/100
-          </div>
-          <div className="feedback-level">{lastFeedback.performance_level}</div>
-          {lastFeedback.key_strength && (
-            <div className="feedback-strength">
-              ✅ {lastFeedback.key_strength}
+      {/* Immediate feedback popup */}
+      <AnimatePresence>
+        {showFeedback && lastFeedback && (
+          <motion.div
+            className="immediate-feedback-popup"
+            initial={{ opacity: 0, y: -20 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -20 }}
+          >
+            <div className="feedback-score">{lastFeedback.emoji} {lastFeedback.overall_score}/100</div>
+            <div className="feedback-level">{lastFeedback.performance_level}</div>
+            {lastFeedback.key_strength && <div className="feedback-strength">✅ {lastFeedback.key_strength}</div>}
+            {lastFeedback.key_weakness && <div className="feedback-weakness">⚠️ {lastFeedback.key_weakness}</div>}
+            <div className="feedback-hint" style={{ fontSize: '0.75rem', opacity: 0.6, marginTop: '8px' }}>
+              Next question loading...
             </div>
-          )}
-          {lastFeedback.key_weakness && (
-            <div className="feedback-weakness">
-              ⚠️ {lastFeedback.key_weakness}
-            </div>
-          )}
-        </motion.div>
-      )}
+          </motion.div>
+        )}
+      </AnimatePresence>
 
       {/* AI Orb */}
       <div className="ai-orb-container">
@@ -598,21 +478,13 @@ function Interview({ resumeData, onBack }) {
       </div>
 
       {/* Interview Content */}
-      <motion.div
-        className="interview-content"
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-      >
-        
-        {/* Header */}
+      <motion.div className="interview-content" initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
+
         <div className="interview-header">
-          <h2>{roundType.toUpperCase()} Interview</h2>
-          <p className="progress">
-            Question {questionNumber} • Phase: {currentPhase || 'Active'}
-          </p>
+          <h2>{roundType?.toUpperCase()} Interview</h2>
+          <p className="progress">Question {questionNumber} • Phase: {currentPhase || 'Active'}</p>
         </div>
 
-        {/* Question Card */}
         <AnimatePresence mode="wait">
           {currentQuestion && (
             <motion.div
@@ -623,7 +495,6 @@ function Interview({ resumeData, onBack }) {
               exit={{ x: 50, opacity: 0 }}
               transition={{ type: 'spring', stiffness: 100 }}
             >
-              {/* Voice Control Button */}
               <motion.button
                 className={`voice-control-btn ${isQuestionSpeaking ? 'speaking' : ''}`}
                 onClick={handleVoiceToggle}
@@ -631,45 +502,29 @@ function Interview({ resumeData, onBack }) {
                 whileTap={{ scale: 0.9 }}
                 title={isQuestionSpeaking ? "Stop reading" : "Read question aloud"}
               >
-                <svg 
-                  width="24" 
-                  height="24" 
-                  viewBox="0 0 24 24" 
-                  fill="none" 
-                  stroke="currentColor" 
-                  strokeWidth="2" 
-                  strokeLinecap="round" 
-                  strokeLinejoin="round"
-                >
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                   {isQuestionSpeaking ? (
-                    <>
-                      <rect x="6" y="4" width="4" height="16" />
-                      <rect x="14" y="4" width="4" height="16" />
-                    </>
+                    <><rect x="6" y="4" width="4" height="16" /><rect x="14" y="4" width="4" height="16" /></>
                   ) : (
-                    <>
-                      <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5" />
-                      <path d="M15.54 8.46a5 5 0 0 1 0 7.07" />
-                      <path d="M19.07 4.93a10 10 0 0 1 0 14.14" />
-                    </>
+                    <><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5" /><path d="M15.54 8.46a5 5 0 0 1 0 7.07" /><path d="M19.07 4.93a10 10 0 0 1 0 14.14" /></>
                   )}
                 </svg>
               </motion.button>
 
-              {/* Interruption Badge */}
               {originalQuestion && (
                 <div className="interruption-badge">
                   ⚡ Follow-up from: "{originalQuestion.text.substring(0, 40)}..."
                 </div>
               )}
 
-              <p className="question-label">Interviewer:</p>
+              <p className="question-label">
+                {currentQuestion?.is_introduction ? '👋 Introduction' : 'Interviewer:'}
+              </p>
               <p className="question-text">{currentQuestion.text}</p>
             </motion.div>
           )}
         </AnimatePresence>
 
-        {/* Answer Section */}
         <div className="answer-section">
           <label>Your Answer (Voice):</label>
           {currentQuestion && sessionId && (
