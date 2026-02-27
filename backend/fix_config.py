@@ -1,4 +1,4 @@
-import os
+content = """import os
 from dotenv import load_dotenv
 
 load_dotenv()
@@ -33,3 +33,8 @@ PRESSURE_MODE = "adaptive"
 
 print("Primary Model: " + OLLAMA_MODEL)
 print("Fast Model: " + OLLAMA_FAST_MODEL)
+"""
+
+with open('config.py', 'w', encoding='utf-8') as f:
+    f.write(content)
+print('config.py written successfully')

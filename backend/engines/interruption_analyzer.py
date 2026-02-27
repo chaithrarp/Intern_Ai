@@ -18,6 +18,10 @@ from datetime import datetime
 from models.interruption_models import InterruptionReason
 from llm_service import get_llm_response
 import re
+from llm_service import get_llm_response, get_fast_llm_response
+import json
+import re
+
 
 
 # ============================================
@@ -86,8 +90,9 @@ class EnhancedInterruptionAnalyzer:
     """
     
     def __init__(self):
+        self._last_llm_followup = ""
         self.session_warnings = {}  # Track warnings per session per issue type
-        self.session_analysis_history = {}  # Store analysis results
+        self.session_analysis_history = {}
         
         print("✅ Enhanced Interruption Analyzer initialized")
     
@@ -460,86 +465,65 @@ class EnhancedInterruptionAnalyzer:
         conversation_history: List[Dict]
     ) -> List[Dict]:
         """
-        Use LLM for deep semantic analysis
-        
-        This is expensive, so only call for longer answers
+        Use LLM for deep semantic analysis + followup generation in ONE call
         """
         triggers = []
         
         try:
-            # Build context from recent history
-            history_context = ""
-            if conversation_history:
-                for qa in conversation_history[-2:]:
-                    q = qa.get('question', '')[:100]
-                    a = qa.get('answer', '')[:150]
-                    history_context += f"Q: {q}\nA: {a}...\n\n"
-            
-            # Build analysis prompt
             messages = [
                 {
                     "role": "system",
-                    "content": f"""You are analyzing a candidate's answer in a job interview to detect issues.
+                    "content": f"""Analyze this interview answer. Respond ONLY in JSON, no other text.
 
-QUESTION ASKED:
-"{question_text}"
+    QUESTION: "{question_text}"
+    ANSWER: "{transcript[:300]}"
 
-RECENT HISTORY:
-{history_context if history_context else "No previous context"}
+    Return EXACTLY this JSON structure:
+    {{
+    "is_off_topic": true or false,
+    "is_dodging": true or false,
+    "is_rambling": true or false,
+    "is_vague": true or false,
+    "contains_false_claim": true or false,
+    "contradicts_history": true or false,
+    "followup_question": "one sharp specific question targeting the exact issue in their answer"
+    }}
 
-CANDIDATE'S CURRENT ANSWER:
-"{transcript}"
-
-Analyze the answer for the following issues. Respond in JSON format:
-
-{{
-  "is_off_topic": true/false,
-  "is_dodging": true/false,
-  "is_rambling": true/false,
-  "is_vague": true/false,
-  "contains_false_claim": true/false,
-  "contradicts_history": true/false,
-  "confidence_level": "high/medium/low",
-  "explanation": "brief explanation of main issue if any"
-}}
-
-Be proactive in flagging issues. This is a tough interview simulation - flag anything that seems off."""
+    For followup_question: reference what they actually said and target the specific weakness."""
                 },
                 {
                     "role": "user",
-                    "content": "Analyze the answer."
+                    "content": "Analyze."
                 }
             ]
             
-            # Get LLM analysis
-            raw_response = get_llm_response(messages, temperature=0.2)
+            raw_response = get_fast_llm_response(messages, temperature=0.2, max_tokens=150)
             
-            # Parse JSON response
-            import json
-            
-            # Clean response (remove markdown if present)
-            clean_response = raw_response.strip()
-            if clean_response.startswith('```'):
-                clean_response = re.sub(r'```json\s*|\s*```', '', clean_response)
+            # Parse JSON
+            clean = raw_response.strip()
+            if clean.startswith('```'):
+                clean = re.sub(r'```json\s*|\s*```', '', clean)
             
             try:
-                analysis = json.loads(clean_response)
+                analysis = json.loads(clean)
             except json.JSONDecodeError:
-                json_match = re.search(r'\{.*\}', clean_response, re.DOTALL)
+                json_match = re.search(r'\{.*\}', clean, re.DOTALL)
                 if json_match:
                     analysis = json.loads(json_match.group())
                 else:
                     print(f"   ⚠️ Could not parse LLM JSON response")
                     return triggers
             
-            # Convert LLM findings to triggers
-            explanation = analysis.get('explanation', '')
+            # Store followup for use in main.py (no second LLM call needed)
+            self._last_llm_followup = analysis.get('followup_question', '').strip()
+            
+            followup = self._last_llm_followup
             
             if analysis.get('contains_false_claim'):
                 triggers.append({
                     "reason": "FALSE_CLAIM",
                     "weight": INTERRUPTION_SEVERITY['FALSE_CLAIM']['weight'],
-                    "evidence": f"LLM detected false claim: {explanation}",
+                    "evidence": followup,
                     "source": "llm"
                 })
             
@@ -547,7 +531,7 @@ Be proactive in flagging issues. This is a tough interview simulation - flag any
                 triggers.append({
                     "reason": "CONTRADICTION",
                     "weight": INTERRUPTION_SEVERITY['CONTRADICTION']['weight'],
-                    "evidence": f"LLM detected contradiction: {explanation}",
+                    "evidence": followup,
                     "source": "llm"
                 })
             
@@ -555,7 +539,7 @@ Be proactive in flagging issues. This is a tough interview simulation - flag any
                 triggers.append({
                     "reason": "DODGING_QUESTION",
                     "weight": INTERRUPTION_SEVERITY['DODGING_QUESTION']['weight'],
-                    "evidence": f"LLM detected question dodging: {explanation}",
+                    "evidence": followup,
                     "source": "llm"
                 })
             
@@ -563,7 +547,7 @@ Be proactive in flagging issues. This is a tough interview simulation - flag any
                 triggers.append({
                     "reason": "COMPLETELY_OFF_TOPIC",
                     "weight": INTERRUPTION_SEVERITY['COMPLETELY_OFF_TOPIC']['weight'],
-                    "evidence": f"LLM detected off-topic response: {explanation}",
+                    "evidence": followup,
                     "source": "llm"
                 })
             
@@ -571,7 +555,7 @@ Be proactive in flagging issues. This is a tough interview simulation - flag any
                 triggers.append({
                     "reason": "EXCESSIVE_RAMBLING",
                     "weight": INTERRUPTION_SEVERITY['EXCESSIVE_RAMBLING']['weight'],
-                    "evidence": f"LLM detected rambling: {explanation}",
+                    "evidence": followup,
                     "source": "llm"
                 })
             
@@ -579,13 +563,13 @@ Be proactive in flagging issues. This is a tough interview simulation - flag any
                 triggers.append({
                     "reason": "LACK_OF_SPECIFICS",
                     "weight": INTERRUPTION_SEVERITY['LACK_OF_SPECIFICS']['weight'],
-                    "evidence": f"LLM detected vagueness: {explanation}",
+                    "evidence": followup,
                     "source": "llm"
                 })
-        
+
         except Exception as e:
             print(f"   ⚠️ LLM layer failed: {str(e)}")
-            # Don't fail the whole analysis if LLM fails
+            self._last_llm_followup = ""
         
         return triggers
     

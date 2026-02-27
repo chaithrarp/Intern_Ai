@@ -1,11 +1,12 @@
 """
-Interview Orchestrator - WITH QUESTION PRE-FETCHING
-=====================================================
+Interview Orchestrator - DEMO MODE FIX
+=======================================
 
-KEY OPTIMIZATION:
-- Next question is generated in a background thread IMMEDIATELY after answer evaluation
-- By the time the user finishes reading feedback and clicks "Next", the question is ready
-- Eliminates the 5-8 second Ollama wait between feedback and next question
+FIXES APPLIED:
+1. ✅ Proper question number tracking (separate from phase questions)
+2. ✅ HARD STOP at question 5 in demo mode
+3. ✅ Follow-ups don't increment main question counter
+4. ✅ Clear logging to debug question flow
 
 DEMO MODE FLOW:
 - Q0: Introduction (not counted)
@@ -19,7 +20,9 @@ from datetime import datetime
 import random
 import json
 import os
-import threading  # ← KEY: for background pre-fetching
+import asyncio
+import concurrent.futures
+from llm_service import get_llm_response, get_fast_llm_response
 
 from models.state_models import (
     SessionState,
@@ -31,14 +34,15 @@ from models.evaluation_models import AnswerEvaluation
 from engines.answer_analyzer import get_answer_analyzer
 from llm_service import get_llm_response
 
+# Import demo mode config
 from config.evaluation_config import PHASE_TRANSITION_RULES
 
 
 class InterviewOrchestrator:
     """
-    Main orchestrator for interview flow.
+    Main orchestrator for interview flow
     
-    OPTIMIZED: Pre-fetches next question in background thread while user reads feedback.
+    FIXED: Proper question counting for demo mode
     """
     
     def __init__(self):
@@ -46,127 +50,57 @@ class InterviewOrchestrator:
         self.sessions = {}
         self.session_file = "active_sessions.json"
         
-        # ── PRE-FETCH CACHE ──────────────────────────────────────────
-        # Stores {session_id: {"question": {...}, "ready": bool, "thread": Thread}}
-        self._question_cache: Dict[str, Dict] = {}
-        self._cache_lock = threading.Lock()
-        # ────────────────────────────────────────────────────────────
-        
         self._load_sessions()
         
+        # Calculate max questions from config
         self.max_total_questions = sum(
             config['max_questions'] 
             for config in PHASE_TRANSITION_RULES.values()
         )
         
-        print("✅ Interview Orchestrator initialized (with question pre-fetching)")
+        print("✅ Interview Orchestrator initialized")
         print(f"   📦 Loaded {len(self.sessions)} active session(s)")
         print(f"   🎯 Demo Mode: Max {self.max_total_questions} questions")
     
-    # ============================================================
-    # PRE-FETCH: Background question generation
-    # ============================================================
-
-    def _prefetch_next_question(
-        self,
-        session_id: str,
-        state: SessionState,
-        round_type: str,
-        evaluation: AnswerEvaluation
-    ):
-        """
-        Kick off background thread to pre-generate the next question.
-        Stores result in self._question_cache[session_id].
-        """
-        # Mark slot as "generating"
-        with self._cache_lock:
-            self._question_cache[session_id] = {"ready": False, "question": None}
-
-        def _generate():
-            try:
-                print(f"   🔄 [PRE-FETCH] Generating next question in background for {session_id}...")
-                question = self._generate_question(
-                    state=state,
-                    round_type=round_type,
-                    resume_context=state.resume_context,
-                    previous_evaluation=evaluation
-                )
-                with self._cache_lock:
-                    self._question_cache[session_id] = {"ready": True, "question": question}
-                print(f"   ✅ [PRE-FETCH] Question ready for {session_id}: {question['text'][:60]}...")
-            except Exception as e:
-                print(f"   ❌ [PRE-FETCH] Failed for {session_id}: {e}")
-                with self._cache_lock:
-                    self._question_cache[session_id] = {"ready": True, "question": None}  # unblock
-
-        thread = threading.Thread(target=_generate, daemon=True)
-        thread.start()
-
-    def _get_prefetched_question(self, session_id: str, timeout: float = 12.0) -> Optional[Dict]:
-        """
-        Wait (up to timeout seconds) for the pre-fetched question to be ready.
-        Returns the question dict or None if it failed.
-        """
-        import time
-        waited = 0.0
-        interval = 0.15  # poll every 150ms
-
-        while waited < timeout:
-            with self._cache_lock:
-                cached = self._question_cache.get(session_id)
-            if cached and cached.get("ready"):
-                with self._cache_lock:
-                    del self._question_cache[session_id]  # consume it
-                return cached.get("question")
-            time.sleep(interval)
-            waited += interval
-
-        print(f"   ⚠️  [PRE-FETCH] Timeout waiting for pre-fetched question ({session_id})")
-        with self._cache_lock:
-            self._question_cache.pop(session_id, None)
-        return None
-
-    def _clear_prefetch(self, session_id: str):
-        """Discard any cached question for this session (e.g. follow-up overrides it)."""
-        with self._cache_lock:
-            self._question_cache.pop(session_id, None)
-
-    # ============================================================
-    # SESSION PERSISTENCE
-    # ============================================================
-    
     def _load_sessions(self):
+        """Load sessions from file"""
         try:
             if os.path.exists(self.session_file):
                 with open(self.session_file, 'r') as f:
                     session_data = json.load(f)
                     
-            for session_id, data in session_data.items():
-                try:
-                    state = SessionState(
-                        session_id=session_id,
-                        resume_context=data.get('resume_context'),
-                        resume_uploaded=data.get('resume_uploaded', False),
-                        current_phase=InterviewPhase(data.get('current_phase', 'resume_deep_dive')),
-                        current_round_type=RoundType(data.get('current_round_type', 'technical'))
-                    )
-                    state.current_question_text = data.get('current_question_text')
-                    state.current_question_id = data.get('current_question_id')
-                    state.difficulty_level = data.get('difficulty_level', 5)
-                    state.questions_in_current_phase = data.get('questions_in_current_phase', 0)
-                    state.conversation_history = data.get('conversation_history', [])
-                    state.overall_score_progression = data.get('overall_score_progression', [])
-                    state.total_interruptions = data.get('total_interruptions', 0)
-                    state.config['actual_question_number'] = data.get('actual_question_number', 0)
-                    state.config['followup_count'] = data.get('followup_count', 0)
-                    self.sessions[session_id] = state
-                    print(f"   ✅ Restored session: {session_id}")
-                except Exception as e:
-                    print(f"   ⚠️  Could not restore session {session_id}: {e}")
+                for session_id, data in session_data.items():
+                    try:
+                        state = SessionState(
+                            session_id=session_id,
+                            resume_context=data.get('resume_context'),
+                            resume_uploaded=data.get('resume_uploaded', False),
+                            current_phase=InterviewPhase(data.get('current_phase', 'resume_deep_dive')),
+                            current_round_type=RoundType(data.get('current_round_type', 'technical'))
+                        )
+                        
+                        state.current_question_text = data.get('current_question_text')
+                        state.current_question_id = data.get('current_question_id')
+                        state.difficulty_level = data.get('difficulty_level', 5)
+                        state.questions_in_current_phase = data.get('questions_in_current_phase', 0)
+                        state.conversation_history = data.get('conversation_history', [])
+                        state.overall_score_progression = data.get('overall_score_progression', [])
+                        state.total_interruptions = data.get('total_interruptions', 0)
+                        
+                        # NEW: Track actual question number
+                        state.config['actual_question_number'] = data.get('actual_question_number', 0)
+                        state.config['followup_count'] = data.get('followup_count', 0)
+                        
+                        self.sessions[session_id] = state
+                        print(f"   ✅ Restored session: {session_id}")
+                    except Exception as e:
+                        print(f"   ⚠️  Could not restore session {session_id}: {e}")
+                        
         except Exception as e:
             print(f"   ⚠️  Could not load sessions file: {e}")
     
     def _save_sessions(self):
+        """Save sessions to file"""
         try:
             session_data = {}
             for session_id, state in self.sessions.items():
@@ -184,23 +118,27 @@ class InterviewOrchestrator:
                     'overall_score_progression': state.overall_score_progression,
                     'total_interruptions': state.total_interruptions,
                     'started_at': state.started_at.isoformat() if state.started_at else None,
+                    # NEW: Save question tracking
                     'actual_question_number': state.config.get('actual_question_number', 0),
                     'followup_count': state.config.get('followup_count', 0)
                 }
+            
             with open(self.session_file, 'w') as f:
                 json.dump(session_data, f, indent=2)
+                
         except Exception as e:
             print(f"   ⚠️  Could not save sessions: {e}")
     
     def get_session(self, session_id: str) -> Optional[SessionState]:
+        """Get session by ID"""
         session = self.sessions.get(session_id)
+        
         if not session:
             print(f"   ❌ Session not found: {session_id}")
+            print(f"   📋 Active sessions: {list(self.sessions.keys())}")
+        
         return session
     
-    # ============================================================
-    # START INTERVIEW
-    # ============================================================
     
     def start_interview(
         self,
@@ -208,11 +146,20 @@ class InterviewOrchestrator:
         round_type: str,
         resume_context: Optional[str] = None
     ) -> Dict:
+        """
+        Start a new interview session
+        
+        Returns:
+            Dict with introduction, first question, and session setup
+        """
+        
         print(f"\n{'='*60}")
         print(f"🎯 STARTING {round_type.upper()} ROUND INTERVIEW")
         print(f"   Session: {session_id}")
+        print(f"   Max Questions: {self.max_total_questions}")
         print(f"{'='*60}")
         
+        # Initialize session state
         state = SessionState(
             session_id=session_id,
             resume_context=resume_context,
@@ -221,45 +168,78 @@ class InterviewOrchestrator:
             current_round_type=self._parse_round_type(round_type)
         )
         
+        # NEW: Initialize question tracking
         state.config["introduction_asked"] = False
-        state.config["actual_question_number"] = 0
-        state.config["followup_count"] = 0
+        state.config["actual_question_number"] = 0  # Actual questions answered (not including followups)
+        state.config["followup_count"] = 0  # Total followups asked
         
+        # Store session
         self.sessions[session_id] = state
         self._save_sessions()
         
+        # Generate introduction
         introduction = self._generate_introduction(round_type, resume_context)
-
-        # Q0: "introduce yourself" — not counted in the 5 scored questions
-        intro_question = {
-            "text": "Tell me a bit about yourself — who you are, what you've been working on, and what brings you here today.",
-            "round_type": round_type,
-            "phase": state.current_phase.value,
-            "difficulty": 1,
-            "question_number": 0,
-            "is_intro": True
-        }
-
-        state.current_question_text = intro_question["text"]
-        state.current_question_id = "q_0"
-        state.config["actual_question_number"] = 0
+        
+        print(f"\n💬 Introduction: {introduction[:80]}...")
+        
+        # Generate first question (Q1)
+        first_question = self._generate_question(
+            state=state,
+            round_type=round_type,
+            resume_context=resume_context
+        )
+        
+        # Update state with current question
+        state.current_question_text = first_question["text"]
+        state.current_question_id = "q_1"
+        state.config["actual_question_number"] = 1  # This will be Q1
+        
+        # Save again with updated question
         self._save_sessions()
-
+        
         return {
             "session_id": session_id,
             "round_type": round_type,
             "current_phase": state.current_phase.value,
             "introduction": introduction,
-            "question": intro_question,
-            "question_number": 0,
+            "question": first_question,
+            "question_number": 1,
             "total_questions_allowed": self.max_total_questions,
             "phase_info": self._get_phase_info(state.current_phase)
         }
     
-    # ============================================================
-    # PROCESS ANSWER — MAIN OPTIMIZED METHOD
-    # ============================================================
-
+    def _generate_introduction(self, round_type: str, resume_context: Optional[str]) -> str:
+        """Generate personalized introduction/greeting"""
+        
+        intros = {
+            "hr": [
+                "Hello! I'm your AI interviewer for today's behavioral round. I'll be asking you about your past experiences and how you've handled various situations. Please use the STAR method: describe the Situation, Task, Action you took, and Results you achieved. Let's begin!",
+                "Welcome to your HR interview! Today we'll explore your professional experiences and how you approach challenges. I'm looking for specific examples with measurable outcomes. Ready? Let's start!",
+                "Hi there! I'll be conducting your behavioral interview today. I want to hear about real situations you've faced, the actions you took, and the results you achieved. Please be specific with examples. Shall we begin?"
+            ],
+            "technical": [
+                "Hello! Welcome to your technical interview. I'll be assessing your understanding of computer science fundamentals, problem-solving skills, and technical depth. I'm looking for clear explanations of concepts, trade-off analysis, and consideration of edge cases. Let's get started!",
+                "Hi! I'm here to evaluate your technical expertise. I'll ask questions about algorithms, data structures, and system concepts. Please explain your thought process, discuss time and space complexity, and mention any trade-offs. Ready to begin?",
+                "Welcome to the technical round! I'll be testing your programming knowledge and problem-solving abilities. Focus on correctness, efficiency, and explaining WHY things work, not just WHAT they do. Let's dive in!"
+            ],
+            "system_design": [
+                "Hello! This is your system design interview. I'll ask you to design scalable systems that handle millions of users. Focus on component architecture, bottleneck identification, and trade-offs between different approaches. Let's start designing!",
+                "Welcome to the system design round! I want to see how you architect large-scale distributed systems. Think about scalability, reliability, and performance. Discuss your design choices and their trade-offs. Ready?",
+                "Hi! I'll be your interviewer for system design. I'm looking for systematic thinking: requirements gathering, high-level design, component breakdown, and deep dives into critical parts. Let's build something!"
+            ]
+        }
+        
+        round_intros = intros.get(round_type, intros["technical"])
+        intro = random.choice(round_intros)
+        
+        if resume_context:
+            intro += " I see you've uploaded your resume, so I'll be asking you questions specifically about your background."
+        
+        intro += " But before that, let me ask you:"
+        
+        return intro
+    
+    
     def process_answer(
         self,
         state: SessionState,
@@ -271,45 +251,87 @@ class InterviewOrchestrator:
         is_followup_answer: bool = False
     ) -> Dict:
         """
-        OPTIMIZED: Evaluate answer, then kick off next-question generation
-        in the background before returning. When frontend eventually asks
-        for the next question it's already (or nearly) ready.
+        Process answer, evaluate, and generate next question or complete interview
+        
+        FIXED: Proper question counting with hard stop at max questions
         """
+        
+        # Get actual question number for logging
         actual_q_num = state.config.get('actual_question_number', question_id)
         followup_count = state.config.get('followup_count', 0)
-        session_id = state.session_id
         
         print(f"\n{'='*60}")
-        print(f"📝 PROCESSING ANSWER Q{question_id} ({actual_q_num}/{self.max_total_questions})")
+        print(f"📝 PROCESSING ANSWER")
+        print(f"   Question ID: Q{question_id}")
+        print(f"   Actual Question Number: {actual_q_num}/{self.max_total_questions}")
+        print(f"   Is Followup Answer: {is_followup_answer}")
+        print(f"   Total Followups So Far: {followup_count}")
+        print(f"   Phase: {state.current_phase.value}")
+        print(f"   Questions in Phase: {state.questions_in_current_phase}")
         print(f"{'='*60}")
         
-        # ── Step 1: Evaluate answer ────────────────────────────────
-        evaluation = self.analyzer.evaluate_answer(
-            answer_text=answer_text,
-            question_text=question_text,
-            question_id=question_id,
-            round_type=round_type,
-            session_id=session_id,
-            conversation_history=state.conversation_history,
-            skip_claim_extraction=skip_claim_extraction
-        )
+        # Step 1: Evaluate answer
+        # Step 1: Evaluate answer AND pre-generate next question IN PARALLEL
+        print(f"   ⚡ Running evaluation and question generation in parallel...")
+
+        def _evaluate():
+            return self.analyzer.evaluate_answer(
+                answer_text=answer_text,
+                question_text=question_text,
+                question_id=question_id,
+                round_type=round_type,
+                session_id=state.session_id,
+                conversation_history=state.conversation_history,
+                skip_claim_extraction=skip_claim_extraction
+            )
+
+        def _pregen_question():
+            return self._generate_question(
+                state=state,
+                round_type=round_type,
+                resume_context=state.resume_context,
+                previous_evaluation=None
+            )
+
+        # For followup answers, skip question generation (saves time)
+        if is_followup_answer:
+            evaluation = _evaluate()
+            pregenerated_question = None
+        else:
+            # Run evaluation (llama3) + question generation (phi3) in parallel
+            with concurrent.futures.ThreadPoolExecutor(max_workers=2) as executor:
+                eval_future = executor.submit(_evaluate)
+                gen_future = executor.submit(_pregen_question)
+                evaluation = eval_future.result()
+                pregenerated_question = gen_future.result()
         
-        # ── Step 2: Update counters ────────────────────────────────
+        # Step 2: FIX - Increment question count ONLY for non-followup answers
         if not is_followup_answer:
             state.questions_in_current_phase += 1
+            print(f"   ✅ New question answered")
+            print(f"      Phase count: {state.questions_in_current_phase}")
+        else:
+            print(f"   🔁 Follow-up answer processed (not incrementing counters)")
         
+        # Step 3: Update session state
         self._update_state_with_evaluation(state, evaluation, question_text, answer_text)
         
+        # Initialize followup tracking flag
         if state.conversation_history:
             state.conversation_history[-1]['triggered_followup'] = False
             state.conversation_history[-1]['is_followup_answer'] = is_followup_answer
         
-        # ── Step 3: Immediate feedback ─────────────────────────────
+        # Step 4: Generate immediate feedback
         immediate_feedback = self._generate_immediate_feedback(evaluation)
         
-        # ── Step 4: Hard stop check ────────────────────────────────
+        # ========================================
+        # FIX: Check if we've hit max questions BEFORE followup check
+        # ========================================
         if actual_q_num >= self.max_total_questions:
-            print(f"🎉 INTERVIEW COMPLETED — reached max questions ({self.max_total_questions})")
+            print(f"\n🎉 INTERVIEW COMPLETED - Reached max questions ({self.max_total_questions})")
+            print(f"   Total questions answered: {actual_q_num}")
+            print(f"   Total followups: {followup_count}")
+            
             return {
                 "evaluation": evaluation.dict(),
                 "immediate_feedback": immediate_feedback,
@@ -318,25 +340,34 @@ class InterviewOrchestrator:
                 "reason": f"Completed all {self.max_total_questions} questions"
             }
         
-        # ── Step 5: Follow-up check ────────────────────────────────
+        # Step 5: Check for follow-up (only if we haven't hit max questions)
         needs_followup = self._should_ask_followup(
-            evaluation, answer_text, state, is_followup_answer, actual_q_num
+            evaluation, 
+            answer_text, 
+            state, 
+            is_followup_answer,
+            actual_q_num  # NEW: Pass current question number
         )
         
         if needs_followup:
             followup_q = self._generate_followup_question(
-                evaluation, question_text, answer_text, state
+                evaluation, 
+                question_text, 
+                answer_text,
+                state
             )
+            
             if followup_q:
-                print(f"🔍 Follow-up triggered")
+                print(f"\n🔍 Follow-up triggered: {evaluation.followup_reason or 'Low score/vague answer'}")
+                
+                # FIX: Mark followup and increment followup counter
                 if state.conversation_history:
                     state.conversation_history[-1]['triggered_followup'] = True
-                state.config['followup_count'] = followup_count + 1
                 
-                # ⚡ Pre-fetch the question AFTER the followup while user answers it
-                self._prefetch_next_question(session_id, state, round_type, evaluation)
+                state.config['followup_count'] = state.config.get('followup_count', 0) + 1
                 
                 self._save_sessions()
+                
                 return {
                     "evaluation": evaluation.dict(),
                     "immediate_feedback": immediate_feedback,
@@ -345,26 +376,36 @@ class InterviewOrchestrator:
                     "followup_reason": evaluation.followup_reason or "Answer needs clarification",
                     "completed": False,
                     "is_followup": True,
-                    "question_number": actual_q_num,
+                    "question_number": actual_q_num,  # Don't increment
                     "total_questions_allowed": self.max_total_questions
                 }
         
-        # ── Step 6: Phase transition ───────────────────────────────
+        # Step 6: Adjust difficulty
         state.difficulty_level = self._adjust_difficulty(
-            state.difficulty_level, evaluation.difficulty_adjustment
+            state.difficulty_level,
+            evaluation.difficulty_adjustment
         )
         
+        # Step 7: Check phase transition
         phase_config = PHASE_TRANSITION_RULES.get(state.current_phase.value, {})
         force_transition_after = phase_config.get('force_transition_after', 999)
         
+        print(f"\n📊 Phase Transition Check:")
+        print(f"   Current phase: {state.current_phase.value}")
+        print(f"   Questions in phase: {state.questions_in_current_phase}")
+        print(f"   Force transition after: {force_transition_after}")
+        
         if state.questions_in_current_phase >= force_transition_after:
+            print(f"   ✅ Phase transition triggered (reached force_transition_after)")
             state.phases_completed.append(state.current_phase)
             state.current_phase = state.get_next_phase()
             state.questions_in_current_phase = 0
-            print(f"→ Phase transition: {state.current_phase.value}")
+            self._save_sessions()
+            
+            print(f"   → New phase: {state.current_phase.value}")
             
             if state.current_phase == InterviewPhase.COMPLETED:
-                print("🎉 INTERVIEW COMPLETED — all phases done")
+                print(f"\n🎉 INTERVIEW COMPLETED - All phases done!")
                 return {
                     "evaluation": evaluation.dict(),
                     "immediate_feedback": immediate_feedback,
@@ -373,41 +414,29 @@ class InterviewOrchestrator:
                     "reason": "Completed all phases"
                 }
         
-        # ── Step 7: Increment question counter ────────────────────
-        # ── Step 7: Increment question counter ────────────────────
-        # Only increment for real questions, not followup answers
-        if is_followup_answer:
-            next_question_num = actual_q_num  # Don't increment — followup is part of same question
-        else:
-            next_question_num = actual_q_num + 1
+        # Step 8: Increment actual question number for NEXT question
+        # Step 8: Increment actual question number for NEXT question
+        next_question_num = actual_q_num + 1
         state.config['actual_question_number'] = next_question_num
-        
-        # ── Step 8: ⚡ START BACKGROUND QUESTION GENERATION ────────
-        # This is the key optimization: we kick this off NOW, before returning,
-        # so the question is ready while the user reads their feedback.
-        self._prefetch_next_question(session_id, state, round_type, evaluation)
-        
-        self._save_sessions()
-        
-        # ── Step 9: Return immediately (question generates in background) ─
-        # The frontend will call /interview/next-question to retrieve it.
-        # But for backward compatibility we ALSO wait here (with a short timeout)
-        # and include the question if it's already done.
-        next_question = self._get_prefetched_question(session_id, timeout=8.0)
-        
-        if next_question is None:
-            # Fallback: generate synchronously (should rarely happen)
-            print("   ⚠️  Pre-fetch timed out, generating synchronously")
+
+        print(f"\n🎲 Generating next question (Q{next_question_num}) in parallel with feedback...")
+
+        # Step 9: Generate next question (already have evaluation, just need question)
+        if pregenerated_question:
+            print(f"   ✅ Using pre-generated question")
+            next_question = pregenerated_question
+        else:
+            print(f"   🔄 Generating question now...")
             next_question = self._generate_question(
                 state=state,
                 round_type=round_type,
                 resume_context=state.resume_context,
                 previous_evaluation=evaluation
             )
-        
+        next_question["question_number"] = next_question_num
+        # Update state with new question
         state.current_question_text = next_question["text"]
         state.current_question_id = f"q_{next_question_num}"
-        next_question["question_number"] = next_question_num
         self._save_sessions()
         
         return {
@@ -422,9 +451,133 @@ class InterviewOrchestrator:
             "completed": False
         }
 
-    # ============================================================
-    # QUESTION GENERATION
-    # ============================================================
+    
+    def _should_ask_followup(
+        self, 
+        evaluation: AnswerEvaluation, 
+        answer_text: str,
+        state: SessionState,
+        is_followup_answer: bool = False,
+        current_question_num: int = 0
+    ) -> bool:
+        """
+        Determine if follow-up question is needed
+        
+        FIXED: Added question number check to prevent followups near the end
+        """
+        
+        # NEW: Never followup if we're at or near max questions
+        if current_question_num >= self.max_total_questions - 1:
+            print(f"   ⏭️  Near end of interview (Q{current_question_num}/{self.max_total_questions}). No followups.")
+            return False
+        
+        # RULE 1: Never follow-up a follow-up answer
+        if is_followup_answer:
+            print("   ⏭️  Current answer is a follow-up. Skipping further follow-ups.")
+            return False
+
+        # RULE 2: Never follow-up if we JUST triggered a follow-up
+        if len(state.conversation_history) >= 1:
+            last_qa = state.conversation_history[-1]
+            if last_qa.get('triggered_followup', False):
+                print("   ⏭️  Previous question had follow-up. Skipping to avoid consecutive follow-ups.")
+                return False
+
+        # RULE 3: Check max follow-ups (2 per session)
+        followup_count = state.config.get('followup_count', 0)
+        if followup_count >= 2:
+            print(f"   ⏭️  Max follow-ups reached ({followup_count}/2). Skipping.")
+            return False
+        
+        # RULE 4: Only follow-up for specific triggers
+        
+        # 1. If evaluator explicitly requested follow-up
+        if evaluation.requires_followup:
+            print(f"   🔍 Follow-up trigger: Evaluator requested")
+            return True
+        
+        # 2. If score is very low
+        if evaluation.overall_score < 55:
+            print(f"   🔍 Follow-up trigger: Low score ({evaluation.overall_score}/100)")
+            return True
+        
+        # 3. If answer is suspiciously short
+        word_count = len(answer_text.split())
+        if word_count < 30:
+            print(f"   🔍 Follow-up trigger: Short answer ({word_count} words)")
+            return True
+        
+        # 4. If there are red flags
+        if len(evaluation.red_flags) > 0:
+            print(f"   🔍 Follow-up trigger: Red flags detected ({len(evaluation.red_flags)})")
+            return True
+        
+        # 5. If critical weaknesses detected
+        critical_weaknesses = [
+            "vague", "no specific", "missing details", 
+            "unclear", "contradictory", "no metrics"
+        ]
+        for weakness in evaluation.weaknesses:
+            if any(cw in weakness.lower() for cw in critical_weaknesses):
+                print(f"   🔍 Follow-up trigger: Critical weakness - {weakness}")
+                return True
+        
+        return False
+    
+    def _generate_followup_question(
+        self,
+        evaluation: AnswerEvaluation,
+        original_question: str,
+        answer_text: str,
+        state: SessionState
+    ) -> Optional[str]:
+        """Generate smart follow-up question"""
+        
+        if evaluation.suggested_followup:
+            return evaluation.suggested_followup
+        
+        weaknesses_str = "; ".join(evaluation.weaknesses[:2])
+        
+        prompt = [
+            {
+                "role": "system",
+                "content": f"""You are an interviewer asking a brief follow-up question.
+
+ORIGINAL QUESTION: {original_question}
+
+CANDIDATE'S ANSWER: {answer_text[:300]}...
+
+ISSUES DETECTED: {weaknesses_str}
+
+Generate ONE short, direct follow-up question (1 sentence) that:
+1. Asks for specific details they missed
+2. Probes deeper into vague points
+3. Requests concrete examples or metrics
+
+Output ONLY the question, nothing else."""
+            },
+            {
+                "role": "user",
+                "content": "Generate the follow-up question."
+            }
+        ]
+        
+        try:
+            response = get_llm_response(prompt, temperature=0.7)
+            question = response.strip().replace("**", "").replace("*", "")
+            
+            for prefix in ["Question:", "Q:", "Follow-up:"]:
+                if question.startswith(prefix):
+                    question = question[len(prefix):].strip()
+            
+            if question.startswith('"') and question.endswith('"'):
+                question = question[1:-1]
+            
+            return question
+        except Exception as e:
+            print(f"   ⚠️  Could not generate follow-up: {e}")
+            return "Can you elaborate on that with more specific details?"
+    
     
     def _generate_question(
         self,
@@ -433,8 +586,13 @@ class InterviewOrchestrator:
         resume_context: Optional[str] = None,
         previous_evaluation: Optional[AnswerEvaluation] = None
     ) -> Dict:
-        print(f"🎲 Generating {round_type.upper()} question (phase={state.current_phase.value}, diff={state.difficulty_level})...")
+        """Generate next question based on state and round type"""
         
+        print(f"\n🎲 Generating {round_type.upper()} question...")
+        print(f"   Phase: {state.current_phase.value}")
+        print(f"   Difficulty: {state.difficulty_level}/10")
+        
+        # Build prompt based on round type
         if round_type == "hr":
             prompt = self._build_hr_question_prompt(state, resume_context, previous_evaluation)
         elif round_type == "technical":
@@ -444,7 +602,10 @@ class InterviewOrchestrator:
         else:
             prompt = self._build_technical_question_prompt(state, resume_context, previous_evaluation)
         
-        raw_question = get_llm_response(prompt, temperature=0.7)
+        # Get LLM response
+        raw_question = get_fast_llm_response(prompt, temperature=0.7, max_tokens=100)
+        
+        # Clean question
         question_text = self._clean_question(raw_question)
         
         print(f"   ✓ Generated: {question_text[:80]}...")
@@ -456,219 +617,180 @@ class InterviewOrchestrator:
             "difficulty": state.difficulty_level,
             "question_number": state.config.get('actual_question_number', len(state.conversation_history) + 1)
         }
-
-    def _should_ask_followup(
-        self, 
-        evaluation: AnswerEvaluation, 
-        answer_text: str,
-        state: SessionState,
-        is_followup_answer: bool = False,
-        current_question_num: int = 0
-    ) -> bool:
-        if current_question_num >= self.max_total_questions - 1:
-            return False
-        if is_followup_answer:
-            return False
-        if len(state.conversation_history) >= 1:
-            last_qa = state.conversation_history[-1]
-            if last_qa.get('triggered_followup', False):
-                return False
-        followup_count = state.config.get('followup_count', 0)
-        if followup_count >= 2:
-            return False
-        if evaluation.requires_followup:
-            print("   🔍 Follow-up trigger: Evaluator requested")
-            return True
-        if evaluation.overall_score < 55:
-            print(f"   🔍 Follow-up trigger: Low score ({evaluation.overall_score})")
-            return True
-        if len(answer_text.split()) < 30:
-            print(f"   🔍 Follow-up trigger: Short answer")
-            return True
-        if len(evaluation.red_flags) > 0:
-            print(f"   🔍 Follow-up trigger: Red flags")
-            return True
-        critical_weaknesses = ["vague", "no specific", "missing details", "unclear", "contradictory", "no metrics"]
-        for weakness in evaluation.weaknesses:
-            if any(cw in weakness.lower() for cw in critical_weaknesses):
-                print(f"   🔍 Follow-up trigger: Critical weakness")
-                return True
-        return False
     
-    def _generate_followup_question(
+    
+    def _build_hr_question_prompt(
         self,
-        evaluation: AnswerEvaluation,
-        original_question: str,
-        answer_text: str,
-        state: SessionState
-    ) -> Optional[str]:
-        if evaluation.suggested_followup:
-            return evaluation.suggested_followup
+        state: SessionState,
+        resume_context: Optional[str],
+        previous_evaluation: Optional[AnswerEvaluation]
+    ) -> List[Dict]:
+        """Build prompt for HR round question"""
         
-        weaknesses_str = "; ".join(evaluation.weaknesses[:2])
-        prompt = [
-            {
-                "role": "system",
-                "content": f"""You are an interviewer asking a brief follow-up question.
-
-ORIGINAL QUESTION: {original_question}
-CANDIDATE'S ANSWER: {answer_text[:300]}
-ISSUES DETECTED: {weaknesses_str}
-
-Generate ONE short, direct follow-up question (1 sentence) that asks for specific details they missed.
-Output ONLY the question, nothing else."""
-            },
-            {"role": "user", "content": "Generate the follow-up question."}
-        ]
-        
-        try:
-            response = get_llm_response(prompt, temperature=0.7)
-            question = response.strip().replace("**", "").replace("*", "")
-            for prefix in ["Question:", "Q:", "Follow-up:"]:
-                if question.startswith(prefix):
-                    question = question[len(prefix):].strip()
-            if question.startswith('"') and question.endswith('"'):
-                question = question[1:-1]
-            return question
-        except Exception as e:
-            print(f"   ⚠️  Could not generate follow-up: {e}")
-            return "Can you elaborate on that with more specific details?"
-    
-    # ============================================================
-    # PROMPT BUILDERS
-    # ============================================================
-    
-    def _generate_introduction(self, round_type: str, resume_context: Optional[str]) -> str:
-        intros = {
-            "hr": [
-                "Hello! I'm your AI interviewer for today's behavioral round. I'll be asking you about your past experiences and how you've handled various situations. Let's begin!",
-                "Welcome to your HR interview! Today we'll explore your professional experiences and how you approach challenges. Ready? Let's start!",
-            ],
-            "technical": [
-                "Hello! Welcome to your technical interview. I'll be assessing your understanding of computer science fundamentals, problem-solving skills, and technical depth. Let's get started!",
-                "Hi! I'm here to evaluate your technical expertise. I'll ask questions about algorithms, data structures, and system concepts. Ready to begin?",
-            ],
-            "system_design": [
-                "Hello! This is your system design interview. I'll ask you to design scalable systems. Focus on component architecture, bottleneck identification, and trade-offs. Let's start!",
-                "Welcome to the system design round! I want to see how you architect large-scale distributed systems. Think about scalability, reliability, and performance. Ready?",
-            ]
-        }
-        round_intros = intros.get(round_type, intros["technical"])
-        intro = random.choice(round_intros)
-        if resume_context:
-            intro += " I can see you've uploaded your resume, so I'll be tailoring questions to your background."
-        intro += " But first — tell me a bit about yourself."
-        return intro
-
-    def _build_hr_question_prompt(self, state, resume_context, previous_evaluation):
         system_prompt = f"""You are an expert HR interviewer conducting a behavioral interview.
 
 CURRENT PHASE: {state.current_phase.value}
 DIFFICULTY LEVEL: {state.difficulty_level}/10
 QUESTIONS ASKED: {len(state.conversation_history)}
 
-Ask ONE behavioral question testing STAR method (Situation, Task, Action, Result).
+YOUR GOAL:
+Ask ONE behavioral question that tests STAR method (Situation, Task, Action, Result).
 
-PHASE FOCUS: {self._get_phase_specific_guidance(state.current_phase, "hr")}
-DIFFICULTY: {self._get_difficulty_guidance(state.difficulty_level, "hr")}
+PHASE-SPECIFIC FOCUS:
+{self._get_phase_specific_guidance(state.current_phase, "hr")}
 
-OUTPUT RULES:
-- Output ONLY the question itself, nothing else.
-- Do NOT explain what you are doing.
-- Do NOT say 'Based on your resume' or 'As you mentioned'.
-- Start directly with the question words."""
+QUESTION REQUIREMENTS:
+- Ask about specific experiences, not general approaches
+- Encourage storytelling with concrete examples
+- Probe for metrics and measurable outcomes
+- Focus on ownership and decision-making
+
+DIFFICULTY GUIDELINES:
+{self._get_difficulty_guidance(state.difficulty_level, "hr")}
+
+OUTPUT:
+Just the question text, nothing else."""
 
         if resume_context:
-            system_prompt += f"\n\nRESUME CONTEXT:\n{resume_context[:500]}\n\nUse this context to personalize the question but do NOT reference the resume in your output."
+            system_prompt += f"\n\nRESUME CONTEXT:\n{resume_context[:500]}...\n\nReference specific experiences from their resume."
+        
         if previous_evaluation:
-            system_prompt += f"\n\nPREVIOUS SCORE: {previous_evaluation.overall_score}/100"
+            system_prompt += f"\n\nPREVIOUS ANSWER SCORE: {previous_evaluation.overall_score}/100"
+            if previous_evaluation.overall_score < 60:
+                system_prompt += "\nAdjust difficulty DOWN - ask a more straightforward question."
+            elif previous_evaluation.overall_score > 80:
+                system_prompt += "\nAdjust difficulty UP - ask a more challenging question."
         
         history_context = self._build_history_context(state.conversation_history)
         if history_context:
-            system_prompt += f"\n\nPREVIOUS QUESTIONS (do NOT repeat):\n{history_context}"
+            system_prompt += f"\n\nPREVIOUS QUESTIONS ASKED:\n{history_context}\n\nDo NOT repeat similar questions. Specifically, the candidate has ALREADY introduced themselves. Ask a NEW behavioral question about their experience."
         else:
-            system_prompt += "\n\nCRITICAL: First question — ask the candidate to introduce themselves and their background."
+            system_prompt += "\n\nCRITICAL: This is the FIRST question. Ask the candidate to introduce themselves, their background, and their key strengths in a way that fits this HR/Behavioral round."
         
-        return [
+        messages = [
             {"role": "system", "content": system_prompt},
             {"role": "user", "content": "Generate the next behavioral interview question."}
         ]
+        
+        return messages
     
-    def _build_technical_question_prompt(self, state, resume_context, previous_evaluation):
+    
+    def _build_technical_question_prompt(
+        self,
+        state: SessionState,
+        resume_context: Optional[str],
+        previous_evaluation: Optional[AnswerEvaluation]
+    ) -> List[Dict]:
+        """Build prompt for Technical round question"""
+        
         system_prompt = f"""You are a senior software engineer conducting a technical interview.
 
 CURRENT PHASE: {state.current_phase.value}
 DIFFICULTY LEVEL: {state.difficulty_level}/10
 QUESTIONS ASKED: {len(state.conversation_history)}
 
-Ask ONE technical question testing depth, accuracy, and problem-solving.
+YOUR GOAL:
+Ask ONE technical question that tests depth, accuracy, and problem-solving.
 
-PHASE FOCUS: {self._get_phase_specific_guidance(state.current_phase, "technical")}
-DIFFICULTY: {self._get_difficulty_guidance(state.difficulty_level, "technical")}
+PHASE-SPECIFIC FOCUS:
+{self._get_phase_specific_guidance(state.current_phase, "technical")}
 
-OUTPUT RULES:
-- Output ONLY the question itself, nothing else.
-- Do NOT explain what you are doing.
-- Do NOT say 'Based on your resume' or 'As you mentioned'.
-- Start directly with the question words."""
+QUESTION REQUIREMENTS:
+- Test conceptual understanding (not just definitions)
+- Probe for trade-offs and edge cases
+- Encourage discussion of time/space complexity
+- Ask about real-world application
+
+DIFFICULTY GUIDELINES:
+{self._get_difficulty_guidance(state.difficulty_level, "technical")}
+
+OUTPUT:
+Just the question text, nothing else."""
 
         if resume_context:
-            system_prompt += f"\n\nRESUME CONTEXT:\n{resume_context[:500]}\n\nUse this context to personalize the question but do NOT reference the resume in your output."
+            system_prompt += f"\n\nRESUME CONTEXT:\n{resume_context[:500]}...\n\nAsk about technologies they claim to know."
+        
         if previous_evaluation:
-            system_prompt += f"\n\nPREVIOUS SCORE: {previous_evaluation.overall_score}/100"
+            system_prompt += f"\n\nPREVIOUS ANSWER SCORE: {previous_evaluation.overall_score}/100"
+            
             if previous_evaluation.weaknesses:
-                system_prompt += f"\nWEAKNESSES: {', '.join(previous_evaluation.weaknesses[:2])}"
+                system_prompt += f"\nWEAKNESSES DETECTED: {', '.join(previous_evaluation.weaknesses[:2])}"
+                system_prompt += "\nProbe these weak areas with targeted questions."
         
         history_context = self._build_history_context(state.conversation_history)
         if history_context:
-            system_prompt += f"\n\nPREVIOUS QUESTIONS (do NOT repeat):\n{history_context}"
+            system_prompt += f"\n\nPREVIOUS QUESTIONS:\n{history_context}\n\nAsk about different topics."
         else:
-            system_prompt += "\n\nCRITICAL: First question — ask the candidate to introduce themselves and their technical background."
+            system_prompt += "\n\nCRITICAL: This is the FIRST question. Ask the candidate to introduce themselves and their technical background/expertise in a way that fits this Technical round."
         
-        return [
+        messages = [
             {"role": "system", "content": system_prompt},
             {"role": "user", "content": "Generate the next technical interview question."}
         ]
+        
+        return messages
     
-    def _build_sysdesign_question_prompt(self, state, resume_context, previous_evaluation):
+    
+    def _build_sysdesign_question_prompt(
+        self,
+        state: SessionState,
+        resume_context: Optional[str],
+        previous_evaluation: Optional[AnswerEvaluation]
+    ) -> List[Dict]:
+        """Build prompt for System Design round question"""
+        
         system_prompt = f"""You are a principal architect conducting a system design interview.
 
 CURRENT PHASE: {state.current_phase.value}
 DIFFICULTY LEVEL: {state.difficulty_level}/10
 QUESTIONS ASKED: {len(state.conversation_history)}
 
-Ask ONE system design question testing architecture, scalability, and trade-offs.
+YOUR GOAL:
+Ask ONE system design question that tests architecture, scalability, and trade-offs.
 
-PHASE FOCUS: {self._get_phase_specific_guidance(state.current_phase, "system_design")}
-DIFFICULTY: {self._get_difficulty_guidance(state.difficulty_level, "system_design")}
+PHASE-SPECIFIC FOCUS:
+{self._get_phase_specific_guidance(state.current_phase, "system_design")}
 
-OUTPUT RULES:
-- Output ONLY the question itself, nothing else.
-- Do NOT explain what you are doing.
-- Do NOT say 'Based on your resume' or 'As you mentioned'.
-- Start directly with the question words."""
+QUESTION REQUIREMENTS:
+- Ask about designing real-world systems
+- Expect discussion of components (load balancer, cache, database, etc)
+- Probe for bottleneck identification
+- Test scalability thinking (millions of users)
+
+DIFFICULTY GUIDELINES:
+{self._get_difficulty_guidance(state.difficulty_level, "system_design")}
+
+OUTPUT:
+Just the question text, nothing else."""
 
         if resume_context:
-            system_prompt += f"\n\nRESUME CONTEXT:\n{resume_context[:500]}\n\nUse this context to personalize the question but do NOT reference the resume in your output."
+            system_prompt += f"\n\nRESUME CONTEXT:\n{resume_context[:500]}...\n\nReference systems they've built."
+        
         if previous_evaluation:
-            system_prompt += f"\n\nPREVIOUS SCORE: {previous_evaluation.overall_score}/100"
+            system_prompt += f"\n\nPREVIOUS ANSWER SCORE: {previous_evaluation.overall_score}/100"
+            
+            if previous_evaluation.scores.get("technical_depth", 0) < 60:
+                system_prompt += "\nStart with simpler systems (URL shortener, cache)."
+            elif previous_evaluation.scores.get("technical_depth", 0) > 80:
+                system_prompt += "\nAsk about complex distributed systems."
         
         history_context = self._build_history_context(state.conversation_history)
         if history_context:
-            system_prompt += f"\n\nPREVIOUS QUESTIONS (do NOT repeat):\n{history_context}"
+            system_prompt += f"\n\nPREVIOUS QUESTIONS:\n{history_context}\n\nDesign different types of systems."
         else:
-            system_prompt += "\n\nCRITICAL: First question — ask the candidate to introduce themselves and their experience with large-scale systems."
+            system_prompt += "\n\nCRITICAL: This is the FIRST question. Ask the candidate to introduce themselves and their experience with building large-scale systems in a way that fits this System Design round."
         
-        return [
+        messages = [
             {"role": "system", "content": system_prompt},
             {"role": "user", "content": "Generate the next system design question."}
         ]
-
-    # ============================================================
-    # HELPERS
-    # ============================================================
+        
+        return messages
+    
     
     def _get_phase_specific_guidance(self, phase: InterviewPhase, round_type: str) -> str:
+        """Get guidance text for specific phase and round combination"""
+        
         phase_guidance = {
             InterviewPhase.RESUME_DEEP_DIVE: {
                 "hr": "Verify claims from resume. Ask about specific projects and achievements.",
@@ -681,12 +803,12 @@ OUTPUT RULES:
                 "system_design": "Test fundamental architecture patterns: caching, load balancing, databases."
             },
             InterviewPhase.SCENARIO_SOLVING: {
-                "hr": "Present HYPOTHETICAL real-world conflicts. Phrasing: 'Imagine you are in a situation where...'",
+                "hr": "Present HYPOTHETICAL real-world conflicts. Phrasing: 'Imagine you are in a situation where... what would you do?'. Focus on future actions and reasoning.",
                 "technical": "Give debugging scenarios and edge cases to solve.",
                 "system_design": "Present scaling challenges and ask for solutions."
             },
             InterviewPhase.STRESS_TESTING: {
-                "hr": "Present HYPOTHETICAL high-pressure scenarios.",
+                "hr": "Present HYPOTHETICAL high-pressure scenarios. Phrasing: 'Imagine you have a tight deadline and... how would you prioritize?'.",
                 "technical": "Ask about optimization under constraints.",
                 "system_design": "Design systems under extreme scale (billions of users)."
             },
@@ -696,14 +818,18 @@ OUTPUT RULES:
                 "system_design": "Ask for specifics about scalability claims."
             },
             InterviewPhase.WRAP_UP: {
-                "hr": "Final: 'What would you like us to know about you?'",
-                "technical": "Final: 'What's the hardest technical problem you've solved?'",
-                "system_design": "Final: 'Design your dream system with unlimited resources.'"
+                "hr": "Final opportunity: 'What would you like us to know about you?'",
+                "technical": "Final challenge: 'What's the hardest technical problem you've solved?'",
+                "system_design": "Final design: 'Design your dream system with unlimited resources.'"
             }
         }
+        
         return phase_guidance.get(phase, {}).get(round_type, "Ask a relevant question for this phase.")
     
+    
     def _get_difficulty_guidance(self, difficulty_level: int, round_type: str) -> str:
+        """Get difficulty-appropriate question guidance"""
+        
         if difficulty_level <= 3:
             return "EASY: Ask straightforward questions with clear answers."
         elif difficulty_level <= 6:
@@ -711,9 +837,19 @@ OUTPUT RULES:
         else:
             return "HARD: Ask questions with multiple layers and edge cases."
     
-    def _update_state_with_evaluation(self, state, evaluation, question_text, answer_text):
+    
+    def _update_state_with_evaluation(
+        self,
+        state: SessionState,
+        evaluation: AnswerEvaluation,
+        question_text: str,
+        answer_text: str
+    ):
+        """Update session state with new evaluation"""
+        
         state.add_answer_scores(evaluation.scores)
         state.calculate_average_scores()
+        
         state.conversation_history.append({
             "question_id": evaluation.question_id,
             "question": question_text,
@@ -722,23 +858,52 @@ OUTPUT RULES:
             "phase": state.current_phase.value,
             "timestamp": datetime.now().isoformat()
         })
+        
         state.overall_score_progression.append(evaluation.overall_score)
+        
         for flag in evaluation.red_flags:
-            state.add_red_flag("evaluation_flag", flag, str(evaluation.question_id))
+            state.add_red_flag(
+                flag_type="evaluation_flag",
+                description=flag,
+                question_id=str(evaluation.question_id)
+            )
+        
         state.update_activity()
     
+    
     def _adjust_difficulty(self, current_level: int, adjustment: str) -> int:
+        """Adjust difficulty level based on performance"""
+        
         if adjustment == "increase":
             return min(10, current_level + 1)
         elif adjustment == "decrease":
             return max(1, current_level - 1)
-        return current_level
+        else:
+            return current_level
+    
+    def _run_parallel(self, func1, args1, func2, args2):
+        """
+        Run two LLM calls in parallel using ThreadPoolExecutor
+        Returns (result1, result2)
+        """
+        with concurrent.futures.ThreadPoolExecutor(max_workers=2) as executor:
+            future1 = executor.submit(func1, **args1)
+            future2 = executor.submit(func2, **args2)
+            result1 = future1.result()
+            result2 = future2.result()
+        return result1, result2
+    
     
     def _generate_immediate_feedback(self, evaluation: AnswerEvaluation) -> Dict:
+        """Generate immediate feedback to show after answer"""
+        
         from models.evaluation_models import ScoringThresholds
+        
         performance_level = ScoringThresholds.get_performance_level(evaluation.overall_score)
+        
         key_strength = evaluation.strengths[0] if evaluation.strengths else "Good effort"
         key_weakness = evaluation.weaknesses[0] if evaluation.weaknesses else None
+        
         if evaluation.overall_score >= 85:
             emoji = "🌟"
         elif evaluation.overall_score >= 70:
@@ -747,6 +912,7 @@ OUTPUT RULES:
             emoji = "🤔"
         else:
             emoji = "📚"
+        
         return {
             "overall_score": evaluation.overall_score,
             "performance_level": performance_level,
@@ -756,65 +922,60 @@ OUTPUT RULES:
             "red_flags": evaluation.red_flags[:1] if evaluation.red_flags else []
         }
     
+    
     def _build_history_context(self, history: List[Dict]) -> str:
+        """Build context string from conversation history"""
+        
         if not history:
             return ""
+        
         context_parts = []
         for i, item in enumerate(history[-3:], 1):
             q = item.get("question", "")
             context_parts.append(f"{i}. {q}")
+        
         return "\n".join(context_parts)
     
+    
     def _clean_question(self, raw_question: str) -> str:
-        import re as _re
-        question = raw_question.strip().replace("**", "").replace("*", "")
-
-        preamble_prefixes = [
-            "Question:", "Q:", "Next question:", "Here's the question:",
-            "Here is the next question:", "Here is a question:",
-            "Sure!", "Sure,", "Certainly!", "Certainly,",
-            "Of course!", "Of course,", "Absolutely!",
-            "Based on", "As you have", "As per", "Given that",
-            "Referring to", "According to", "Since you",
-            "I see that", "I notice that", "Looking at",
-            "From your resume", "From the resume",
-            "As referenced", "As you referenced",
-        ]
-        changed = True
-        while changed:
-            changed = False
-            for prefix in preamble_prefixes:
-                if question.lower().startswith(prefix.lower()):
-                    question = question[len(prefix):].strip().lstrip(",:").strip()
-                    changed = True
-
-        # Jump past "...interview question: 'actual question'"
-        colon_match = _re.search(r"(?i)\bquestion\s*:", question)
-        if colon_match:
-            question = question[colon_match.end():].strip()
-
-        # Strip surrounding quotes (up to 3 layers)
-        for _ in range(3):
-            if len(question) > 2:
-                if question.startswith('"') and question.endswith('"'):
-                    question = question[1:-1].strip()
-                if question.startswith("'") and question.endswith("'"):
-                    question = question[1:-1].strip()
-
-        return question.strip()
+        """Clean LLM-generated question"""
+        
+        question = raw_question.strip()
+        question = question.replace("**", "").replace("*", "")
+        
+        prefixes = ["Question:", "Q:", "Next question:", "Here's the question:"]
+        for prefix in prefixes:
+            if question.startswith(prefix):
+                question = question[len(prefix):].strip()
+        
+        if question.startswith('"') and question.endswith('"'):
+            question = question[1:-1]
+        if question.startswith("'") and question.endswith("'"):
+            question = question[1:-1]
+        
+        return question
+    
     
     def _parse_round_type(self, round_type_str: str) -> RoundType:
+        """Parse round type string to enum"""
+        
         round_type_str = round_type_str.lower().strip()
+        
         if "hr" in round_type_str or "behavioral" in round_type_str:
             return RoundType.HR
         elif "system" in round_type_str or "design" in round_type_str:
             return RoundType.SYSTEM_DESIGN
-        return RoundType.TECHNICAL
+        else:
+            return RoundType.TECHNICAL
+    
     
     def _get_phase_info(self, phase: InterviewPhase) -> Dict:
+        """Get phase information for frontend"""
+        
         config = DEFAULT_PHASE_CONFIGS.get(phase)
         if not config:
             return {}
+        
         return {
             "phase": phase.value,
             "description": config.description,
@@ -828,6 +989,7 @@ OUTPUT RULES:
 _orchestrator_instance = None
 
 def get_interview_orchestrator() -> InterviewOrchestrator:
+    """Get singleton instance of interview orchestrator"""
     global _orchestrator_instance
     if _orchestrator_instance is None:
         _orchestrator_instance = InterviewOrchestrator()

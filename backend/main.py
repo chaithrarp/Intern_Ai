@@ -274,7 +274,7 @@ async def submit_answer(request: AnswerSubmitRequest):
             answer_text=request.answer_text,
             round_type=session.current_round_type.value,
             skip_claim_extraction=skip_claims,
-            is_followup_answer=request.is_followup_answer or request.was_interrupted
+            is_followup_answer=request.is_followup_answer
         )
         
         # Save to database (async)
@@ -341,7 +341,7 @@ async def submit_answer(request: AnswerSubmitRequest):
             "success": True,
             "completed": False,
             "question": result["next_question"],
-            "question_number": session.config.get('actual_question_number', len(session.conversation_history) + 1),
+            "question_number": len(session.conversation_history) + 1,
             "total_questions": 6,
             "evaluation": evaluation if isinstance(evaluation, dict) else evaluation.dict(),
             "immediate_feedback": immediate_feedback,
@@ -459,13 +459,18 @@ async def check_interruption(request: InterruptionCheckRequest):
         if should_interrupt and action == "interrupt":
             phrase = analyzer.generate_interruption_phrase(reason)
             
-            followup = followup_gen.generate_followup(
-                interruption_reason=reason,
-                partial_answer=request.partial_transcript or "",
-                original_question=session.current_question_text or "",
-                conversation_history=session.conversation_history,
-                evidence=analysis.get("evidence", "")
-            )
+            # Use followup already generated inside LLM analysis call (no extra LLM call needed)
+            followup = analyzer._last_llm_followup
+
+            # Fallback if LLM didn't generate one
+            if not followup or len(followup.strip()) < 10:
+                followup = followup_gen.generate_followup(
+                    interruption_reason=reason,
+                    partial_answer=request.partial_transcript or "",
+                    original_question=session.current_question_text or "",
+                    conversation_history=session.conversation_history,
+                    evidence=analysis.get("evidence", "")
+                )
             
             session.total_interruptions += 1
             session.interruptions.append({

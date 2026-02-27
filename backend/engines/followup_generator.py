@@ -452,7 +452,8 @@ Output ONLY the question."""
         """Call LLM and clean up the response"""
         
         try:
-            raw_response = get_llm_response(messages, temperature=0.7)
+            from llm_service import get_fast_llm_response
+            raw_response = get_fast_llm_response(messages, temperature=0.7, max_tokens=80)
             
             # Clean response
             question = raw_response.strip()
