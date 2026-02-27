@@ -12,12 +12,16 @@ import './App.css';
 function App() {
   const [showInterview, setShowInterview] = useState(false);
   const [showResumeUpload, setShowResumeUpload] = useState(false);
-  const [showHistory, setShowHistory] = useState(false);         // ← NEW
+  const [showHistory, setShowHistory] = useState(false);
   const [resumeData, setResumeData] = useState(null);
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [currentUser, setCurrentUser] = useState(null);
   const [authView, setAuthView] = useState('login');
   const [loading, setLoading] = useState(true);
+
+  // ── Track where user came from before going to History ──────────────────
+  // 'welcome' | 'interview' (interview includes the feedback screen at the end)
+  const [historyReturnTo, setHistoryReturnTo] = useState('welcome');
 
   useEffect(() => {
     const checkAuth = async () => {
@@ -38,7 +42,6 @@ function App() {
             localStorage.removeItem('user');
           }
         } catch (error) {
-          console.error('Auth check failed:', error);
           localStorage.removeItem('token');
           localStorage.removeItem('token_type');
           localStorage.removeItem('user');
@@ -107,11 +110,33 @@ function App() {
     setResumeData(null);
   };
 
-  // ← NEW: called from FeedbackScreen "View History" button
-  const handleViewHistory = () => {
-    setShowInterview(false);
-    setShowResumeUpload(false);
+  // ── View History — remember where we came from ───────────────────────────
+  // Called from FeedbackScreen (inside Interview) → return to interview/feedback
+  const handleViewHistoryFromInterview = () => {
+    setHistoryReturnTo('interview');
     setShowHistory(true);
+    // Don't setShowInterview(false) — keep it true so back returns to it
+  };
+
+  // Called from WelcomeScreen (if you add a history button there) → return to welcome
+  const handleViewHistoryFromWelcome = () => {
+    setHistoryReturnTo('welcome');
+    setShowInterview(false);
+    setShowHistory(true);
+  };
+
+  // ── History back button — goes to correct previous screen ───────────────
+  const handleHistoryBack = () => {
+    setShowHistory(false);
+    if (historyReturnTo === 'interview') {
+      // Return to the interview/feedback screen (showInterview is still true)
+      // Nothing else to set — Interview component is still mounted showing FeedbackScreen
+    } else {
+      // Return to welcome
+      setShowInterview(false);
+      setShowResumeUpload(false);
+      setResumeData(null);
+    }
   };
 
   if (loading) {
@@ -141,26 +166,35 @@ function App() {
         <>
           <UserMenu user={currentUser} onLogout={handleLogout} />
 
+          {/* Welcome screen — hidden when interview/history is showing */}
           {!showInterview && !showResumeUpload && !showHistory && (
-            <WelcomeScreen onStart={handleStartInterview} user={currentUser} />
-          )}
-
-          {showResumeUpload && (
-            <ResumeUpload onResumeUploaded={handleResumeUploaded} onSkip={handleSkipResume} />
-          )}
-
-          {showInterview && (
-            <Interview
-              resumeData={resumeData}
-              onBack={handleBackToWelcome}
-              onViewHistory={handleViewHistory}   // ← NEW: passed down
+            <WelcomeScreen
+              onStart={handleStartInterview}
+              user={currentUser}
+              onViewHistory={handleViewHistoryFromWelcome}  // optional: add history button to welcome
             />
           )}
 
-          {/* ← NEW: Session History view */}
+          {showResumeUpload && (
+            <ResumeUpload
+              onResumeUploaded={handleResumeUploaded}
+              onSkip={handleSkipResume}
+            />
+          )}
+
+          {/* Interview — stays mounted even when history is open (so feedback screen is preserved) */}
+          {showInterview && !showHistory && (
+            <Interview
+              resumeData={resumeData}
+              onBack={handleBackToWelcome}
+              onViewHistory={handleViewHistoryFromInterview}
+            />
+          )}
+
+          {/* History — shown on top, back button goes to correct page */}
           {showHistory && (
             <SessionHistory
-              onBack={handleBackToWelcome}
+              onBack={handleHistoryBack}
               onStartNew={handleStartInterview}
             />
           )}

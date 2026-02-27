@@ -1,90 +1,190 @@
-/* LiveWarning.css - Floating warning component styles */
+/* LiveWarning.css — Dark Neon Glow Theme */
 
 .live-warning-container {
   position: fixed;
-  top: 20px;
-  right: 20px;
+  top: 24px;
+  right: 24px;
   z-index: 9999;
   pointer-events: none;
 }
 
+/* ── Base warning card ─────────────────────────────────────────── */
 .live-warning {
   display: flex;
-  align-items: center;
+  align-items: flex-start;
   gap: 12px;
-  padding: 12px 20px;
-  border-radius: 12px;
-  background: rgba(255, 255, 255, 0.95);
-  backdrop-filter: blur(10px);
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
-  border-left: 4px solid #ffc107;
+  padding: 14px 18px 16px;
+  border-radius: 14px;
+  border: 1px solid;
   position: relative;
   overflow: hidden;
-  min-width: 250px;
-  max-width: 350px;
+  min-width: 260px;
+  max-width: 360px;
+  backdrop-filter: blur(16px);
+  box-shadow:
+    0 0 0 1px rgba(255,255,255,0.06),
+    0 8px 32px rgba(0,0,0,0.5);
 }
 
+/* Animated shimmer sweep */
+.live-warning::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    110deg,
+    transparent 20%,
+    rgba(255,255,255,0.06) 50%,
+    transparent 80%
+  );
+  animation: shimmerSweep 2.4s linear infinite;
+  pointer-events: none;
+}
+
+@keyframes shimmerSweep {
+  0%   { transform: translateX(-100%); }
+  100% { transform: translateX(300%); }
+}
+
+/* Left glow bar */
+.live-warning::after {
+  content: '';
+  position: absolute;
+  left: 0; top: 0; bottom: 0;
+  width: 3px;
+  border-radius: 14px 0 0 14px;
+}
+
+/* ── Severity variants ─────────────────────────────────────────── */
+
 .live-warning-critical {
-  border-left-color: #ff4444;
-  background: rgba(255, 68, 68, 0.05);
+  background: rgba(18, 4, 4, 0.88);
+  border-color: rgba(239, 68, 68, 0.55);
+  box-shadow:
+    0 0 0 1px rgba(239,68,68,0.2),
+    0 0 24px rgba(239,68,68,0.35),
+    0 0 60px rgba(239,68,68,0.15),
+    0 8px 32px rgba(0,0,0,0.5);
+  animation: criticalPulse 1.8s ease-in-out infinite;
+}
+.live-warning-critical::after {
+  background: #ef4444;
+  box-shadow: 0 0 12px rgba(239,68,68,0.9);
+}
+@keyframes criticalPulse {
+  0%, 100% { box-shadow: 0 0 0 1px rgba(239,68,68,0.2), 0 0 24px rgba(239,68,68,0.35), 0 0 60px rgba(239,68,68,0.15), 0 8px 32px rgba(0,0,0,0.5); }
+  50%       { box-shadow: 0 0 0 1px rgba(239,68,68,0.4), 0 0 40px rgba(239,68,68,0.6), 0 0 90px rgba(239,68,68,0.25), 0 8px 32px rgba(0,0,0,0.5); }
 }
 
 .live-warning-high {
-  border-left-color: #ff9800;
-  background: rgba(255, 152, 0, 0.05);
+  background: rgba(18, 10, 2, 0.88);
+  border-color: rgba(249, 115, 22, 0.5);
+  box-shadow:
+    0 0 0 1px rgba(249,115,22,0.2),
+    0 0 20px rgba(249,115,22,0.3),
+    0 0 50px rgba(249,115,22,0.12),
+    0 8px 32px rgba(0,0,0,0.5);
+  animation: highPulse 2.2s ease-in-out infinite;
+}
+.live-warning-high::after {
+  background: #f97316;
+  box-shadow: 0 0 10px rgba(249,115,22,0.9);
+}
+@keyframes highPulse {
+  0%, 100% { box-shadow: 0 0 0 1px rgba(249,115,22,0.2), 0 0 20px rgba(249,115,22,0.3), 0 0 50px rgba(249,115,22,0.12), 0 8px 32px rgba(0,0,0,0.5); }
+  50%       { box-shadow: 0 0 0 1px rgba(249,115,22,0.35), 0 0 36px rgba(249,115,22,0.5), 0 0 80px rgba(249,115,22,0.2), 0 8px 32px rgba(0,0,0,0.5); }
 }
 
 .live-warning-medium {
-  border-left-color: #ffc107;
-  background: rgba(255, 193, 7, 0.05);
+  background: rgba(16, 12, 2, 0.88);
+  border-color: rgba(234, 179, 8, 0.45);
+  box-shadow:
+    0 0 0 1px rgba(234,179,8,0.15),
+    0 0 18px rgba(234,179,8,0.25),
+    0 0 45px rgba(234,179,8,0.1),
+    0 8px 32px rgba(0,0,0,0.5);
+  animation: mediumPulse 2.6s ease-in-out infinite;
+}
+.live-warning-medium::after {
+  background: #eab308;
+  box-shadow: 0 0 10px rgba(234,179,8,0.8);
+}
+@keyframes mediumPulse {
+  0%, 100% { box-shadow: 0 0 0 1px rgba(234,179,8,0.15), 0 0 18px rgba(234,179,8,0.25), 0 0 45px rgba(234,179,8,0.1), 0 8px 32px rgba(0,0,0,0.5); }
+  50%       { box-shadow: 0 0 0 1px rgba(234,179,8,0.3), 0 0 32px rgba(234,179,8,0.45), 0 0 70px rgba(234,179,8,0.18), 0 8px 32px rgba(0,0,0,0.5); }
 }
 
 .live-warning-low {
-  border-left-color: #4caf50;
-  background: rgba(76, 175, 80, 0.05);
+  background: rgba(2, 14, 8, 0.88);
+  border-color: rgba(16, 185, 129, 0.4);
+  box-shadow:
+    0 0 0 1px rgba(16,185,129,0.15),
+    0 0 16px rgba(16,185,129,0.2),
+    0 8px 32px rgba(0,0,0,0.5);
+}
+.live-warning-low::after {
+  background: #10b981;
+  box-shadow: 0 0 10px rgba(16,185,129,0.8);
 }
 
+/* ── Icon ──────────────────────────────────────────────────────── */
 .warning-icon {
-  font-size: 24px;
+  font-size: 20px;
   flex-shrink: 0;
+  margin-top: 1px;
+  filter: drop-shadow(0 0 6px currentColor);
+}
+
+/* ── Message text ──────────────────────────────────────────────── */
+.warning-content {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.warning-label {
+  font-size: 0.66rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  opacity: 0.55;
+  color: #e2e8f0;
 }
 
 .warning-message {
-  color: #333;
-  font-size: 14px;
-  font-weight: 500;
-  line-height: 1.4;
-  flex: 1;
+  color: #f1f5f9;
+  font-size: 0.88rem;
+  font-weight: 600;
+  line-height: 1.45;
+  text-shadow: 0 1px 3px rgba(0,0,0,0.6);
 }
 
+/* severity-coloured message */
+.live-warning-critical .warning-message { color: #fca5a5; }
+.live-warning-high    .warning-message  { color: #fdba74; }
+.live-warning-medium  .warning-message  { color: #fde68a; }
+.live-warning-low     .warning-message  { color: #6ee7b7; }
+
+/* ── Bottom progress bar ───────────────────────────────────────── */
 .warning-severity-bar {
   position: absolute;
   bottom: 0;
   left: 0;
   right: 0;
-  height: 3px;
+  height: 2px;
   transform-origin: left;
+  opacity: 0.7;
+  border-radius: 0 0 14px 14px;
 }
 
-/* Dark mode support */
-@media (prefers-color-scheme: dark) {
-  .live-warning {
-    background: rgba(30, 30, 30, 0.95);
-  }
-  
-  .warning-message {
-    color: #e0e0e0;
-  }
-}
-
-/* Mobile responsive */
+/* ── Mobile ────────────────────────────────────────────────────── */
 @media (max-width: 768px) {
   .live-warning-container {
-    top: 10px;
-    right: 10px;
-    left: 10px;
+    top: 12px;
+    right: 12px;
+    left: 12px;
   }
-  
   .live-warning {
     min-width: unset;
     max-width: unset;

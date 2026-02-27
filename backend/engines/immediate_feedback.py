@@ -2,9 +2,13 @@
 Immediate Feedback Generator
 =============================
 
-Generates quick, actionable feedback shown right after each answer.
+Generates quick, conversational feedback shown right after each answer.
 
-This is NOT the final report - it's immediate guidance shown after transcription.
+CHANGED: Now produces message-based feedback — e.g.:
+  "Your answer lacked technical depth — you didn't discuss trade-offs or complexity."
+  "You paused frequently and used filler words, which reduced clarity."
+
+Instead of just returning a score number.
 """
 
 from typing import Dict, List
@@ -13,124 +17,226 @@ from models.evaluation_models import AnswerEvaluation
 
 class ImmediateFeedbackGenerator:
     """
-    Generates immediate post-answer feedback
-    
-    Shows:
-    - Quick score summary
-    - Top 2 strengths
-    - Top 2 improvements
-    - Any red flags
+    Generates immediate post-answer feedback as conversational messages.
     """
-    
+
     def __init__(self):
         pass
-    
+
     def generate_feedback(
         self,
         evaluation: AnswerEvaluation,
         round_type: str
     ) -> Dict:
         """
-        Generate immediate feedback from evaluation
-        
-        Args:
-            evaluation: AnswerEvaluation object
-            round_type: Which round (hr, technical, system_design)
-        
+        Generate immediate feedback as human-readable messages.
+
         Returns:
-            Dictionary with feedback data for UI
+            Dictionary with:
+              - overall_score
+              - performance_level
+              - emoji
+              - headline: one-line summary ("Strong technical answer")
+              - messages: list of specific conversational observations
+              - key_strength: best thing they did (string)
+              - key_weakness: main thing to fix (string)
+              - red_flags: list of hard issues
+              - encouragement: closing line
         """
-        
-        print(f"\n💬 Generating immediate feedback...")
-        
-        # Overall assessment
-        overall_assessment = self._get_overall_assessment(evaluation.overall_score)
-        
-        # Key dimension for this round
-        key_dimension = self._get_key_dimension(round_type)
-        key_score = evaluation.scores.get(key_dimension, 0)
-        
-        # Top strengths (limit to 2)
-        strengths = evaluation.strengths[:2] if len(evaluation.strengths) >= 2 else evaluation.strengths
-        
-        # Top improvements (limit to 2)
+
+        print(f"\n💬 Generating immediate feedback (score={evaluation.overall_score})...")
+
+        performance_level = self._get_performance_level(evaluation.overall_score)
+        emoji = self._get_emoji(evaluation.overall_score)
+        headline = self._get_headline(evaluation.overall_score, round_type)
+
+        # Build specific observation messages
+        messages = self._build_observation_messages(evaluation, round_type)
+
+        key_strength = evaluation.strengths[0] if evaluation.strengths else None
+        key_weakness = evaluation.weaknesses[0] if evaluation.weaknesses else None
+
+        encouragement = self._get_encouragement(evaluation.overall_score, round_type)
+
+        feedback = {
+            "overall_score": evaluation.overall_score,
+            "performance_level": performance_level,
+            "emoji": emoji,
+            "headline": headline,
+            "messages": messages,           # ← NEW: list of specific observations
+            "key_strength": key_strength,
+            "key_weakness": key_weakness,
+            "red_flags": evaluation.red_flags[:2] if evaluation.red_flags else [],
+            "has_critical_issues": len(evaluation.red_flags) > 0,
+            "encouragement": encouragement,
+            # Legacy fields kept for backward compatibility
+            "overall_assessment": performance_level,
+            "strengths": [{"text": s, "icon": "✅"} for s in (evaluation.strengths or [])[:2]],
+            "improvements": self._build_improvement_list(evaluation),
+        }
+
+        print(f"   ✅ Feedback generated: {headline}")
+        return feedback
+
+    # ──────────────────────────────────────────────────────────────
+    # CORE MESSAGE BUILDER
+    # ──────────────────────────────────────────────────────────────
+
+    def _build_observation_messages(self, evaluation: AnswerEvaluation, round_type: str) -> List[str]:
+        """
+        Build a list of specific, conversational observations based on
+        the score breakdown and detected issues.
+
+        Examples:
+          "You lacked technical depth — no mention of time complexity or trade-offs."
+          "Your answer was well-structured and used specific examples."
+          "You contradicted an earlier answer about your team size."
+        """
+        messages = []
+        scores = evaluation.scores or {}
+
+        # ── Dimension-specific messages ──────────────────────────
+        tech_depth = scores.get("technical_depth", -1)
+        concept_acc = scores.get("concept_accuracy", -1)
+        structured = scores.get("structured_thinking", -1)
+        clarity = scores.get("communication_clarity", -1)
+        confidence = scores.get("confidence_consistency", -1)
+
+        # Technical depth
+        if tech_depth >= 0:
+            if tech_depth >= 80:
+                messages.append("Your answer showed strong technical depth with specific details.")
+            elif tech_depth >= 60:
+                messages.append("Decent technical depth, but you could go deeper on trade-offs or edge cases.")
+            elif tech_depth >= 40:
+                if round_type == "technical":
+                    messages.append("Your answer lacked technical depth — try to discuss complexity, trade-offs, or concrete implementation details.")
+                elif round_type == "system_design":
+                    messages.append("The architecture answer was surface-level — mention specific components, bottlenecks, or scaling strategies.")
+                else:
+                    messages.append("Add more specific details to strengthen your answer.")
+            else:
+                if round_type == "technical":
+                    messages.append("Very limited technical depth — core concepts were missing or incorrect.")
+                else:
+                    messages.append("The answer was too brief and lacked supporting details.")
+
+        # Concept accuracy
+        if concept_acc >= 0:
+            if concept_acc < 50:
+                messages.append("Some concepts were inaccurate or misused — review the fundamentals here.")
+            elif concept_acc >= 85:
+                messages.append("Concepts were accurate and well-applied.")
+
+        # Structured thinking
+        if structured >= 0:
+            if round_type == "hr" and structured < 55:
+                messages.append("Your answer didn't follow the STAR format clearly — try to structure as Situation → Task → Action → Result.")
+            elif round_type in ("technical", "system_design") and structured < 55:
+                messages.append("Your answer jumped around — try to structure your thinking before diving into details.")
+            elif structured >= 80:
+                messages.append("Well-structured and easy to follow.")
+
+        # Communication clarity
+        if clarity >= 0:
+            if clarity < 50:
+                messages.append("Your answer was hard to follow — aim for shorter sentences and clearer transitions.")
+            elif clarity >= 80:
+                messages.append("Communicated clearly and concisely.")
+
+        # Confidence/consistency
+        if confidence >= 0:
+            if confidence < 45:
+                messages.append("You seemed uncertain — avoid excessive hedging like 'I think maybe' or 'I'm not sure but'.")
+            elif confidence >= 80:
+                messages.append("Answered with confidence and consistency.")
+
+        # ── Red flag messages ─────────────────────────────────────
+        for flag in (evaluation.red_flags or [])[:2]:
+            if "contradiction" in flag.lower():
+                messages.append(f"⚠️ Contradiction detected: {flag}")
+            elif "suspicious" in flag.lower() or "false claim" in flag.lower():
+                messages.append(f"⚠️ Unverified claim: {flag}")
+
+        # ── Positive reinforcement if doing well ──────────────────
+        if evaluation.overall_score >= 80 and not messages:
+            messages.append("Solid all-round answer — strong depth, clarity, and accuracy.")
+
+        # Fallback
+        if not messages:
+            if evaluation.overall_score >= 70:
+                messages.append("Good answer overall. Small improvements to depth will push you further.")
+            elif evaluation.overall_score >= 50:
+                messages.append("Average answer. Focus on being more specific and structured.")
+            else:
+                messages.append("This answer needs work. Review the key concepts and try to give concrete examples.")
+
+        return messages[:3]  # Cap at 3 messages to keep the popup clean
+
+    def _build_improvement_list(self, evaluation: AnswerEvaluation) -> List[Dict]:
+        """Build improvements list (legacy format for compatibility)"""
         improvements = []
-        for detail in evaluation.score_details:
+        for detail in (evaluation.score_details or []):
             if detail.improvement and len(improvements) < 2:
                 improvements.append({
-                    "dimension": detail.dimension,
-                    "suggestion": detail.improvement
+                    "dimension": self._format_dimension_name(detail.dimension),
+                    "suggestion": detail.improvement,
+                    "icon": "💡"
                 })
-        
-        # Add generic improvements if less than 2
         if len(improvements) < 2 and evaluation.weaknesses:
             for weakness in evaluation.weaknesses[:2]:
                 if len(improvements) >= 2:
                     break
                 improvements.append({
-                    "dimension": "general",
-                    "suggestion": weakness
-                })
-        
-        # Red flags
-        has_red_flags = len(evaluation.red_flags) > 0
-        
-        # Build feedback object
-        feedback = {
-            "overall_score": evaluation.overall_score,
-            "overall_assessment": overall_assessment,
-            "key_dimension": {
-                "name": self._format_dimension_name(key_dimension),
-                "score": key_score,
-                "importance": f"Critical for {round_type.upper()} round"
-            },
-            "strengths": [
-                {"text": s, "icon": "✅"} for s in strengths
-            ],
-            "improvements": [
-                {
-                    "dimension": self._format_dimension_name(imp["dimension"]),
-                    "suggestion": imp["suggestion"],
+                    "dimension": "General",
+                    "suggestion": weakness,
                     "icon": "💡"
-                }
-                for imp in improvements
-            ],
-            "red_flags": [
-                {"text": flag, "icon": "🚨"} for flag in evaluation.red_flags
-            ] if has_red_flags else [],
-            "has_critical_issues": has_red_flags,
-            "encouragement": self._get_encouragement(evaluation.overall_score, round_type)
+                })
+        return improvements
+
+    # ──────────────────────────────────────────────────────────────
+    # HELPERS
+    # ──────────────────────────────────────────────────────────────
+
+    def _get_performance_level(self, score: int) -> str:
+        if score >= 85: return "Excellent"
+        if score >= 70: return "Good"
+        if score >= 50: return "Average"
+        return "Needs Improvement"
+
+    def _get_emoji(self, score: int) -> str:
+        if score >= 85: return "🌟"
+        if score >= 70: return "👍"
+        if score >= 50: return "🤔"
+        return "📚"
+
+    def _get_headline(self, score: int, round_type: str) -> str:
+        """One-line summary tailored to round type and score"""
+        round_labels = {
+            "hr": "behavioral answer",
+            "technical": "technical answer",
+            "system_design": "design answer"
         }
-        
-        print(f"   ✅ Feedback generated: {overall_assessment}")
-        
-        return feedback
-    
-    
-    def _get_overall_assessment(self, score: int) -> str:
-        """Get overall assessment text"""
+        label = round_labels.get(round_type, "answer")
+
         if score >= 85:
-            return "Excellent Answer"
-        elif score >= 70:
-            return "Good Answer"
-        elif score >= 50:
-            return "Average Answer"
-        else:
-            return "Needs Improvement"
-    
-    
-    def _get_key_dimension(self, round_type: str) -> str:
-        """Get the most important dimension for this round"""
-        key_dimensions = {
-            "hr": "structured_thinking",  # STAR method
-            "technical": "technical_depth",  # Deep understanding
-            "system_design": "technical_depth"  # Architecture thinking
-        }
-        return key_dimensions.get(round_type, "technical_depth")
-    
-    
+            return f"Excellent {label}"
+        if score >= 70:
+            return f"Good {label} — minor gaps to address"
+        if score >= 50:
+            return f"Average {label} — several areas to improve"
+        return f"Weak {label} — key concepts were missing"
+
+    def _get_encouragement(self, score: int, round_type: str) -> str:
+        if score >= 85:
+            return "Keep this up — you're performing at a strong level."
+        if score >= 70:
+            return "Good foundation. Address the gaps above to reach the next level."
+        if score >= 50:
+            return "You're on the right track. Be more specific and structured."
+        return "Review the feedback carefully — focus on the biggest gap first."
+
     def _format_dimension_name(self, dimension: str) -> str:
-        """Format dimension name for display"""
         name_map = {
             "technical_depth": "Technical Depth",
             "concept_accuracy": "Concept Accuracy",
@@ -140,122 +246,16 @@ class ImmediateFeedbackGenerator:
             "general": "General"
         }
         return name_map.get(dimension, dimension.replace("_", " ").title())
-    
-    
-    def _get_encouragement(self, score: int, round_type: str) -> str:
-        """Get encouraging message based on score"""
-        
-        if score >= 85:
-            messages = [
-                "Outstanding! You're demonstrating strong skills.",
-                "Excellent work! Keep this level of detail.",
-                "Great answer! You're showing deep understanding."
-            ]
-        elif score >= 70:
-            messages = [
-                "Good job! A few tweaks will make it even better.",
-                "Solid answer. Focus on the improvements noted.",
-                "Nice work! Small refinements will boost your score."
-            ]
-        elif score >= 50:
-            messages = [
-                "Decent start. Work on the areas highlighted above.",
-                "You're on the right track. Address the key improvements.",
-                "Not bad. Focus on the feedback to improve further."
-            ]
-        else:
-            messages = [
-                "Let's work on this together. Review the suggestions carefully.",
-                "This needs improvement. Focus on the critical points above.",
-                "Keep trying. Pay attention to the feedback provided."
-            ]
-        
-        import random
-        return random.choice(messages)
 
 
 # ============================================
-# SINGLETON INSTANCE
+# SINGLETON
 # ============================================
 
 _feedback_generator = None
 
 def get_immediate_feedback_generator() -> ImmediateFeedbackGenerator:
-    """Get singleton instance"""
     global _feedback_generator
     if _feedback_generator is None:
         _feedback_generator = ImmediateFeedbackGenerator()
     return _feedback_generator
-
-
-# ============================================
-# TESTING
-# ============================================
-
-if __name__ == "__main__":
-    print("=" * 60)
-    print("IMMEDIATE FEEDBACK GENERATOR TEST")
-    print("=" * 60)
-    
-    from models.evaluation_models import AnswerEvaluation, EvaluationScore
-    
-    # Test evaluation
-    test_eval = AnswerEvaluation(
-        question_id=1,
-        round_type="technical",
-        scores={
-            "technical_depth": 82,
-            "concept_accuracy": 78,
-            "structured_thinking": 75,
-            "communication_clarity": 70,
-            "confidence_consistency": 72
-        },
-        score_details=[
-            EvaluationScore(
-                dimension="technical_depth",
-                score=82,
-                evidence="Explained caching strategies in detail",
-                improvement="Could discuss cache invalidation patterns"
-            ),
-            EvaluationScore(
-                dimension="concept_accuracy",
-                score=78,
-                evidence="Correct understanding of Redis",
-                improvement=None
-            )
-        ],
-        overall_score=76,
-        strengths=[
-            "Detailed explanation of Redis internals",
-            "Mentioned trade-offs between different caching strategies",
-            "Good use of concrete examples"
-        ],
-        weaknesses=[
-            "Didn't discuss cache invalidation",
-            "Could elaborate on memory management"
-        ],
-        red_flags=[],
-        requires_followup=False,
-        difficulty_adjustment="increase"
-    )
-    
-    generator = get_immediate_feedback_generator()
-    feedback = generator.generate_feedback(test_eval, "technical")
-    
-    print(f"\n📊 Generated Feedback:")
-    print(f"\n   Overall: {feedback['overall_assessment']} ({feedback['overall_score']}/100)")
-    
-    print(f"\n   Key Dimension:")
-    print(f"   - {feedback['key_dimension']['name']}: {feedback['key_dimension']['score']}/100")
-    
-    print(f"\n   Strengths:")
-    for strength in feedback['strengths']:
-        print(f"   {strength['icon']} {strength['text']}")
-    
-    print(f"\n   Improvements:")
-    for imp in feedback['improvements']:
-        print(f"   {imp['icon']} [{imp['dimension']}] {imp['suggestion']}")
-    
-    print(f"\n   {feedback['encouragement']}")
-    
-    print("\n" + "=" * 60)

@@ -1,5 +1,8 @@
-/* Interruption Alert Styling */
+/* ============================================================
+   InterruptionAlert.css — Complete
+   ============================================================ */
 
+/* ── Overlay ─────────────────────────────────────────────────── */
 .interruption-overlay {
   position: fixed;
   top: 0;
@@ -14,6 +17,7 @@
   backdrop-filter: blur(8px);
 }
 
+/* ── Card ────────────────────────────────────────────────────── */
 .interruption-alert {
   background: linear-gradient(135deg, #ff4444 0%, #cc0000 100%);
   border: 3px solid #ff6666;
@@ -27,59 +31,118 @@
   text-align: center;
 }
 
-.interruption-icon {
-  font-size: 80px;
+/* ── Header row (icon + title) ───────────────────────────────── */
+.interruption-header {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
   margin-bottom: 20px;
-  filter: drop-shadow(0 0 20px rgba(255, 255, 0, 0.8));
 }
 
+.interruption-header-text {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 2px;
+}
+
+.interruption-title {
+  font-size: 22px;
+  font-weight: 800;
+  color: white;
+  letter-spacing: 0.5px;
+  text-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+}
+
+/* counter removed from JS — hidden as safety fallback */
+.interruption-counter {
+  display: none;
+}
+
+/* ── Icon ────────────────────────────────────────────────────── */
+.interruption-icon {
+  font-size: 52px;
+  line-height: 1;
+  filter: drop-shadow(0 0 12px rgba(255, 255, 255, 0.4));
+  animation: pulse 1.5s ease-in-out infinite;
+  flex-shrink: 0;
+}
+
+/* ── Reason badge ────────────────────────────────────────────── */
+.interruption-reason-badge {
+  display: inline-block;
+  background: rgba(0, 0, 0, 0.25);
+  border: 1.5px solid rgba(255, 255, 255, 0.35);
+  border-radius: 30px;
+  padding: 6px 18px;
+  font-size: 14px;
+  font-weight: 600;
+  color: #fff;
+  letter-spacing: 0.3px;
+  margin-bottom: 20px;
+}
+
+/* ── Phrase ──────────────────────────────────────────────────── */
 .interruption-phrase {
-  font-size: 28px;
+  font-size: 24px;
   font-weight: 700;
   color: white;
-  margin-bottom: 30px;
+  margin-bottom: 24px;
   text-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
-  letter-spacing: 0.5px;
+  letter-spacing: 0.3px;
+  line-height: 1.4;
 }
 
+.phrase-quote-mark {
+  font-size: 28px;
+  opacity: 0.6;
+  vertical-align: -2px;
+  margin: 0 2px;
+  color: white;
+}
+
+/* ── Follow-up question box ──────────────────────────────────── */
 .interruption-question {
   background: rgba(255, 255, 255, 0.15);
   border: 2px solid rgba(255, 255, 255, 0.3);
   border-radius: 12px;
-  padding: 25px;
-  margin: 20px 0;
+  padding: 22px 25px;
+  margin: 0 0 20px;
   backdrop-filter: blur(10px);
+  text-align: left;
 }
 
 .interruption-question .question-label {
-  font-size: 14px;
-  font-weight: 600;
+  font-size: 11px;
+  font-weight: 700;
   color: #ffeb3b;
   text-transform: uppercase;
-  letter-spacing: 1px;
-  margin-bottom: 10px;
+  letter-spacing: 1.5px;
+  margin: 0 0 8px;
 }
 
 .interruption-question .question-text {
-  font-size: 20px;
+  font-size: 18px;
   color: white;
   font-weight: 500;
-  line-height: 1.5;
+  line-height: 1.55;
   margin: 0;
 }
 
+/* ── Acknowledge button ──────────────────────────────────────── */
 .btn-acknowledge {
   background: white;
   color: #cc0000;
   border: none;
-  padding: 16px 40px;
-  font-size: 18px;
+  padding: 14px 40px;
+  font-size: 17px;
   font-weight: 700;
   border-radius: 30px;
   cursor: pointer;
-  margin-top: 20px;
+  margin-top: 8px;
   box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
-  transition: all 0.3s ease;
+  transition: background 0.2s, color 0.2s, box-shadow 0.2s;
 }
 
 .btn-acknowledge:hover {
@@ -89,69 +152,34 @@
 }
 
 .btn-acknowledge:active {
-  transform: scale(0.95);
+  transform: scale(0.96);
 }
 
-.pressure-badge {
-  position: absolute;
-  top: 15px;
-  right: 15px;
-  background: rgba(0, 0, 0, 0.4);
-  border: 2px solid rgba(255, 255, 255, 0.3);
-  border-radius: 20px;
-  padding: 8px 16px;
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  backdrop-filter: blur(10px);
-}
-
-.pressure-icon {
-  font-size: 20px;
-}
-
-.pressure-text {
-  color: white;
-  font-size: 12px;
-  font-weight: 600;
-  text-transform: uppercase;
-  letter-spacing: 1px;
-}
-
-/* Pulse Animation for Icon */
+/* ── Pulse animation ─────────────────────────────────────────── */
 @keyframes pulse {
-  0%, 100% {
-    transform: scale(1);
-  }
-  50% {
-    transform: scale(1.1);
-  }
+  0%, 100% { transform: scale(1); }
+  50%       { transform: scale(1.1); }
 }
 
-.interruption-icon {
-  animation: pulse 1.5s ease-in-out infinite;
-}
-
-/* Mobile Responsive */
+/* ── Mobile ──────────────────────────────────────────────────── */
 @media (max-width: 768px) {
   .interruption-alert {
     padding: 30px 20px;
   }
-
   .interruption-icon {
-    font-size: 60px;
+    font-size: 40px;
   }
-
-  .interruption-phrase {
-    font-size: 22px;
-  }
-
-  .interruption-question .question-text {
+  .interruption-title {
     font-size: 18px;
   }
-
-  .btn-acknowledge {
-    padding: 14px 30px;
+  .interruption-phrase {
+    font-size: 20px;
+  }
+  .interruption-question .question-text {
     font-size: 16px;
+  }
+  .btn-acknowledge {
+    padding: 12px 28px;
+    font-size: 15px;
   }
 }

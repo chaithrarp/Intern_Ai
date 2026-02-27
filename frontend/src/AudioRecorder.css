@@ -295,6 +295,105 @@
   animation: pressurePulse 1.5s ease-in-out infinite;
 }
 
+
+/* ─── ADD/REPLACE THESE RULES IN AudioRecorder.css ──────────────────────── */
+
+/* Live transcript box — expands with content, scrolls when very long */
+.live-transcript-box {
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(124, 140, 248, 0.25);
+  border-radius: 12px;
+  padding: 12px 14px;
+  margin: 10px 0;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.live-transcript-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 8px;
+}
+
+.live-label {
+  font-size: 0.72rem;
+  color: rgba(255, 255, 255, 0.45);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+
+.whisper-badge {
+  font-size: 0.68rem;
+  color: #7c8cf8;
+  opacity: 0.8;
+}
+
+/* Scroll area — max height before scrolling kicks in */
+.live-transcript-scroll {
+  max-height: 140px;       /* shows ~5-6 lines before scrolling */
+  overflow-y: auto;
+  line-height: 1.6;
+  font-size: 0.9rem;
+  word-break: break-word;
+  scrollbar-width: thin;
+  scrollbar-color: rgba(124, 140, 248, 0.3) transparent;
+}
+
+.live-transcript-scroll::-webkit-scrollbar {
+  width: 4px;
+}
+.live-transcript-scroll::-webkit-scrollbar-track {
+  background: transparent;
+}
+.live-transcript-scroll::-webkit-scrollbar-thumb {
+  background: rgba(124, 140, 248, 0.3);
+  border-radius: 4px;
+}
+
+/* Confirmed Whisper text — solid white */
+.confirmed-text {
+  color: rgba(255, 255, 255, 0.90);
+}
+
+/* Interim Web Speech text — faded, italic = live typing feel */
+.interim-text {
+  color: rgba(255, 255, 255, 0.45);
+  font-style: italic;
+}
+
+/* Blinking cursor */
+.cursor-blink {
+  color: #7c8cf8;
+  font-weight: bold;
+  animation: blink 1s step-start infinite;
+  margin-left: 1px;
+}
+@keyframes blink {
+  50% { opacity: 0; }
+}
+
+/* Waiting dots animation */
+.live-transcript-waiting {
+  text-align: center;
+  color: rgba(255, 255, 255, 0.35);
+  font-size: 0.85rem;
+  padding: 8px 0;
+  letter-spacing: 0.1em;
+}
+
+/* Chunk status inline badge */
+.chunk-status {
+  font-size: 0.72rem;
+  color: #7c8cf8;
+  margin-left: 10px;
+  opacity: 0.8;
+}
+.chunk-status.chunk-done {
+  color: #4ade80;
+}
+
+
 @keyframes pressurePulse {
   0%, 100% {
     transform: scale(1);
@@ -305,29 +404,6 @@
     box-shadow: 0 6px 20px rgba(255, 152, 0, 0.6);
   }
 }
-
-/* Responsive */
-@media (max-width: 768px) {
-  .audio-recorder {
-    padding: 20px;
-  }
-
-  .btn-record {
-    padding: 18px 40px;
-    font-size: 1.1rem;
-  }
-
-  .action-buttons {
-    flex-direction: column;
-    width: 100%;
-  }
-
-  .btn-rerecord,
-  .btn-upload {
-    width: 100%;
-  }
-
-/* PHASE 5: Interrupted Recording Badge */
 .interrupted-badge {
   background: linear-gradient(135deg, #ff6b6b, #ff8787);
   color: white;
@@ -355,6 +431,30 @@
     box-shadow: 0 4px 20px rgba(255, 107, 107, 0.7);
   }
 }  
+
+/* Responsive */
+@media (max-width: 768px) {
+  .audio-recorder {
+    padding: 20px;
+  }
+
+  .btn-record {
+    padding: 18px 40px;
+    font-size: 1.1rem;
+  }
+
+  .action-buttons {
+    flex-direction: column;
+    width: 100%;
+  }
+
+  .btn-rerecord,
+  .btn-upload {
+    width: 100%;
+  }
+
+/* PHASE 5: Interrupted Recording Badge */
+
 
 
 

@@ -90,8 +90,10 @@ class AnswerSubmitRequest(BaseModel):
 
 class InterruptionCheckRequest(BaseModel):
     session_id: str
+    question_id: int = 0
     recording_duration: float
     partial_transcript: str = ""
+    current_question_text: str = ""
     audio_metrics: Optional[dict] = None
 
 # ============================================
@@ -350,6 +352,9 @@ async def submit_answer(request: AnswerSubmitRequest):
 # ============================================
 # CHECK INTERRUPTION
 # ============================================
+# ============================================
+# CHECK INTERRUPTION  (replace the existing endpoint in main.py)
+# ============================================
 @app.post("/interview/check-interruption")
 async def check_interruption(request: InterruptionCheckRequest):
     try:
@@ -361,95 +366,135 @@ async def check_interruption(request: InterruptionCheckRequest):
         if not session:
             return {"should_interrupt": False, "reason": "session_not_found"}
 
-        if session.total_interruptions >= session.max_interruptions:
-            return {"should_interrupt": False, "reason": "max_interruptions_reached"}
+        # ── Hard cap: read from config so it's consistent everywhere ──────────
+        MAX_INTERRUPTIONS = getattr(config, 'MAX_INTERRUPTIONS_PER_SESSION', 2)
 
-        if not request.partial_transcript or len(request.partial_transcript.strip()) < 10:
-            if not request.audio_metrics or not request.audio_metrics.get('detected_issues'):
-                return {"should_interrupt": False, "should_warn": False}
+        if session.total_interruptions >= MAX_INTERRUPTIONS:
+            return {
+                "should_interrupt": False,
+                "should_warn": False,
+                "reason": "max_interruptions_reached",
+            }
 
+        # ── Minimum transcript length before analysis ─────────────────────────
+        transcript = (request.partial_transcript or "").strip()
+        min_chars = getattr(config, 'MIN_TRANSCRIPT_LENGTH_FOR_ANALYSIS', 80)
+        if len(transcript) < min_chars and not (request.audio_metrics or {}).get('detected_issues'):
+            return {"should_interrupt": False, "should_warn": False}
+
+        question_text = request.current_question_text or session.current_question_text or ""
+
+        # ── Run analysis ───────────────────────────────────────────────────────
         analysis = analyzer.analyze_for_interruption(
             session_id=request.session_id,
-            partial_transcript=request.partial_transcript or "",
+            partial_transcript=transcript,
             audio_metrics=request.audio_metrics or {},
-            question_text=session.current_question_text or "",
+            question_text=question_text,
             conversation_history=session.conversation_history,
-            recording_duration=request.recording_duration
+            recording_duration=request.recording_duration,
+            question_id=request.question_id,
+            current_interruption_count=session.total_interruptions,
         )
 
         if not analysis:
             return {"should_interrupt": False, "should_warn": False}
 
         action = analysis.get("action", "none")
-        should_interrupt = analysis.get("should_interrupt", False)
         reason = analysis.get("reason", "")
+        display_reason = analysis.get("display_reason", analyzer.get_display_reason(reason))
 
-        if should_interrupt and action == "interrupt":
-            phrase = analyzer.generate_interruption_phrase(reason)
+        # ── INTERRUPT path ─────────────────────────────────────────────────────
+        if action == "interrupt":
+            phrase = analysis.get("interruption_phrase") or analyzer.generate_interruption_phrase(reason)
 
             followup = followup_gen.generate_followup(
                 interruption_reason=reason,
-                partial_answer=request.partial_transcript or "",
-                original_question=session.current_question_text or "",
+                partial_answer=transcript,
+                original_question=question_text,
                 conversation_history=session.conversation_history,
-                evidence=analysis.get("evidence", "")
+                evidence=analysis.get("evidence", ""),
             )
 
             session.total_interruptions += 1
             session.interruptions.append({
                 "timestamp": datetime.now().isoformat(),
                 "reason": reason,
-                "partial_answer": request.partial_transcript or "",
+                "display_reason": display_reason,
+                "partial_answer": transcript[:300],
                 "triggered_at": request.recording_duration,
-                "weight": analysis.get("weight"),
-                "evidence": analysis.get("evidence"),
-                "all_triggers": analysis.get("all_triggers", [])
             })
 
             save_interruption(
                 session_id=request.session_id,
-                reason=reason,
-                triggered_at=request.recording_duration,
-                partial_transcript=request.partial_transcript or ""
+                answer_id=None,
+                triggered_at_seconds=request.recording_duration,
+                interruption_reason=reason,
+                interruption_phrase=phrase,
+                followup_question=followup,
+                partial_answer=transcript,
+                recovery_time=None,
             )
 
-            print(f"🔥 INTERRUPTION | Reason: {reason}")
+            print(f"🔥 INTERRUPTION fired | reason={reason} | display='{display_reason}' | "
+                  f"total={session.total_interruptions}/{MAX_INTERRUPTIONS}")
 
             return {
                 "should_interrupt": True,
                 "interruption_phrase": phrase,
                 "followup_question": followup,
                 "reason": reason,
-                "weight": analysis.get("weight"),
-                "evidence": analysis.get("evidence"),
+                "display_reason": display_reason,          # ← human-readable reason
+                "icon": analysis.get("icon", "⚠️"),
                 "interruption_count": session.total_interruptions,
-                "max_interruptions": session.max_interruptions,
-                "all_triggers": analysis.get("all_triggers", [])
+                "max_interruptions": MAX_INTERRUPTIONS,
             }
 
+        # ── WARN path ──────────────────────────────────────────────────────────
         elif action == "warn":
-            print(f"⚠️  Warning: {reason}")
+            warn_phrase = analysis.get("warn_phrase") or analyzer.generate_warn_phrase(reason)
+
+            severity_map = {
+                "COMPLETELY_OFF_TOPIC":  "high",
+                "DODGING_QUESTION":      "high",
+                "FILLER_HEAVY":          "medium",
+                "EXCESSIVE_RAMBLING":    "medium",
+                "STRUGGLING":            "high",
+                "CONTRADICTION":         "high",
+                "VAGUE_EVASION":         "medium",
+                "MANIPULATION_ATTEMPT":  "high",
+                "FALSE_CLAIM":           "critical",
+                "LONG_PAUSE":            "low",
+                "SPEAKING_TOO_LONG":     "low",
+                "MINOR_UNCERTAINTY":     "low",
+            }
+            severity = severity_map.get(reason, "medium")
+
+            icon = analysis.get("icon", "⚠️")
+
+            print(f"⚠️  WARNING | reason={reason} | message: {warn_phrase}")
+
             return {
                 "should_interrupt": False,
                 "should_warn": True,
                 "warning": {
-                    "message": reason.replace('_', ' ').title(),
+                    "message": warn_phrase,
                     "reason": reason,
-                    "evidence": analysis.get("evidence", ""),
-                    "occurrence": analysis.get("occurrence_count", 1),
-                    "threshold": analysis.get("threshold", 2)
+                    "display_reason": display_reason,
+                    "severity": severity,
+                    "icon": icon,
+                    "show_duration": 4,
                 },
-                "reason": reason
             }
 
         return {"should_interrupt": False, "should_warn": False}
 
     except Exception as e:
-        print(f"❌ Error in interruption check: {str(e)}")
+        print(f"❌ Error in check-interruption: {e}")
         import traceback
         traceback.print_exc()
         return {"should_interrupt": False, "error": str(e)}
-
+    
+    
 # ============================================
 # FINAL REPORT
 # ============================================
@@ -731,6 +776,67 @@ async def upload_audio(
     except Exception as e:
         print(f"❌ Error processing audio: {str(e)}")
         return {"success": False, "error": str(e)}
+
+
+"""
+This receives a short audio chunk every 6 seconds during recording,
+transcribes it with the tiny Whisper model, and returns the text.
+The frontend accumulates chunks into a live transcript and uses it
+for interruption checks.
+"""
+
+from whisper_service import transcribe_chunk as whisper_transcribe_chunk
+
+@app.post("/interview/transcribe-chunk")
+async def transcribe_chunk_endpoint(
+    session_id: str,
+    question_id: int,
+    chunk_index: int,
+    audio_chunk: UploadFile = File(...)
+):
+    """
+    Transcribe a short audio chunk in near real-time.
+    Called every 6s during recording by AudioRecorder.js.
+    Uses tiny Whisper model (fast) instead of base (slow).
+    """
+    try:
+        # Save chunk to disk temporarily
+        timestamp = datetime.now().strftime("%Y%m%d_%H%M%S_%f")
+        filename = f"{session_id}_q{question_id}_chunk{chunk_index}_{timestamp}.webm"
+
+        os.makedirs("audio_uploads/chunks", exist_ok=True)
+        file_path = os.path.join("audio_uploads/chunks", filename)
+
+        contents = await audio_chunk.read()
+        with open(file_path, "wb") as f:
+            f.write(contents)
+
+        # Transcribe with tiny model (fast)
+        result = whisper_transcribe_chunk(file_path)
+
+        # Clean up chunk file after transcription (don't accumulate)
+        try:
+            os.remove(file_path)
+        except Exception:
+            pass
+
+        if not result or not result.get("text"):
+            return {
+                "success": True,
+                "text": "",
+                "elapsed": 0
+            }
+
+        return {
+            "success": True,
+            "text": result["text"],
+            "elapsed": result.get("elapsed", 0),
+            "chunk_index": chunk_index
+        }
+
+    except Exception as e:
+        print(f"❌ Chunk transcription error: {e}")
+        return {"success": False, "text": "", "error": str(e)}
 
 # ============================================
 # TEST ENDPOINTS

@@ -6,13 +6,11 @@ Controls which LLM provider to use and settings
 import os
 from dotenv import load_dotenv
 
-# Load environment variables from .env file
 load_dotenv()
 
 # ============================================
 # LLM PROVIDER SELECTION
 # ============================================
-# Options: "ollama" or "openai"
 LLM_PROVIDER = os.getenv("LLM_PROVIDER", "ollama")
 
 # ============================================
@@ -42,12 +40,28 @@ ENABLE_CONTEXT_MEMORY = True
 # INTERRUPTION SETTINGS
 # ============================================
 ENABLE_INTERRUPTIONS = True
-MAX_INTERRUPTIONS_PER_SESSION = 5
+
+# ── DEMO MODE: max 3 interruptions per 5-question session ──
+MAX_INTERRUPTIONS_PER_SESSION = 2
+
 INTERRUPTION_PROBABILITY = 1.0
-MIN_INTERRUPTION_TIME = 5
+
+# Don't interrupt in first 12 seconds of an answer
+MIN_INTERRUPTION_TIME = 12
+
+# Don't interrupt after 90 seconds (let them finish at that point)
 MAX_INTERRUPTION_TIME = 90
+
 ENABLE_RAMBLING_DETECTION = True
 PRESSURE_MODE = "adaptive"
+
+# Minimum transcript length (chars) before interruption analysis runs
+# Prevents firing on near-empty transcripts
+MIN_TRANSCRIPT_LENGTH_FOR_ANALYSIS = 80
+
+# Score threshold: answers scoring above this are NEVER interrupted
+# (good answers shouldn't be penalized)
+GOOD_ANSWER_SCORE_THRESHOLD = 72
 
 # ============================================
 # VALIDATION
@@ -57,3 +71,4 @@ if LLM_PROVIDER == "openai" and not OPENAI_API_KEY:
 
 print(f"✅ LLM Provider: {LLM_PROVIDER}")
 print(f"✅ Interruptions: {'ENABLED' if ENABLE_INTERRUPTIONS else 'DISABLED'}")
+print(f"✅ Max interruptions per session: {MAX_INTERRUPTIONS_PER_SESSION}")
