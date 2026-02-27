@@ -249,7 +249,7 @@ class SessionState(BaseModel):
         description="All interruptions that occurred"
     )
     total_interruptions: int = Field(0)
-    max_interruptions: int = Field(5, description="Max interruptions allowed")
+    max_interruptions: int = Field(2, description="Max interruptions allowed")
     
     # === PHASE PROGRESS ===
     questions_in_current_phase: int = Field(

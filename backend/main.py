@@ -274,7 +274,7 @@ async def submit_answer(request: AnswerSubmitRequest):
             answer_text=request.answer_text,
             round_type=session.current_round_type.value,
             skip_claim_extraction=skip_claims,
-            is_followup_answer=request.is_followup_answer
+            is_followup_answer=request.is_followup_answer or request.was_interrupted
         )
         
         # Save to database (async)
@@ -341,7 +341,7 @@ async def submit_answer(request: AnswerSubmitRequest):
             "success": True,
             "completed": False,
             "question": result["next_question"],
-            "question_number": len(session.conversation_history) + 1,
+            "question_number": session.config.get('actual_question_number', len(session.conversation_history) + 1),
             "total_questions": 6,
             "evaluation": evaluation if isinstance(evaluation, dict) else evaluation.dict(),
             "immediate_feedback": immediate_feedback,
@@ -423,7 +423,12 @@ async def check_interruption(request: InterruptionCheckRequest):
             return {"should_interrupt": False, "reason": "session_not_found"}
         
         # Check max interruptions
-        if session.total_interruptions >= session.max_interruptions:
+        # Check max interruptions PER QUESTION (not per session)
+        current_question_interruptions = sum(
+            1 for i in session.interruptions
+            if i.get("question_id") == session.current_question_id
+        )
+        if current_question_interruptions >= 2:
             return {"should_interrupt": False, "reason": "max_interruptions_reached"}
         
         # If transcript is empty or very short, skip analysis
@@ -465,6 +470,7 @@ async def check_interruption(request: InterruptionCheckRequest):
             session.total_interruptions += 1
             session.interruptions.append({
                 "timestamp": datetime.now().isoformat(),
+                "question_id": session.current_question_id,
                 "reason": reason,
                 "partial_answer": request.partial_transcript or "",
                 "triggered_at": request.recording_duration,

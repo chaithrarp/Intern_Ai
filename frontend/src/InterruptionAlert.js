@@ -5,27 +5,23 @@ import './InterruptionAlert.css';
 
 function InterruptionAlert({ interruption, onAcknowledge }) {
   const hasSpokenRef = useRef(false);
+  const timerRef = useRef(null);
 
   useEffect(() => {
-    console.log('🟡 InterruptionAlert useEffect ran. interruption:', !!interruption, 'hasSpoken:', hasSpokenRef.current);
     if (!interruption) return;
     if (hasSpokenRef.current) return;
     hasSpokenRef.current = true;
-    console.log('🟢 About to set timer to speak...');
 
-    const timer = setTimeout(() => {
-      console.log('🔊 About to speak interruption...');
-      voiceService.stop(); // Force clear anything playing
-      setTimeout(() => {
-        const textToSpeak = `${interruption.interruption_phrase} ${interruption.followup_question}`;
-        console.log('🔊 Speaking now:', textToSpeak.substring(0, 50));
-        voiceService.speak(textToSpeak).catch(err => console.error('Voice error:', err));
-      }, 200);
-    }, 500);
+    timerRef.current = setTimeout(() => {
+      const textToSpeak = `${interruption.interruption_phrase} ${interruption.followup_question}`;
+      console.log('🔊 Speaking:', textToSpeak.substring(0, 60));
+      voiceService.speak(textToSpeak)
+        .then(() => console.log('✅ Interruption audio done'))
+        .catch(err => console.error('❌ Voice error:', err));
+    }, 1500);
 
-    return () => {
-      clearTimeout(timer);
-    };
+    // NO cleanup — removing return() so re-renders don't cancel the timer
+
   }, [interruption]);
 
   if (!interruption) return null;
