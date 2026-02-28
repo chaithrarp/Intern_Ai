@@ -1,4 +1,4 @@
-from fastapi import FastAPI, UploadFile, File, Form, HTTPException
+from fastapi import FastAPI, UploadFile, File, Form, HTTPException, APIRouter
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse
 from pydantic import BaseModel
@@ -19,6 +19,18 @@ from engines.followup_generator import get_followup_generator
 from engines.live_warning_generator import get_warning_generator
 from models.state_models import SessionState, RoundType, InterviewPhase
 from models.evaluation_models import AnswerEvaluation
+
+# ============================================
+# VISION IMPORTS
+# ============================================
+from vision_websocket import vision_websocket_endpoint
+from vision_database import (
+    init_vision_database,
+    save_answer_vision_summary,
+    save_session_vision_report,
+)
+from vision_analyzer import get_answer_vision_summary, get_session_vision_report
+from models.vision_models import SessionVisionReport
 
 # ============================================
 # LEGACY IMPORTS (keeping for resume/audio/auth)
@@ -56,17 +68,61 @@ app.add_middleware(
 app.include_router(auth_router)
 
 # ============================================
+# VISION WEBSOCKET ROUTE
+# ============================================
+app.add_api_websocket_route("/ws/vision/{session_id}", vision_websocket_endpoint)
+
+# ============================================
+# VISION REST ROUTER
+# ============================================
+vision_router = APIRouter(prefix="/vision", tags=["vision"])
+
+@vision_router.get("/report/{session_id}")
+async def get_vision_report_endpoint(session_id: str):
+    """
+    Returns aggregated vision report for a completed session.
+    Called by the FinalReport screen after interview ends.
+    """
+    try:
+        report = get_session_vision_report(session_id)
+        save_session_vision_report(report)
+        return {"success": True, "report": report.dict()}
+    except Exception as e:
+        print(f"❌ Error fetching vision report: {e}")
+        raise HTTPException(status_code=500, detail=str(e))
+
+
+@vision_router.get("/answer-summary/{session_id}/{answer_index}")
+async def get_answer_vision_endpoint(session_id: str, answer_index: int):
+    """
+    Returns per-answer vision summary.
+    Called by FeedbackScreen after each answer is submitted.
+    """
+    try:
+        summary = get_answer_vision_summary(session_id, answer_index)
+        save_answer_vision_summary(summary)
+        return {"success": True, "summary": summary.dict()}
+    except Exception as e:
+        print(f"❌ Error fetching answer vision summary: {e}")
+        raise HTTPException(status_code=500, detail=str(e))
+
+
+app.include_router(vision_router)
+
+# ============================================
 # STARTUP
 # ============================================
 @app.on_event("startup")
 async def startup_event():
     init_database()
     init_auth_database()
+    init_vision_database()                   # ← Vision DB tables
     get_interview_orchestrator()
     get_immediate_feedback_generator()
     get_final_report_generator()
     print("✅ Database initialized")
     print("✅ Authentication database initialized")
+    print("✅ Vision database initialized")
     print("✅ Interview system initialized")
 
 # ============================================
@@ -104,7 +160,13 @@ def read_root():
     return {
         "message": "InternAI Intelligent Interview System",
         "version": "2.0",
-        "features": ["Round-based evaluation", "Intelligent interruptions", "Phase progression", "Smart follow-ups"]
+        "features": [
+            "Round-based evaluation",
+            "Intelligent interruptions",
+            "Phase progression",
+            "Smart follow-ups",
+            "Real-time vision analysis",       # ← NEW
+        ]
     }
 
 @app.get("/health")
@@ -202,7 +264,6 @@ async def start_interview_with_persona(request: PersonaInterviewRequest):
         orchestrator = get_interview_orchestrator()
         session_id = f"session_{datetime.now().strftime('%Y%m%d_%H%M%S')}_{uuid.uuid4().hex[:4]}"
 
-        # Map persona to round_type
         persona_to_round = {
             "hr_manager": "hr",
             "senior_engineer": "technical",
@@ -251,8 +312,12 @@ async def submit_answer(request: AnswerSubmitRequest):
 
         question_text = session.current_question_text or "Question"
 
+        # Current answer index = number of completed Q&A pairs so far
+        answer_index = len(session.conversation_history)
+
         print(f"\n📝 Processing answer for session: {request.session_id}")
         print(f"   Question ID: {request.question_id}")
+        print(f"   Answer index: {answer_index}")
         print(f"   Round: {session.current_round_type.value}")
         print(f"   Is Follow-up: {request.is_followup_answer}")
 
@@ -301,9 +366,29 @@ async def submit_answer(request: AnswerSubmitRequest):
             round_type=session.current_round_type.value
         ) if evaluation_obj else None
 
+        # ── Vision: fetch & persist per-answer summary ──────────────────────
+        vision_feedback = None
+        try:
+            vision_summary = get_answer_vision_summary(request.session_id, answer_index)
+            save_answer_vision_summary(vision_summary)
+            vision_feedback = vision_summary.dict()
+            print(f"👁️  Vision summary for answer {answer_index}: score={vision_summary.overall_vision_score:.1f}")
+        except Exception as ve:
+            print(f"⚠️  Vision summary error (non-fatal): {ve}")
+        # ────────────────────────────────────────────────────────────────────
+
         if result.get("completed"):
             session.current_phase = InterviewPhase.COMPLETED
             session.completed_at = datetime.now()
+
+            # ── Vision: persist full session report on completion ────────────
+            try:
+                session_vision_report = get_session_vision_report(request.session_id)
+                save_session_vision_report(session_vision_report)
+                print(f"👁️  Session vision report saved: overall={session_vision_report.overall_vision_score:.1f}")
+            except Exception as ve:
+                print(f"⚠️  Session vision report error (non-fatal): {ve}")
+            # ────────────────────────────────────────────────────────────────
 
             print("🎉 Interview completed!")
 
@@ -312,7 +397,8 @@ async def submit_answer(request: AnswerSubmitRequest):
                 "completed": True,
                 "session_id": request.session_id,
                 "evaluation": evaluation if isinstance(evaluation, dict) else evaluation.dict(),
-                "immediate_feedback": immediate_feedback
+                "immediate_feedback": immediate_feedback,
+                "vision_feedback": vision_feedback,        # ← NEW
             }
 
         if result.get("requires_followup"):
@@ -325,6 +411,7 @@ async def submit_answer(request: AnswerSubmitRequest):
                 "followup_reason": result.get("followup_reason"),
                 "evaluation": evaluation if isinstance(evaluation, dict) else evaluation.dict(),
                 "immediate_feedback": immediate_feedback,
+                "vision_feedback": vision_feedback,        # ← NEW
                 "session_id": request.session_id
             }
 
@@ -338,6 +425,7 @@ async def submit_answer(request: AnswerSubmitRequest):
             "total_questions": 6,
             "evaluation": evaluation if isinstance(evaluation, dict) else evaluation.dict(),
             "immediate_feedback": immediate_feedback,
+            "vision_feedback": vision_feedback,            # ← NEW
             "current_phase": result.get("current_phase"),
             "phase_info": result.get("phase_info"),
             "session_id": request.session_id
@@ -352,9 +440,6 @@ async def submit_answer(request: AnswerSubmitRequest):
 # ============================================
 # CHECK INTERRUPTION
 # ============================================
-# ============================================
-# CHECK INTERRUPTION  (replace the existing endpoint in main.py)
-# ============================================
 @app.post("/interview/check-interruption")
 async def check_interruption(request: InterruptionCheckRequest):
     try:
@@ -366,7 +451,6 @@ async def check_interruption(request: InterruptionCheckRequest):
         if not session:
             return {"should_interrupt": False, "reason": "session_not_found"}
 
-        # ── Hard cap: read from config so it's consistent everywhere ──────────
         MAX_INTERRUPTIONS = getattr(config, 'MAX_INTERRUPTIONS_PER_SESSION', 2)
 
         if session.total_interruptions >= MAX_INTERRUPTIONS:
@@ -376,7 +460,6 @@ async def check_interruption(request: InterruptionCheckRequest):
                 "reason": "max_interruptions_reached",
             }
 
-        # ── Minimum transcript length before analysis ─────────────────────────
         transcript = (request.partial_transcript or "").strip()
         min_chars = getattr(config, 'MIN_TRANSCRIPT_LENGTH_FOR_ANALYSIS', 80)
         if len(transcript) < min_chars and not (request.audio_metrics or {}).get('detected_issues'):
@@ -384,7 +467,6 @@ async def check_interruption(request: InterruptionCheckRequest):
 
         question_text = request.current_question_text or session.current_question_text or ""
 
-        # ── Run analysis ───────────────────────────────────────────────────────
         analysis = analyzer.analyze_for_interruption(
             session_id=request.session_id,
             partial_transcript=transcript,
@@ -403,7 +485,7 @@ async def check_interruption(request: InterruptionCheckRequest):
         reason = analysis.get("reason", "")
         display_reason = analysis.get("display_reason", analyzer.get_display_reason(reason))
 
-        # ── INTERRUPT path ─────────────────────────────────────────────────────
+        # ── INTERRUPT path ────────────────────────────────────────────────────
         if action == "interrupt":
             phrase = analysis.get("interruption_phrase") or analyzer.generate_interruption_phrase(reason)
 
@@ -443,13 +525,13 @@ async def check_interruption(request: InterruptionCheckRequest):
                 "interruption_phrase": phrase,
                 "followup_question": followup,
                 "reason": reason,
-                "display_reason": display_reason,          # ← human-readable reason
+                "display_reason": display_reason,
                 "icon": analysis.get("icon", "⚠️"),
                 "interruption_count": session.total_interruptions,
                 "max_interruptions": MAX_INTERRUPTIONS,
             }
 
-        # ── WARN path ──────────────────────────────────────────────────────────
+        # ── WARN path ─────────────────────────────────────────────────────────
         elif action == "warn":
             warn_phrase = analysis.get("warn_phrase") or analyzer.generate_warn_phrase(reason)
 
@@ -468,7 +550,6 @@ async def check_interruption(request: InterruptionCheckRequest):
                 "MINOR_UNCERTAINTY":     "low",
             }
             severity = severity_map.get(reason, "medium")
-
             icon = analysis.get("icon", "⚠️")
 
             print(f"⚠️  WARNING | reason={reason} | message: {warn_phrase}")
@@ -493,8 +574,7 @@ async def check_interruption(request: InterruptionCheckRequest):
         import traceback
         traceback.print_exc()
         return {"should_interrupt": False, "error": str(e)}
-    
-    
+
 # ============================================
 # FINAL REPORT
 # ============================================
@@ -514,9 +594,23 @@ async def get_final_report(session_id: str):
 
         report = report_gen.generate_report(session)
 
+        # ── Attach vision report to final report ──────────────────────────────
+        vision_report_data = None
+        try:
+            vision_report = get_session_vision_report(session_id)
+            save_session_vision_report(vision_report)
+            vision_report_data = vision_report.dict()
+            print(f"👁️  Vision report attached to final report | score={vision_report.overall_vision_score:.1f}")
+        except Exception as ve:
+            print(f"⚠️  Vision report fetch error (non-fatal): {ve}")
+        # ────────────────────────────────────────────────────────────────────
+
         print(f"📋 Generated final report for session: {session_id}")
 
-        return {"success": True, "report": report.dict()}
+        report_dict = report.dict()
+        report_dict["vision_report"] = vision_report_data   # ← NEW field
+
+        return {"success": True, "report": report_dict}
 
     except HTTPException:
         raise
@@ -575,12 +669,6 @@ async def get_sessions_history():
 # ============================================
 @app.get("/metrics/history")
 async def get_metrics_history(limit: int = 20):
-    """
-    Returns per-session behavioral metrics for the SessionHistory dashboard.
-    Fields: session_id, started_at, completed_at, total_questions,
-            avg_hesitation_score, avg_words_per_minute, total_filler_words,
-            interruption_count, round_type, overall_score
-    """
     try:
         orchestrator = get_interview_orchestrator()
         history = []
@@ -595,7 +683,6 @@ async def get_metrics_history(limit: int = 20):
                 if state.overall_score_progression else 0
             )
 
-            # Hesitation score: inverse of performance + interruption penalty (lower = better)
             avg_hesitation_score = max(0, round(100 - avg_score + (interruption_count * 5), 1))
 
             total_words = 0
@@ -675,6 +762,22 @@ async def get_metrics_summary(session_id: str):
             reason = interruption.get('reason', 'unknown')
             interruption_reasons[reason] = interruption_reasons.get(reason, 0) + 1
 
+        # ── Attach vision summary ─────────────────────────────────────────────
+        vision_summary_data = None
+        try:
+            vision_report = get_session_vision_report(session_id)
+            vision_summary_data = {
+                "overall_vision_score": vision_report.overall_vision_score,
+                "avg_posture_score":    vision_report.avg_posture_score,
+                "avg_gaze_score":       vision_report.avg_gaze_score,
+                "strengths":            vision_report.strengths,
+                "improvements":         vision_report.improvements,
+                "summary":              vision_report.summary,
+            }
+        except Exception as ve:
+            print(f"⚠️  Vision data for metrics summary (non-fatal): {ve}")
+        # ────────────────────────────────────────────────────────────────────
+
         print(f"📊 Generated metrics summary for session: {session_id}")
 
         return {
@@ -701,7 +804,8 @@ async def get_metrics_summary(session_id: str):
                 "verified": len(session.verified_claims),
                 "unverified": session.unverified_claims[:5]
             },
-            "red_flags": session.red_flag_answers[:5] if hasattr(session, 'red_flag_answers') else []
+            "red_flags": session.red_flag_answers[:5] if hasattr(session, 'red_flag_answers') else [],
+            "vision": vision_summary_data,              # ← NEW field
         }
 
     except HTTPException:
@@ -777,14 +881,9 @@ async def upload_audio(
         print(f"❌ Error processing audio: {str(e)}")
         return {"success": False, "error": str(e)}
 
-
-"""
-This receives a short audio chunk every 6 seconds during recording,
-transcribes it with the tiny Whisper model, and returns the text.
-The frontend accumulates chunks into a live transcript and uses it
-for interruption checks.
-"""
-
+# ============================================
+# TRANSCRIBE CHUNK
+# ============================================
 from whisper_service import transcribe_chunk as whisper_transcribe_chunk
 
 @app.post("/interview/transcribe-chunk")
@@ -800,7 +899,6 @@ async def transcribe_chunk_endpoint(
     Uses tiny Whisper model (fast) instead of base (slow).
     """
     try:
-        # Save chunk to disk temporarily
         timestamp = datetime.now().strftime("%Y%m%d_%H%M%S_%f")
         filename = f"{session_id}_q{question_id}_chunk{chunk_index}_{timestamp}.webm"
 
@@ -811,21 +909,15 @@ async def transcribe_chunk_endpoint(
         with open(file_path, "wb") as f:
             f.write(contents)
 
-        # Transcribe with tiny model (fast)
         result = whisper_transcribe_chunk(file_path)
 
-        # Clean up chunk file after transcription (don't accumulate)
         try:
             os.remove(file_path)
         except Exception:
             pass
 
         if not result or not result.get("text"):
-            return {
-                "success": True,
-                "text": "",
-                "elapsed": 0
-            }
+            return {"success": True, "text": "", "elapsed": 0}
 
         return {
             "success": True,
@@ -847,5 +939,20 @@ def test_llm():
         from llm_service import test_llm_connection
         success, message = test_llm_connection()
         return {"success": success, "message": message}
+    except Exception as e:
+        return {"success": False, "message": str(e)}
+
+
+@app.get("/test/vision")
+def test_vision():
+    """Quick check that vision analyzer imports and MediaPipe loads correctly."""
+    try:
+        from vision_analyzer import _mp_face_mesh, _mp_pose
+        return {
+            "success": True,
+            "message": "Vision system (MediaPipe + DeepFace) loaded successfully",
+            "mediapipe_face_mesh": "ok",
+            "mediapipe_pose": "ok",
+        }
     except Exception as e:
         return {"success": False, "message": str(e)}

@@ -38,6 +38,7 @@ backend/
     - database.py                     (Core database operations)
     - interview_data.py               (Interview data models and management)
     - metrics_storage.py              (Metrics data storage)
+    - active_sessions.json            (Active interview sessions tracking)
   
   Data Models:
     - models/
@@ -46,6 +47,7 @@ backend/
       - interruption_models.py        (Interruption tracking and models)
       - interview_models.py           (Interview session models)
       - state_models.py               (State management models)
+      - vision_models.py              (Vision analysis data models)
       - __pycache__/
   
   Analysis & Processing Engines:
@@ -78,8 +80,12 @@ backend/
     - llm_service.py                  (LLM (Language Model) integration)
     - whisper_service.py              (Whisper speech-to-text service)
   
+  Vision & Media Analysis:
+    - vision_analyzer.py              (Computer vision analysis engine)
+    - vision_database.py              (Vision data persistence)
+    - vision_websocket.py             (WebSocket support for vision streaming)
+  
   Prompts & Templates:
-    - prompts.py                      (Central prompt management)
     - prompt_templates/
       - __init__.py
       - claim_prompts.py              (Claim analysis prompt templates)
@@ -87,9 +93,15 @@ backend/
       - interruption_prompts.py       (Interruption detection prompt templates)
       - __pycache__/
   
+  Media Processing Models:
+    - mp_models/                      (MediaPipe models for vision analysis)
+      - face_landmarker.task          (Face detection and landmarks model)
+      - pose_landmarker_lite.task     (Pose estimation model)
+  
   Testing & Validation:
     - test_intelligent_interruptions.py  (Intelligent interruption testing)
     - test_whisper.py                    (Whisper service testing)
+    - test_STANDALONE.py                 (Standalone system integration testing)
     - validate_integration.py            (Integration validation and tests)
   
   Data Storage Directories:
@@ -98,7 +110,9 @@ backend/
   
   System Directories:
     - __pycache__/                    (Python bytecode cache)
+    - config/__pycache__/             (Config module cache)
     - engines/__pycache__/            (Engines module cache)
+    - engines/round_evaluators/__pycache__/   (Round evaluators cache)
     - models/__pycache__/             (Models module cache)
     - prompt_templates/__pycache__/   (Prompt templates cache)
 
@@ -205,6 +219,8 @@ BACKEND FEATURES:
   - Resume parsing and intelligent question generation
   - Multi-round interview support (Technical, System Design, HR)
   - Pressure mode for stress testing
+  - Vision analysis and webcam monitoring (MediaPipe integration)
+  - Real-time WebSocket support for media streaming
 
 FRONTEND FEATURES:
   - React-based interactive web application
@@ -217,5 +233,5 @@ FRONTEND FEATURES:
   - Responsive design with custom styling
 
 KEY TECHNOLOGIES:
-  Backend: Python, FastAPI, SQLite, LLM APIs, OpenAI Whisper
+  Backend: Python, FastAPI, SQLite, LLM APIs, OpenAI Whisper, MediaPipe, WebSockets
   Frontend: React, JavaScript, Web Audio API, CSS3
